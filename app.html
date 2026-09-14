@@ -745,12 +745,15 @@
     .dt-info-edit-fab { position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; border-radius: 50%; background: var(--surface-2); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text2); z-index: 2; transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease; }
     .dt-info-edit-fab:active { transform: scale(0.9); }
     .dt-info-edit-fab.active { background: var(--accent); color: var(--accent-contrast); }
-    .ntask-section-label { padding: 16px 16px 6px; font-size: 11px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; }
-    /* Fiche unifiee : lignes label/valeur epurees (libelle petit gris majuscule a gauche, valeur en gras a droite) */
-    .dt-info-card .ntask-row-label { font-size: 11.5px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.4px; }
-    .dt-info-card .ntask-row-val .vsg-value { font-size: 15px; font-weight: 700; color: var(--text); }
-    .dt-info-card .ntask-row.ntask-row-hero .ntask-row-val .vsg-value { font-size: 17px; }
-    .dt-info-card .ntask-row { min-height: 44px; }
+    .ntask-section-label { padding: 18px 16px 8px; font-size: 13px; font-weight: 700; color: var(--text); letter-spacing: 0.1px; }
+    .ntask-section-label-primary { font-size: 18px; padding-top: 16px; }
+    /* Fiche unifiee : lignes label/valeur epurees (libelle gris a gauche, valeur en gras a droite) */
+    .dt-info-card .ntask-row-label { font-size: 13.5px; font-weight: 500; color: var(--text2); }
+    .dt-info-card .ntask-row-val .vsg-value { font-size: 15.5px; font-weight: 700; color: var(--text); }
+    .dt-info-card .ntask-row.ntask-row-hero .ntask-row-label { font-size: 15px; font-weight: 600; }
+    .dt-info-card .ntask-row.ntask-row-hero .ntask-row-val .vsg-value { font-size: 21px; }
+    .dt-info-card .ntask-row { min-height: 46px; }
+    .dt-info-card .ntask-row.ntask-row-hero { min-height: 52px; }
     /* Verrouille l'edition tant que le pinceau n'est pas active */
     .dt-info-card .ntask-row:not(.ntask-row-static) { cursor: default; }
     .dt-info-card .ntask-row:not(.ntask-row-static) .chev { opacity: 0; transition: opacity 0.15s ease; }
@@ -2111,7 +2114,7 @@
             </div>
             <div class="ntask-sep"></div>
 
-            <div class="ntask-section-label">Informations principales</div>
+            <div class="ntask-section-label ntask-section-label-primary">Informations principales</div>
             <div class="ntask-row ntask-row-hero" onclick="editVsgField(this,'numVo')"><span class="ntask-row-label">N° de VO</span><span class="ntask-row-val"><span class="vsg-value" id="detail-numvo"></span></span></div>
             <div class="ntask-sep"></div>
             <div class="ntask-row ntask-row-hero" onclick="editVsgField(this,'year')"><span class="ntask-row-label">Année</span><span class="ntask-row-val"><span class="vsg-value" id="detail-year"></span></span></div>
@@ -2136,9 +2139,9 @@
             <div class="ntask-section-label">Administratif</div>
             <div class="ntask-row" onclick="editVsgField(this,'immatriculation')"><span class="ntask-row-label">Immatriculation</span><span class="ntask-row-val"><span class="vsg-value" id="detail-immat"></span></span></div>
             <div class="ntask-sep"></div>
-            <div class="ntask-row" onclick="openVsgBoolMenu(this,'clesDouble','detail-cles')"><span class="ntask-row-label">Double des clés</span><span class="ntask-row-val"><span class="vsg-value" id="detail-cles"></span><span class="chev">›</span></span></div>
+            <div class="ntask-row" onclick="openVsgBoolMenu(this,'clesDouble','detail-cles')"><span class="ntask-row-label">Clés</span><span class="ntask-row-val"><span class="vsg-value" id="detail-cles"></span><span class="chev">›</span></span></div>
             <div class="ntask-sep"></div>
-            <div class="ntask-row" onclick="openVsgBoolMenu(this,'histoEntretien','detail-histo')"><span class="ntask-row-label">Historique d'entretien</span><span class="ntask-row-val"><span class="vsg-value" id="detail-histo"></span><span class="chev">›</span></span></div>
+            <div class="ntask-row" onclick="openVsgBoolMenu(this,'histoEntretien','detail-histo')"><span class="ntask-row-label">Historique</span><span class="ntask-row-val"><span class="vsg-value" id="detail-histo"></span><span class="chev">›</span></span></div>
           </div>
         </div>
 
