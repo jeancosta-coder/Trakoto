@@ -745,6 +745,7 @@
     .dt-info-edit-fab { position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; border-radius: 50%; background: var(--surface-2); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text2); z-index: 2; transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease; }
     .dt-info-edit-fab:active { transform: scale(0.9); }
     .dt-info-edit-fab.active { background: var(--accent); color: var(--accent-contrast); }
+    .dt-notes-frame { border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px; background: var(--surface-2); }
     .ntask-section-label { padding: 18px 16px 8px; font-size: 13px; font-weight: 700; color: var(--text); letter-spacing: 0.1px; }
     .ntask-section-label-primary { font-size: 18px; padding-top: 16px; }
     /* Fiche unifiee : lignes label/valeur epurees (libelle gris a gauche, valeur en gras a droite) */
@@ -2108,9 +2109,11 @@
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.83 2.83 0 0 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
             </button>
 
-            <div class="ntask-row ntask-row-static" style="cursor:default;flex-direction:column;align-items:stretch;min-height:0;padding-top:16px;padding-bottom:12px;">
+            <div class="ntask-row ntask-row-static" style="cursor:default;flex-direction:column;align-items:stretch;min-height:0;padding-top:16px;padding-bottom:14px;">
               <span class="ntask-row-label" style="margin-bottom:8px;">Notes</span>
-              <textarea id="detail-notes" style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:70px;resize:none;color:var(--text);background:transparent;padding:0;box-sizing:border-box;" placeholder="Révisions, rayures, réparations..." onblur="saveVehicleNotes()"></textarea>
+              <div class="dt-notes-frame">
+                <textarea id="detail-notes" oninput="autoGrowNotes(this)" style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:22px;resize:none;color:var(--text);background:transparent;padding:0;box-sizing:border-box;overflow:hidden;" placeholder="Pas encore de note pour ce véhicule…" onblur="saveVehicleNotes()"></textarea>
+              </div>
             </div>
             <div class="ntask-sep"></div>
 
@@ -3697,6 +3700,10 @@ function saveClientInfoModal(){
   showToast('✓ Client enregistré');
 }
 const VSG_FIELD_TYPES = { year:'number', km:'number', achat:'number', puissance:'number' };
+function autoGrowNotes(el){
+  el.style.height = 'auto';
+  el.style.height = el.scrollHeight + 'px';
+}
 function toggleDetailInfoEditHint(btn){
   const card = document.getElementById('dt-info-card');
   if(!card) return;
@@ -3804,7 +3811,7 @@ function openVehicleDetails(id){
   const _svd = document.getElementById('detail-sale-date-disp'); if(_svd) _svd.textContent = _fmtD(v.saleDate);
   const _ade = document.getElementById('detail-achat-date-edit'); if(_ade) _ade.value = v.achatDate || '';
   const _sde = document.getElementById('detail-sale-date-edit'); if(_sde) _sde.value = v.saleDate || '';
-  document.getElementById('detail-notes').value = v.notes || '';
+  const _notesEl = document.getElementById('detail-notes'); _notesEl.value = v.notes || ''; setTimeout(() => autoGrowNotes(_notesEl), 0);
   renderFinanceValidationState(v);
   relayoutDetailInfos();
   updateMargePreview();
