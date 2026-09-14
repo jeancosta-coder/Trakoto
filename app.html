@@ -745,13 +745,20 @@
     .vsg-hero-cell { background: var(--surface); padding: 16px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 4px; cursor: pointer; transition: background 0.15s ease; }
     .vsg-hero-cell:hover { background: var(--surface-2); }
     .vsg-hero-label { font-size: 10.5px; color: var(--text2); font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
-    .vsg-hero-value { font-size: 19px; font-weight: 800; color: var(--accent); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+    .vsg-hero-value { font-size: 23px; font-weight: 800; color: var(--accent); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
     .dt-info-card { position: relative; }
     .dt-info-edit-fab { position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; border-radius: 50%; background: var(--surface-2); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text2); z-index: 2; transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease; }
     .dt-info-edit-fab:active { transform: scale(0.9); }
     .dt-info-edit-fab.active { background: var(--accent); color: var(--accent-contrast); }
-    .dt-info-card.edit-hint .ntask-row:not(.ntask-row-static) { background: var(--accent-soft, rgba(99,102,241,0.06)); }
-    .dt-info-card.edit-hint .vsg-hero-cell { background: var(--accent-soft, rgba(99,102,241,0.06)) !important; }
+    .ntask-section-label { padding: 14px 16px 6px; font-size: 11px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; }
+    /* Verrouille l'edition tant que le pinceau n'est pas active */
+    .dt-info-card .ntask-row:not(.ntask-row-static) { cursor: default; }
+    .dt-info-card .ntask-row:not(.ntask-row-static) .chev { opacity: 0; transition: opacity 0.15s ease; }
+    .dt-info-card .vsg-hero-cell { cursor: default; }
+    .dt-info-card.edit-hint .ntask-row:not(.ntask-row-static) { cursor: pointer; background: var(--accent-soft, rgba(99,102,241,0.06)); }
+    .dt-info-card.edit-hint .ntask-row:not(.ntask-row-static) .chev { opacity: 1; }
+    .dt-info-card.edit-hint .vsg-hero-cell { cursor: pointer; }
+    .dt-info-card.edit-hint .detail-hero-stats { background: var(--accent-soft, rgba(99,102,241,0.06)) !important; }
     #detail-header-trash { visibility: hidden; pointer-events: none; }
     .fin-green { color:#34c759; }
     .fin-red { color:#ff3b30; }
@@ -2107,24 +2114,30 @@
             </div>
             <div class="ntask-sep"></div>
 
-            <div class="detail-hero-stats" style="margin:0;box-shadow:none;border-radius:0;background:var(--border);">
-              <div class="vsg-hero-cell" style="cursor:pointer;background:transparent;" onclick="editVsgField(this,'numVo')"><div class="vsg-hero-label">N° de VO</div><div class="vsg-value vsg-hero-value" id="detail-numvo"></div></div>
-              <div class="vsg-hero-cell" style="cursor:pointer;background:transparent;" onclick="editVsgField(this,'year')"><div class="vsg-hero-label">Année</div><div class="vsg-value vsg-hero-value" id="detail-year"></div></div>
-              <div class="vsg-hero-cell" style="cursor:pointer;background:transparent;" onclick="editVsgField(this,'km')"><div class="vsg-hero-label">Kilométrage</div><div class="vsg-value vsg-hero-value" id="detail-km"></div></div>
+            <div class="ntask-section-label">Informations principales</div>
+            <div class="detail-hero-stats" style="margin:0 16px 4px;box-shadow:none;border-radius:14px;background:var(--surface-2);">
+              <div class="vsg-hero-cell" onclick="editVsgField(this,'numVo')"><div class="vsg-hero-label">N° de VO</div><div class="vsg-value vsg-hero-value" id="detail-numvo"></div></div>
+              <div class="vsg-hero-cell" onclick="editVsgField(this,'year')"><div class="vsg-hero-label">Année</div><div class="vsg-value vsg-hero-value" id="detail-year"></div></div>
+              <div class="vsg-hero-cell" onclick="editVsgField(this,'km')"><div class="vsg-hero-label">Kilométrage</div><div class="vsg-value vsg-hero-value" id="detail-km"></div></div>
             </div>
             <div class="ntask-sep"></div>
 
+            <div class="ntask-section-label">Mécanique</div>
             <div class="ntask-row" onclick="openVsgCarburantMenu(this)"><span class="ntask-row-label">Carburant</span><span class="ntask-row-val"><span class="vsg-value" id="detail-carburant"></span><span class="chev">›</span></span></div>
             <div class="ntask-sep"></div>
             <div class="ntask-row" onclick="openVsgTransmissionMenu(this)"><span class="ntask-row-label">Transmission</span><span class="ntask-row-val"><span class="vsg-value" id="detail-transmission"></span><span class="chev">›</span></span></div>
             <div class="ntask-sep"></div>
-            <div class="ntask-row" onclick="editVsgField(this,'couleur')"><span class="ntask-row-label">Couleur</span><span class="ntask-row-val"><span class="vsg-value" id="detail-couleur"></span></span></div>
-            <div class="ntask-sep"></div>
-            <div class="ntask-row" onclick="editVsgField(this,'immatriculation')"><span class="ntask-row-label">Immatriculation</span><span class="ntask-row-val"><span class="vsg-value" id="detail-immat"></span></span></div>
-            <div class="ntask-sep"></div>
             <div class="ntask-row" onclick="editVsgField(this,'puissance')"><span class="ntask-row-label">Puissance</span><span class="ntask-row-val"><span class="vsg-value" id="detail-puissance"></span></span></div>
             <div class="ntask-sep"></div>
+
+            <div class="ntask-section-label">Apparence</div>
+            <div class="ntask-row" onclick="editVsgField(this,'couleur')"><span class="ntask-row-label">Couleur</span><span class="ntask-row-val"><span class="vsg-value" id="detail-couleur"></span></span></div>
+            <div class="ntask-sep"></div>
             <div class="ntask-row" onclick="editVsgField(this,'gen')"><span class="ntask-row-label">Génération</span><span class="ntask-row-val"><span class="vsg-value" id="detail-gen"></span></span></div>
+            <div class="ntask-sep"></div>
+
+            <div class="ntask-section-label">Administratif</div>
+            <div class="ntask-row" onclick="editVsgField(this,'immatriculation')"><span class="ntask-row-label">Immatriculation</span><span class="ntask-row-val"><span class="vsg-value" id="detail-immat"></span></span></div>
             <div class="ntask-sep"></div>
             <div class="ntask-row" onclick="openVsgBoolMenu(this,'clesDouble','detail-cles')"><span class="ntask-row-label">Double des clés</span><span class="ntask-row-val"><span class="vsg-value" id="detail-cles"></span><span class="chev">›</span></span></div>
             <div class="ntask-sep"></div>
@@ -3690,7 +3703,17 @@ function toggleDetailInfoEditHint(btn){
   const active = card.classList.toggle('edit-hint');
   btn.classList.toggle('active', active);
 }
+function isDetailInfoEditable(){
+  const card = document.getElementById('dt-info-card');
+  return !!(card && card.classList.contains('edit-hint'));
+}
+function requireDetailInfoEdit(){
+  if(isDetailInfoEditable()) return true;
+  showToast('✎ Appuyez sur le crayon pour modifier');
+  return false;
+}
 function editVsgField(cell, field){
+  if(!requireDetailInfoEdit()) return;
   if(cell.dataset.editing) return;
   const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
   cell.dataset.editing = '1';
@@ -3722,6 +3745,7 @@ function editVsgField(cell, field){
 }
 const BOOL_OPTS = [{v:'oui',l:'Oui'},{v:'non',l:'Non'}];
 function openVsgBoolMenu(cell, field){
+  if(!requireDetailInfoEdit()) return;
   const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
   document._vsgBoolField = field;
   openAnchoredMenu(cell, ntaskOptList(BOOL_OPTS, v[field] || '', 'saveVsgBool'));
@@ -3734,6 +3758,7 @@ function saveVsgBool(val){
   showToast('✓ Enregistré');
 }
 function openVsgCarburantMenu(cell){
+  if(!requireDetailInfoEdit()) return;
   const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
   openAnchoredMenu(cell, ntaskOptList(FUEL_OPTS, v.carburant || '', 'saveVsgCarburant'));
 }
@@ -3745,6 +3770,7 @@ function saveVsgCarburant(val){
   showToast('✓ Enregistré');
 }
 function openVsgTransmissionMenu(cell){
+  if(!requireDetailInfoEdit()) return;
   const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
   openAnchoredMenu(cell, ntaskOptList(TRANS_OPTS, v.transmission || '', 'saveVsgTransmission'));
 }
@@ -3759,6 +3785,10 @@ function openVehicleDetails(id){
   currentDetailVehicleId = id;
   document._pendingStatutAfterClient = null;
   financeUnlocked = false;
+  const infoCard = document.getElementById('dt-info-card');
+  if(infoCard) infoCard.classList.remove('edit-hint');
+  const infoFab = document.getElementById('dt-info-edit-fab');
+  if(infoFab) infoFab.classList.remove('active');
   const v = vehicles.find(x => x.id === id);
   if(!v) return;
   refreshDetailHeaderAndSpecs(v);
