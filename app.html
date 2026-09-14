@@ -739,22 +739,19 @@
     .fin-resultat-row .fin-label-text { font-size:12px; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; }
     .fin-marge-pct { font-size:16px; color:var(--text2); }
     .fin-save-mobile { position:fixed; bottom:calc(90px + env(safe-area-inset-bottom)); left:16px; right:16px; padding:14px; background:var(--surface); color:var(--text); border:none; border-radius:12px; font-size:15px; font-weight:500; cursor:pointer; box-shadow:0 2px 12px rgba(0,0,0,0.1); z-index:100; display:flex; align-items:center; justify-content:center; gap:8px; }
-    .detail-vehicle-specs { display: block; }
-    .vehicle-specs-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--surface-3); border-radius: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); overflow: hidden; margin-bottom: 12px; }
-    .vsg-cell { background:var(--surface); padding: 12px; display:flex; align-items:center; gap:10px; transition: background 0.15s ease; }
-    .vsg-cell:hover { background: var(--surface-2); }
-    .vsg-icon { width: 34px; height: 34px; border-radius: 10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; background: var(--accent-soft, rgba(99,102,241,0.12)); color: var(--accent); }
-    .vsg-icon svg { width:17px; height:17px; }
-    .vsg-text { min-width:0; }
-    .vsg-label { font-size: 10.5px; color:var(--text2); font-weight: 500; text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 2px; }
     .vsg-value { font-size: 13.5px; font-weight: 700; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .vsg-input { font-size: 13.5px; font-weight: 700; color:var(--text); font-family:inherit; border:none; border-bottom:1.5px solid var(--accent); outline:none; background:transparent; width:100%; padding:0 0 1px; }
-    @media (min-width: 480px) { .vehicle-specs-grid { grid-template-columns: repeat(3, 1fr); } }
     .detail-hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--surface-3); border-radius: 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); overflow: hidden; margin-bottom: 12px; }
     .vsg-hero-cell { background: var(--surface); padding: 16px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 4px; cursor: pointer; transition: background 0.15s ease; }
     .vsg-hero-cell:hover { background: var(--surface-2); }
     .vsg-hero-label { font-size: 10.5px; color: var(--text2); font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
     .vsg-hero-value { font-size: 19px; font-weight: 800; color: var(--accent); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+    .dt-info-card { position: relative; }
+    .dt-info-edit-fab { position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; border-radius: 50%; background: var(--surface-2); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text2); z-index: 2; transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease; }
+    .dt-info-edit-fab:active { transform: scale(0.9); }
+    .dt-info-edit-fab.active { background: var(--accent); color: var(--accent-contrast); }
+    .dt-info-card.edit-hint .ntask-row:not(.ntask-row-static) { background: var(--accent-soft, rgba(99,102,241,0.06)); }
+    .dt-info-card.edit-hint .vsg-hero-cell { background: var(--accent-soft, rgba(99,102,241,0.06)) !important; }
     #detail-header-trash { visibility: hidden; pointer-events: none; }
     .fin-green { color:#34c759; }
     .fin-red { color:#ff3b30; }
@@ -1110,35 +1107,14 @@
         text-align: left !important;
         margin-top: 3px !important;
       }
-      /* Infos véhicule : visible sur desktop dans la colonne gauche */
-      .dt-infos-wrap {
-        display: block !important;
-        padding: 8px 16px 0 !important;
-        flex-shrink: 0 !important;
-      }
-      .dt-infos-wrap .detail-vehicle-specs {
-        box-shadow: none !important;
-        border: none !important;
-        background: transparent !important;
-        gap: 0 !important;
-      }
-      .dt-infos-wrap .vsg-cell { padding: 4px 6px !important; border: none !important; background: transparent !important; }
-      .dt-infos-wrap .vsg-label { font-size: 9px !important; }
-      .dt-infos-wrap .vsg-value { font-size: 11px !important; }
       /* Statut : deplace dans le nav desktop (photo/titre), on masque l'ancien emplacement */
       .dt-statut-wrap { display: none !important; }
       .dt-client-wrap { flex-shrink: 0 !important; padding: 12px 20px 0 !important; }
       .dt-client-wrap > div:first-child { padding: 0 !important; }
-      /* Notes */
-      .dt-notes-wrap {
+      /* Fiche unifiee (Notes + Infos vehicule) */
+      .dt-info-wrap {
         flex-shrink: 0 !important;
         padding: 12px 20px 0 !important;
-      }
-      .dt-notes-wrap > div:first-child { padding: 0 !important; }
-      .dt-notes-wrap textarea {
-        border: 1px solid #f0f0f0 !important;
-        border-radius: 14px !important;
-        box-shadow: none !important;
       }
       /* Bouton supprimer : tout en bas */
       .dt-delete-wrap {
@@ -1181,12 +1157,7 @@
         padding: 24px 28px 32px !important;
       }
       /* Contenu Infos déplacé à droite : rétablir l'aspect carte normal */
-      #detail-tab-inforight .dt-notes-wrap,
-      #detail-tab-inforight .dt-infos-wrap { padding: 0 !important; margin-bottom: 16px !important; }
-      #detail-tab-inforight .detail-vehicle-specs { grid-template-columns: repeat(3, 1fr) !important; }
-      #detail-tab-inforight .vsg-cell { padding: 14px !important; }
-      #detail-tab-inforight .vsg-label { font-size: 11px !important; }
-      #detail-tab-inforight .vsg-value { font-size: 14.5px !important; }
+      #detail-tab-inforight .dt-info-wrap { padding: 0 !important; margin-bottom: 16px !important; }
       /* ── Finances desktop ── */
       .fin-section-label {
         display: flex !important;
@@ -2123,41 +2094,41 @@
         <!-- Contenu déplacé vers l'onglet Infos sur desktop (via JS) -->
         <div id="infos-movable">
 
-        <!-- Notes -->
-        <div class="dt-notes-wrap">
-          <div style="margin-bottom:4px;padding:0 4px;">
-            <span style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-              Notes
-            </span>
-          </div>
-          <div style="background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--card-shadow);overflow:hidden;margin-bottom:12px;">
-            <textarea id="detail-notes" style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:90px;resize:none;color:var(--text);background:transparent;padding:14px 16px;box-sizing:border-box;" placeholder="Révisions, rayures, réparations..." onblur="saveVehicleNotes()"></textarea>
-          </div>
-        </div>
+        <!-- Fiche unifiee : Notes + Infos vehicule en un seul bloc -->
+        <div class="dt-info-wrap">
+          <div class="ntask-card dt-info-card" id="dt-info-card">
+            <button type="button" class="dt-info-edit-fab" id="dt-info-edit-fab" onclick="toggleDetailInfoEditHint(this)" title="Modifier">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.83 2.83 0 0 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+            </button>
 
-        <!-- Infos véhicule -->
-        <div class="dt-infos-wrap">
-          <div style="margin-bottom:10px;padding:0 4px;">
-            <span style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>
-              Infos véhicule
-            </span>
-          </div>
-          <div class="detail-hero-stats">
-            <div class="vsg-hero-cell" style="cursor:pointer;" onclick="editVsgField(this,'numVo')"><div class="vsg-hero-label">N° de VO</div><div class="vsg-value vsg-hero-value" id="detail-numvo"></div></div>
-            <div class="vsg-hero-cell" style="cursor:pointer;" onclick="editVsgField(this,'year')"><div class="vsg-hero-label">Année</div><div class="vsg-value vsg-hero-value" id="detail-year"></div></div>
-            <div class="vsg-hero-cell" style="cursor:pointer;" onclick="editVsgField(this,'km')"><div class="vsg-hero-label">Kilométrage</div><div class="vsg-value vsg-hero-value" id="detail-km"></div></div>
-          </div>
-          <div class="detail-vehicle-specs vehicle-specs-grid">
-            <div class="vsg-cell" style="cursor:pointer;" onclick="openVsgCarburantMenu(this)"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22V8a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v14"/><path d="M3 22h10"/><path d="M13 10h2l3 3v5a1 1 0 0 1-1 1h-1"/><circle cx="7" cy="6" r="0" /><path d="M7 3v3"/></svg></div><div class="vsg-text"><div class="vsg-label">Carburant</div><div class="vsg-value" id="detail-carburant"></div></div></div>
-            <div class="vsg-cell" style="cursor:pointer;" onclick="openVsgTransmissionMenu(this)"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="18" r="3"/><circle cx="18" cy="6" r="3"/><path d="M9 18h4a4 4 0 0 0 4-4V9"/></svg></div><div class="vsg-text"><div class="vsg-label">Transmission</div><div class="vsg-value" id="detail-transmission"></div></div></div>
-            <div class="vsg-cell" style="cursor:pointer;" onclick="editVsgField(this,'couleur')"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="19" cy="13" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="10" cy="19" r="2.5"/></svg></div><div class="vsg-text"><div class="vsg-label">Couleur</div><div class="vsg-value" id="detail-couleur"></div></div></div>
-            <div class="vsg-cell" style="cursor:pointer;" onclick="editVsgField(this,'immatriculation')"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="10" rx="2"/><path d="M7 11h.01M7 13h.01M12 11h4M12 13h4"/></svg></div><div class="vsg-text"><div class="vsg-label">Immatriculation</div><div class="vsg-value" id="detail-immat"></div></div></div>
-            <div class="vsg-cell" style="cursor:pointer;" onclick="editVsgField(this,'puissance')"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg></div><div class="vsg-text"><div class="vsg-label">Puissance</div><div class="vsg-value" id="detail-puissance"></div></div></div>
-            <div class="vsg-cell" style="cursor:pointer;" onclick="editVsgField(this,'gen')"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v5h-5"/></svg></div><div class="vsg-text"><div class="vsg-label">Génération</div><div class="vsg-value" id="detail-gen"></div></div></div>
-            <div class="vsg-cell" style="cursor:pointer;" onclick="openVsgBoolMenu(this,'clesDouble','detail-cles')"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M10.5 12.5L21 2M18 5l3 3M15 8l2 2"/></svg></div><div class="vsg-text"><div class="vsg-label">Double des clés</div><div class="vsg-value" id="detail-cles"></div></div></div>
-            <div class="vsg-cell" style="cursor:pointer;" onclick="openVsgBoolMenu(this,'histoEntretien','detail-histo')"><div class="vsg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 15l2 2 4-4"/></svg></div><div class="vsg-text"><div class="vsg-label">Historique d'entretien</div><div class="vsg-value" id="detail-histo"></div></div></div>
+            <div class="ntask-row ntask-row-static" style="cursor:default;flex-direction:column;align-items:stretch;min-height:0;padding-top:16px;padding-bottom:12px;">
+              <span class="ntask-row-label" style="margin-bottom:8px;">Notes</span>
+              <textarea id="detail-notes" style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:70px;resize:none;color:var(--text);background:transparent;padding:0;box-sizing:border-box;" placeholder="Révisions, rayures, réparations..." onblur="saveVehicleNotes()"></textarea>
+            </div>
+            <div class="ntask-sep"></div>
+
+            <div class="detail-hero-stats" style="margin:0;box-shadow:none;border-radius:0;background:var(--border);">
+              <div class="vsg-hero-cell" style="cursor:pointer;background:transparent;" onclick="editVsgField(this,'numVo')"><div class="vsg-hero-label">N° de VO</div><div class="vsg-value vsg-hero-value" id="detail-numvo"></div></div>
+              <div class="vsg-hero-cell" style="cursor:pointer;background:transparent;" onclick="editVsgField(this,'year')"><div class="vsg-hero-label">Année</div><div class="vsg-value vsg-hero-value" id="detail-year"></div></div>
+              <div class="vsg-hero-cell" style="cursor:pointer;background:transparent;" onclick="editVsgField(this,'km')"><div class="vsg-hero-label">Kilométrage</div><div class="vsg-value vsg-hero-value" id="detail-km"></div></div>
+            </div>
+            <div class="ntask-sep"></div>
+
+            <div class="ntask-row" onclick="openVsgCarburantMenu(this)"><span class="ntask-row-label">Carburant</span><span class="ntask-row-val"><span class="vsg-value" id="detail-carburant"></span><span class="chev">›</span></span></div>
+            <div class="ntask-sep"></div>
+            <div class="ntask-row" onclick="openVsgTransmissionMenu(this)"><span class="ntask-row-label">Transmission</span><span class="ntask-row-val"><span class="vsg-value" id="detail-transmission"></span><span class="chev">›</span></span></div>
+            <div class="ntask-sep"></div>
+            <div class="ntask-row" onclick="editVsgField(this,'couleur')"><span class="ntask-row-label">Couleur</span><span class="ntask-row-val"><span class="vsg-value" id="detail-couleur"></span></span></div>
+            <div class="ntask-sep"></div>
+            <div class="ntask-row" onclick="editVsgField(this,'immatriculation')"><span class="ntask-row-label">Immatriculation</span><span class="ntask-row-val"><span class="vsg-value" id="detail-immat"></span></span></div>
+            <div class="ntask-sep"></div>
+            <div class="ntask-row" onclick="editVsgField(this,'puissance')"><span class="ntask-row-label">Puissance</span><span class="ntask-row-val"><span class="vsg-value" id="detail-puissance"></span></span></div>
+            <div class="ntask-sep"></div>
+            <div class="ntask-row" onclick="editVsgField(this,'gen')"><span class="ntask-row-label">Génération</span><span class="ntask-row-val"><span class="vsg-value" id="detail-gen"></span></span></div>
+            <div class="ntask-sep"></div>
+            <div class="ntask-row" onclick="openVsgBoolMenu(this,'clesDouble','detail-cles')"><span class="ntask-row-label">Double des clés</span><span class="ntask-row-val"><span class="vsg-value" id="detail-cles"></span><span class="chev">›</span></span></div>
+            <div class="ntask-sep"></div>
+            <div class="ntask-row" onclick="openVsgBoolMenu(this,'histoEntretien','detail-histo')"><span class="ntask-row-label">Historique d'entretien</span><span class="ntask-row-val"><span class="vsg-value" id="detail-histo"></span><span class="chev">›</span></span></div>
           </div>
         </div>
 
@@ -3713,6 +3684,12 @@ function saveClientInfoModal(){
   showToast('✓ Client enregistré');
 }
 const VSG_FIELD_TYPES = { year:'number', km:'number', achat:'number', puissance:'number' };
+function toggleDetailInfoEditHint(btn){
+  const card = document.getElementById('dt-info-card');
+  if(!card) return;
+  const active = card.classList.toggle('edit-hint');
+  btn.classList.toggle('active', active);
+}
 function editVsgField(cell, field){
   if(cell.dataset.editing) return;
   const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
