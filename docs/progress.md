@@ -1,6 +1,6 @@
 # État d'avancement — Trakoto
 
-Dernière mise à jour : 2026-09-19. Ce fichier est un instantané, pas un journal en temps réel — croiser avec `git log` et `git status` pour l'état exact au moment présent.
+Dernière mise à jour : 2026-09-19 (soir). Ce fichier est un instantané, pas un journal en temps réel — croiser avec `git log` et `git status` pour l'état exact au moment présent.
 
 ## Fonctionnalités en place
 
@@ -17,6 +17,10 @@ Dernière mise à jour : 2026-09-19. Ce fichier est un instantané, pas un journ
 
 ## Terminé récemment (voir `git log` pour le détail exact)
 
+- Desktop (`app.html`, scopé `@media (min-width: 900px)`) : refonte des onglets Détails/Finances/Client de la fiche véhicule — bloc unique par onglet (au lieu de plusieurs sous-blocs), titres de section en texte gras plus grand (pas de fond ni de trait), séparateurs style tableau entre les lignes d'une même section uniquement, bouton "Valider la vente" intégré en pilule dans le bloc Finances, onglet "Clientèle" renommé "Client".
+- Planning : vraie transition de glissement façon iOS entre deux pages (l'ancienne sort pendant que la nouvelle entre), sur les flèches prev/next et le swipe mobile.
+- Organisation : ajout d'une recherche de véhicule (icône loupe dans l'en-tête) qui bascule sur le bon prestataire et met en surbrillance la carte trouvée.
+- Retrait du bandeau "Préconisations constructeur IA" (placeholder désactivé) et du bandeau d'en-tête desktop de la vue Compte.
 - Fiche détail véhicule : fusion Notes + Infos véhicule en un bloc unique, édition verrouillée tant que le pinceau n'est pas activé, sections labellisées, hiérarchie visuelle renforcée (infos principales en lignes verticales, plus grandes que le reste).
 - Zone Notes : cadre visible, hauteur auto-adaptative au contenu, placeholder plus clair.
 - Parc mobile : cartes remplacées par des lignes pleine largeur type Leboncoin (photo à gauche, infos à droite).
@@ -25,12 +29,12 @@ Dernière mise à jour : 2026-09-19. Ce fichier est un instantané, pas un journ
 
 ## En cours (non terminé)
 
-- **Adaptation desktop de la fiche détail véhicule** : le premier essai (réduction des tailles de police) a été jugé inadapté par l'utilisateur ("pas ergonomique, pas esthétique"). Une deuxième version restructure vraiment la mise en page en grille 3 colonnes (`#detail-tab-inforight .dt-info-card { display:grid; grid-template-columns: repeat(3,1fr); }`) — **présente dans `app.html` mais non commitée au moment de la rédaction**, avec un bug connu : les labels/valeurs longs (ex. "KILOMÉTRAGE" / "42 300 km") débordent de leur colonne de grille. Correctif identifié mais pas encore appliqué : `min-width: 0` sur les cellules de la grille + `overflow-wrap: break-word` sur labels/valeurs.
-  → Avant de reprendre : vérifier l'état réel avec `git diff app.html` (ne pas supposer que cet état est toujours celui décrit ici).
+- **Vue Compte desktop** : ajout d'un bloc "Paramètres" prévu (marge cible par défaut, numérotation automatique des N° de VO, export CSV du parc). Pas encore commencé.
 
-## Prochaine étape demandée
+## Prochaine étape demandée (mise de côté pour plus tard, à la demande de l'utilisateur)
 
-- **Planning** : ajouter une transition de type glissement (slide), façon Apple Calendar, lors du changement de page/date affichée. Pas encore commencé — fonctions concernées probables : `renderPlanning()`, `renderWeekView()`, `renderMonthView()`, et la navigation via `currentDisplayDate`.
+- **Suppression de compte** (obligation RGPD) : nécessite une nouvelle fonction Netlify avec la clé service role Supabase (impossible depuis le front avec la clé publique) pour supprimer l'utilisateur dans `auth.users` en plus de ses données.
+- **Résiliation d'abonnement** : à relier soit à un lien vers le Customer Portal Stripe, soit à une nouvelle fonction backend — à clarifier avec l'utilisateur avant de commencer (zone sensible, voir garde-fous Stripe dans `CLAUDE.md`).
 
 ## Notes pour reprendre le travail
 
