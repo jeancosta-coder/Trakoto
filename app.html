@@ -1209,6 +1209,50 @@
       }
       /* Contenu Infos déplacé à droite : rétablir l'aspect carte normal */
       #detail-tab-inforight .dt-info-wrap { padding: 0 !important; margin-bottom: 16px !important; }
+      /* Finances desktop : grille de fiches, meme langage visuel que la fiche detail (inforight) */
+      #detail-tab-finances { padding: 24px 28px 32px !important; }
+      #detail-tab-finances #fin-stats-row { gap: 16px !important; margin-bottom: 20px !important; }
+      #detail-tab-finances .bft-card { padding: 0 !important; }
+      #detail-tab-finances .bft-group {
+        background: transparent !important;
+        color: var(--text2) !important;
+        border-top: 1px solid var(--border) !important;
+        border-bottom: none !important;
+        padding: 18px 20px 8px !important;
+        font-size: 11px !important;
+      }
+      #detail-tab-finances .bft-card > .bft-group:first-child { border-top: none !important; padding-top: 4px !important; }
+      #detail-tab-finances .bft-row-simple,
+      #detail-tab-finances .bft-subgroup {
+        padding: 10px 20px !important;
+        margin: 0 4px !important;
+        width: calc(100% - 8px) !important;
+        box-sizing: border-box !important;
+        border-radius: 8px !important;
+        transition: background 0.15s ease !important;
+      }
+      #detail-tab-finances .bft-row-simple:hover { background: var(--surface-2) !important; }
+      #detail-tab-finances .bft-row { padding: 10px 20px !important; margin: 0 4px !important; width: calc(100% - 8px) !important; box-sizing: border-box !important; border-radius: 8px !important; }
+      #detail-tab-finances .bft-row:hover { background: var(--surface-2) !important; }
+      #detail-tab-finances .bft-mini-table { padding: 4px 20px !important; }
+      #detail-tab-finances .bft-mini-row { padding: 11px 0 !important; font-size: 13.5px !important; }
+      #detail-tab-finances .fin-section-label { margin: 20px 4px 8px !important; padding: 0 16px !important; }
+      #detail-tab-finances #finalize-sale-btn { border-radius: 12px !important; }
+      /* Clientele desktop : grille 2 colonnes pour les champs, comme un formulaire bureau */
+      #detail-tab-clients .bft-card {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 0 20px !important;
+        padding: 8px 20px !important;
+      }
+      #detail-tab-clients .bft-card > div { border-bottom: none !important; padding: 14px 0 !important; }
+      #detail-tab-clients .bft-card > div:nth-child(1),
+      #detail-tab-clients .bft-card > div:nth-child(2) { border-bottom: 1px solid var(--border) !important; }
+      #detail-tab-clients .bft-card > div:nth-child(3),
+      #detail-tab-clients .bft-card > div:nth-child(4) { grid-column: span 1 !important; }
+      #detail-tab-clients .bft-card:last-of-type { display: block !important; padding: 0 !important; }
+      #detail-tab-clients #dtc-notes { padding: 18px 20px !important; min-height: 140px !important; }
+      #detail-tab-clients > div[style*="margin-bottom:16px"] { margin: 4px 4px 10px !important; }
       /* ── Finances desktop ── */
       .fin-section-label {
         display: flex !important;
