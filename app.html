@@ -1217,15 +1217,17 @@
       #detail-tab-inforight .dt-info-wrap { padding: 0 !important; margin-bottom: 16px !important; }
       /* Finances desktop : grille de fiches, meme langage visuel que la fiche detail (inforight) */
       #detail-tab-finances { padding: 24px 28px 32px !important; }
-      /* Chiffres cles (apres vente) : premiere piece du bloc unique, avec Recapitulatif + Detail comptable */
-      #detail-tab-finances #fin-stats-row {
+      /* Bloc unique apres vente : Chiffres cles + Recapitulatif + Detail comptable, un seul fond/ombre/radius */
+      #detail-tab-finances #fin-postsale-block {
         background: var(--surface) !important;
-        border-radius: var(--card-radius) var(--card-radius) 0 0 !important;
+        border-radius: var(--card-radius) !important;
         box-shadow: var(--card-shadow) !important;
+        overflow: hidden !important;
+      }
+      #detail-tab-finances #fin-stats-row {
         gap: 0 !important;
         margin-bottom: 0 !important;
         padding: 0 0 12px !important;
-        overflow: hidden !important;
       }
       #detail-tab-finances #fin-stats-row .fin-stats-title { grid-column: 1 / -1 !important; margin-top: 20px !important; }
       #detail-tab-finances #fin-stats-row .bft-stat {
@@ -1267,23 +1269,23 @@
       #detail-tab-finances .bft-row-simple,
       #detail-tab-finances .bft-subgroup {
         padding: 10px 20px !important;
-        margin: 0 4px !important;
-        width: calc(100% - 8px) !important;
+        margin: 0 !important;
+        width: 100% !important;
         box-sizing: border-box !important;
-        border-radius: 8px !important;
+        border-radius: 0 !important;
         border-top: 1px solid var(--border-strong) !important;
         transition: background 0.15s ease !important;
       }
       #detail-tab-finances .bft-row-simple:first-child, #detail-tab-finances .bft-subgroup:first-child { border-top: none !important; }
       #detail-tab-finances .bft-row-simple:hover { background: var(--surface-2) !important; }
-      #detail-tab-finances .bft-row { padding: 10px 20px !important; margin: 0 4px !important; width: calc(100% - 8px) !important; box-sizing: border-box !important; border-radius: 8px !important; border-top: 1px solid var(--border-strong) !important; }
+      #detail-tab-finances .bft-row { padding: 10px 20px !important; margin: 0 !important; width: 100% !important; box-sizing: border-box !important; border-radius: 0 !important; border-top: 1px solid var(--border-strong) !important; }
       #detail-tab-finances .bft-row:hover { background: var(--surface-2) !important; }
       #detail-tab-finances .bft-mini-row {
         padding: 11px 20px !important;
-        margin: 0 4px !important;
-        width: calc(100% - 8px) !important;
+        margin: 0 !important;
+        width: 100% !important;
         box-sizing: border-box !important;
-        border-radius: 8px !important;
+        border-radius: 0 !important;
         border-top: 1px solid var(--border-strong) !important;
         font-size: 14px !important;
         transition: background 0.15s ease !important;
@@ -1291,23 +1293,14 @@
       #detail-tab-finances .bft-mini-row:first-child { border-top: none !important; }
       #detail-tab-finances .bft-mini-row:hover { background: var(--surface-2) !important; }
       #detail-tab-finances .bft-mini-row span:first-child { color: var(--text) !important; }
-      /* Chiffres cles + Recapitulatif + detail comptable (apres vente) : un seul bloc, comme la section avant vente */
       #detail-tab-finances #fin-frozen-table-wrap {
-        background: var(--surface) !important;
-        border-radius: 0 !important;
-        box-shadow: var(--card-shadow) !important;
         padding: 0 0 8px !important;
         margin-bottom: 0 !important;
         margin-top: 0 !important;
-        overflow: hidden !important;
       }
       #detail-tab-finances #fin-comptable-wrap {
-        background: var(--surface) !important;
-        border-radius: 0 0 var(--card-radius) var(--card-radius) !important;
-        box-shadow: var(--card-shadow) !important;
-        padding: 0 0 8px !important;
+        padding: 0 0 20px !important;
         margin-top: 0 !important;
-        overflow: hidden !important;
       }
       #detail-tab-finances #fin-frozen-table-wrap .bft-mini-table,
       #detail-tab-finances #fin-comptable-wrap .bft-mini-table {
@@ -2371,14 +2364,6 @@
           <button onclick="unlockFinanceForEdit()" style="background:none;border:1px solid var(--success);color:var(--success);border-radius:9999px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;flex-shrink:0;">Modifier</button>
         </div>
 
-        <!-- Widget prix de revient / vente / marge : visible uniquement une fois la vente validée (figee) -->
-        <div id="fin-stats-row" style="display:none;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;">
-          <div class="bft-card-title fin-stats-title">Chiffres clés</div>
-          <div class="bft-stat"><div class="bft-stat-lbl">Prix de revient</div><div id="stat-revient" class="bft-stat-val">—</div></div>
-          <div class="bft-stat"><div class="bft-stat-lbl">Prix de vente</div><div id="stat-vente" class="bft-stat-val">—</div></div>
-          <div class="bft-stat"><div class="bft-stat-lbl">Marge</div><div id="stat-marge" class="bft-stat-val">—</div></div>
-        </div>
-
         <!-- Section editable : un seul tableau continu, visible tant que la vente n'est pas figee -->
         <div id="fin-editable-section">
           <div class="bft-card">
@@ -2413,22 +2398,6 @@
           </div>
         </div>
 
-        <!-- Tableau recapitulatif figé : visible uniquement une fois la vente validee -->
-        <div id="fin-frozen-table-wrap" style="display:none;">
-          <div class="bft-card-title">Récapitulatif de la vente</div>
-          <div class="bft-mini-table">
-            <div class="bft-mini-row"><span>Date d'achat</span><span id="fz-achat-date">—</span></div>
-            <div class="bft-mini-row"><span>Date de vente</span><span id="fz-vente-date">—</span></div>
-            <div class="bft-mini-row"><span>Prix d'achat</span><span id="fz-achat">—</span></div>
-            <div class="bft-mini-row"><span>Prix de vente cible</span><span id="fz-vente-cible">—</span></div>
-            <div class="bft-mini-row"><span>Frais sans TVA</span><span id="fz-sans-tva">—</span></div>
-            <div id="fz-sansTva-detail"></div>
-            <div class="bft-mini-row"><span>Frais soumis à la TVA</span><span id="fz-avec-tva">—</span></div>
-            <div id="fz-avecTva-detail"></div>
-            <div class="bft-mini-row"><span>Carte grise</span><span id="fz-cg">—</span></div>
-          </div>
-        </div>
-
         <input type="hidden" id="detail-marge-cible-input" value="15">
         <span id="detail-marge" style="display:none;"></span><span id="detail-marge-pct" style="display:none;"></span>
 
@@ -2438,17 +2407,44 @@
           Valider la vente
         </button>
 
-        <!-- Détail comptable : visible uniquement une fois la vente validée (figee) -->
-        <div id="fin-comptable-wrap" style="display:none;">
-          <div class="fin-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l2 2"/></svg><span>Détail comptable</span></div>
-          <div class="bft-mini-table">
-            <div class="bft-mini-row"><span>Marge TTC</span><span id="ind-marge-ttc">—</span></div>
-            <div class="bft-mini-row"><span>Marge HT</span><span id="ind-marge-ht">—</span></div>
-            <div class="bft-mini-row"><span>TVA sur marge (20%)</span><span id="ind-tva-marge">—</span></div>
-            <div class="bft-mini-row"><span>% de la marge</span><span id="ind-pct-marge">—</span></div>
-            <div class="bft-mini-row"><span>Bénéf. net comptable</span><span id="ind-benef-net">—</span></div>
-            <div class="bft-mini-row"><span>Trésorerie</span><span id="ind-tresorerie">—</span></div>
-            <div class="bft-mini-row"><span>% marge trésorerie</span><span id="ind-pct-tresorerie">—</span></div>
+        <!-- Bloc unique apres vente : chiffres cles + recapitulatif + detail comptable -->
+        <div id="fin-postsale-block">
+          <!-- Widget prix de revient / vente / marge : visible uniquement une fois la vente validée (figee) -->
+          <div id="fin-stats-row" style="display:none;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;">
+            <div class="bft-card-title fin-stats-title">Chiffres clés</div>
+            <div class="bft-stat"><div class="bft-stat-lbl">Prix de revient</div><div id="stat-revient" class="bft-stat-val">—</div></div>
+            <div class="bft-stat"><div class="bft-stat-lbl">Prix de vente</div><div id="stat-vente" class="bft-stat-val">—</div></div>
+            <div class="bft-stat"><div class="bft-stat-lbl">Marge</div><div id="stat-marge" class="bft-stat-val">—</div></div>
+          </div>
+
+          <!-- Tableau recapitulatif figé : visible uniquement une fois la vente validee -->
+          <div id="fin-frozen-table-wrap" style="display:none;">
+            <div class="bft-card-title">Récapitulatif de la vente</div>
+            <div class="bft-mini-table">
+              <div class="bft-mini-row"><span>Date d'achat</span><span id="fz-achat-date">—</span></div>
+              <div class="bft-mini-row"><span>Date de vente</span><span id="fz-vente-date">—</span></div>
+              <div class="bft-mini-row"><span>Prix d'achat</span><span id="fz-achat">—</span></div>
+              <div class="bft-mini-row"><span>Prix de vente cible</span><span id="fz-vente-cible">—</span></div>
+              <div class="bft-mini-row"><span>Frais sans TVA</span><span id="fz-sans-tva">—</span></div>
+              <div id="fz-sansTva-detail"></div>
+              <div class="bft-mini-row"><span>Frais soumis à la TVA</span><span id="fz-avec-tva">—</span></div>
+              <div id="fz-avecTva-detail"></div>
+              <div class="bft-mini-row"><span>Carte grise</span><span id="fz-cg">—</span></div>
+            </div>
+          </div>
+
+          <!-- Détail comptable : visible uniquement une fois la vente validée (figee) -->
+          <div id="fin-comptable-wrap" style="display:none;">
+            <div class="fin-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l2 2"/></svg><span>Détail comptable</span></div>
+            <div class="bft-mini-table">
+              <div class="bft-mini-row"><span>Marge TTC</span><span id="ind-marge-ttc">—</span></div>
+              <div class="bft-mini-row"><span>Marge HT</span><span id="ind-marge-ht">—</span></div>
+              <div class="bft-mini-row"><span>TVA sur marge (20%)</span><span id="ind-tva-marge">—</span></div>
+              <div class="bft-mini-row"><span>% de la marge</span><span id="ind-pct-marge">—</span></div>
+              <div class="bft-mini-row"><span>Bénéf. net comptable</span><span id="ind-benef-net">—</span></div>
+              <div class="bft-mini-row"><span>Trésorerie</span><span id="ind-tresorerie">—</span></div>
+              <div class="bft-mini-row"><span>% marge trésorerie</span><span id="ind-pct-tresorerie">—</span></div>
+            </div>
           </div>
         </div>
 
