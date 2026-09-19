@@ -239,6 +239,7 @@
     .btn-danger-soft:active { transform: scale(0.98); }
     /* .btn-success-block = action de validation positive pleine largeur (ex: Valider la vente) */
     .btn-success-block { width: 100%; padding: 14px; background: var(--success); color: #fff; border: none; border-radius: 9999px; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .fin-finalize-wrap { padding: 16px; }
     /* Rail Planning "À venir" — masqué par défaut (mobile), visible desktop */
     #planning-rail { display: none; }
     .planning-rail-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 14px; }
@@ -1320,6 +1321,7 @@
         margin-bottom: 0 !important;
       }
       #detail-tab-finances #finalize-sale-btn { border-radius: 12px !important; }
+      #detail-tab-finances .fin-finalize-wrap { padding: 20px !important; margin-top: 8px !important; }
       /* Clientele desktop : un seul bloc (comme Finances avant vente), grille 2 colonnes pour les champs */
       #detail-tab-clients .bft-card {
         display: grid !important;
@@ -2391,17 +2393,19 @@
 
             <div class="bft-group"><span>Autres frais</span></div>
             <div class="bft-row-simple"><span class="bft-name">Carte grise</span><input type="number" id="detail-cg-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="bft-inp-simple"></div>
+
+            <!-- Valider la vente : action finale du bloc, visible tant que la vente n'est pas validée -->
+            <div class="fin-finalize-wrap">
+              <button id="finalize-sale-btn" onclick="openFinalizeSaleModal()" class="btn-success-block">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                Valider la vente
+              </button>
+            </div>
           </div>
         </div>
 
         <input type="hidden" id="detail-marge-cible-input" value="15">
         <span id="detail-marge" style="display:none;"></span><span id="detail-marge-pct" style="display:none;"></span>
-
-        <!-- Valider la vente : visible tant que la vente n'est pas validée -->
-        <button id="finalize-sale-btn" onclick="openFinalizeSaleModal()" class="btn-success-block" style="margin-bottom:16px;">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-          Valider la vente
-        </button>
 
         <!-- Bloc unique apres vente : chiffres cles + recapitulatif + detail comptable -->
         <div id="fin-postsale-block">
