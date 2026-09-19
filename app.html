@@ -1155,20 +1155,48 @@
         min-height: 0 !important;
         overflow-y: auto !important;
       }
-      #detail-tab-inforight { padding: 20px 28px 28px !important; }
-      /* Fiche unifiee : version compacte sur desktop pour tenir sans scroll (pas assez de contenu pour justifier l'echelle mobile) */
-      #detail-tab-inforight .ntask-section-label { padding: 12px 4px 4px !important; font-size: 11.5px !important; }
-      #detail-tab-inforight .ntask-section-label-primary { font-size: 13px !important; padding-top: 4px !important; }
-      #detail-tab-inforight .ntask-row-label { font-size: 12.5px !important; }
-      #detail-tab-inforight .ntask-row-val .vsg-value { font-size: 13.5px !important; }
-      #detail-tab-inforight .ntask-row.ntask-row-hero .ntask-row-label { font-size: 12.5px !important; }
-      #detail-tab-inforight .ntask-row.ntask-row-hero .ntask-row-val .vsg-value { font-size: 16px !important; }
-      #detail-tab-inforight .ntask-row { min-height: 34px !important; padding: 0 4px !important; }
-      #detail-tab-inforight .ntask-row.ntask-row-hero { min-height: 38px !important; }
-      #detail-tab-inforight .ntask-sep { margin-left: 4px !important; }
-      #detail-tab-inforight .dt-notes-frame { padding: 8px 10px !important; }
-      #detail-tab-inforight #detail-notes { font-size: 13px !important; }
-      #detail-tab-inforight .dt-info-edit-fab { width: 26px !important; height: 26px !important; top: 6px !important; right: 6px !important; }
+      #detail-tab-inforight { padding: 24px 28px 32px !important; }
+      /* Fiche unifiee sur desktop : vraie mise en page bureau (grille de fiches), pas juste la liste mobile retrecie */
+      #detail-tab-inforight .dt-info-card {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 2px 24px !important;
+        padding: 24px !important;
+      }
+      #detail-tab-inforight .ntask-sep { display: none !important; }
+      #detail-tab-inforight .ntask-row.ntask-row-static { grid-column: 1 / -1 !important; padding: 0 0 4px !important; }
+      #detail-tab-inforight .ntask-section-label {
+        grid-column: 1 / -1 !important;
+        padding: 18px 0 8px !important;
+        margin-top: 4px !important;
+        border-top: 1px solid var(--border) !important;
+        font-size: 11px !important;
+      }
+      #detail-tab-inforight .ntask-section-label-primary { font-size: 12px !important; border-top: none !important; margin-top: 0 !important; padding-top: 0 !important; }
+      #detail-tab-inforight .ntask-row:not(.ntask-row-static) {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        justify-content: center !important;
+        gap: 3px !important;
+        min-height: 0 !important;
+        padding: 6px 10px !important;
+        margin: 0 -10px !important;
+        border-radius: 8px !important;
+        transition: background 0.15s ease !important;
+      }
+      #detail-tab-inforight .dt-info-card.edit-hint .ntask-row:not(.ntask-row-static):hover { background: var(--surface-2) !important; }
+      #detail-tab-inforight .ntask-row-label { font-size: 10.5px !important; text-transform: uppercase !important; letter-spacing: 0.3px !important; }
+      #detail-tab-inforight .ntask-row-val { width: 100% !important; }
+      #detail-tab-inforight .ntask-row-val .vsg-value { font-size: 14px !important; white-space: normal !important; }
+      #detail-tab-inforight .ntask-row .chev { display: none !important; }
+      #detail-tab-inforight .ntask-row.ntask-row-hero { text-align: center !important; align-items: center !important; }
+      #detail-tab-inforight .ntask-row.ntask-row-hero .ntask-row-val { display: flex !important; justify-content: center !important; }
+      #detail-tab-inforight .ntask-row.ntask-row-hero .ntask-row-label { font-size: 10.5px !important; }
+      #detail-tab-inforight .ntask-row.ntask-row-hero .ntask-row-val .vsg-value { font-size: 19px !important; font-weight: 800 !important; }
+      #detail-tab-inforight .dt-notes-frame { padding: 10px 12px !important; }
+      #detail-tab-inforight #detail-notes { font-size: 13.5px !important; }
+      #detail-tab-inforight .dt-info-edit-fab { top: 14px !important; right: 14px !important; }
       #tab-infos, #tab-inforight, #tab-finances, #tab-clients { display: none !important; }
       #detail-tab-dropdown-desktop { display: flex !important; background:var(--surface-2) !important; border:1px solid var(--border) !important; box-shadow:none !important; }
       #detail-tab-clients {
