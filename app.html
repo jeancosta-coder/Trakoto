@@ -1253,6 +1253,10 @@
         letter-spacing: 0.6px !important;
       }
       #detail-tab-finances .bft-card > .bft-group:first-child { padding-top: 20px !important; }
+      /* Pas de trait sur la premiere ligne d'une section (juste apres le titre) : uniquement entre les lignes d'une meme section */
+      #detail-tab-finances .bft-group + .bft-row-simple,
+      #detail-tab-finances .bft-group + .bft-subgroup,
+      #detail-tab-finances .bft-group + .bft-row { border-top: none !important; }
       /* Titres de sections (avant + apres vente) : meme traitement, texte plus gros/gras que le reste. Pas de trait sur les titres : uniquement entre les lignes d'une meme section. */
       #detail-tab-finances .bft-card-title,
       #detail-tab-finances .fin-section-label {
