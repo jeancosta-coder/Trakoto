@@ -1271,10 +1271,12 @@
         width: calc(100% - 8px) !important;
         box-sizing: border-box !important;
         border-radius: 8px !important;
+        border-top: 1px solid var(--border-strong) !important;
         transition: background 0.15s ease !important;
       }
+      #detail-tab-finances .bft-row-simple:first-child, #detail-tab-finances .bft-subgroup:first-child { border-top: none !important; }
       #detail-tab-finances .bft-row-simple:hover { background: var(--surface-2) !important; }
-      #detail-tab-finances .bft-row { padding: 10px 20px !important; margin: 0 4px !important; width: calc(100% - 8px) !important; box-sizing: border-box !important; border-radius: 8px !important; }
+      #detail-tab-finances .bft-row { padding: 10px 20px !important; margin: 0 4px !important; width: calc(100% - 8px) !important; box-sizing: border-box !important; border-radius: 8px !important; border-top: 1px solid var(--border-strong) !important; }
       #detail-tab-finances .bft-row:hover { background: var(--surface-2) !important; }
       #detail-tab-finances .bft-mini-row {
         padding: 11px 20px !important;
@@ -1282,10 +1284,13 @@
         width: calc(100% - 8px) !important;
         box-sizing: border-box !important;
         border-radius: 8px !important;
+        border-top: 1px solid var(--border-strong) !important;
         font-size: 14px !important;
         transition: background 0.15s ease !important;
       }
+      #detail-tab-finances .bft-mini-row:first-child { border-top: none !important; }
       #detail-tab-finances .bft-mini-row:hover { background: var(--surface-2) !important; }
+      #detail-tab-finances .bft-mini-row span:first-child { color: var(--text) !important; }
       /* Chiffres cles + Recapitulatif + detail comptable (apres vente) : un seul bloc, comme la section avant vente */
       #detail-tab-finances #fin-frozen-table-wrap {
         background: var(--surface) !important;
