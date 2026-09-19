@@ -427,6 +427,8 @@
     .org-col-body { display: flex; flex-direction: column; gap: 7px; flex: 1; min-height: 0; overflow-y: auto; transition: background 0.15s ease; border-radius: 12px; -webkit-overflow-scrolling: touch; }
     .org-col-body.org-drop-hover { background: var(--accent-soft); outline: 2px dashed var(--accent); outline-offset: -2px; }
     .org-card { background: var(--surface); border-radius: 14px; padding: 13px 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); display: flex; align-items: center; gap: 10px; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; flex-shrink: 0; }
+    @keyframes orgCardFlash { 0%, 100% { box-shadow: 0 1px 2px rgba(0,0,0,0.04); } 25%, 75% { box-shadow: 0 0 0 2px var(--accent); } }
+    .org-card-highlight { animation: orgCardFlash 1.4s ease; }
     .org-card-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
     .org-card-text { flex: 1; min-width: 0; }
     .org-card-name { font-size: 14.5px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -2083,6 +2085,9 @@
           <span id="org-prestataire-dropdown-label" style="font-size:15px;font-weight:600;color:var(--text);">Aucun prestataire</span>
           <span id="org-prestataire-dropdown-icon" style="display:flex;color:var(--text2);opacity:0.7;"><svg width="11" height="11" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="2,3 5,7 8,3"/></svg></span>
         </div>
+        <button type="button" onclick="toggleOrgSearchPopover(event)" id="org-search-btn" title="Rechercher un véhicule" style="flex-shrink:0;width:44px;height:44px;background:var(--surface);box-shadow:var(--card-shadow);border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text);transition:background 0.2s;" onmouseover="this.style.background='var(--surface-3)'" onmouseout="this.style.background='var(--surface)'">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
         <button type="button" id="org-add-vehicle-btn-desktop" class="desktop-only" onclick="orgFabClick(this)" style="display:none;flex-shrink:0;align-items:center;gap:6px;background:var(--accent);color:var(--accent-contrast);border:none;border-radius:9999px;padding:12px 18px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;">
           <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="var(--accent-contrast)" stroke-width="2.2" stroke-linecap="round"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg>
           Ajouter un véhicule
@@ -2951,6 +2956,55 @@ function renderOrgBoard(){
       <div class="org-col-body" data-col="${col.k}">${cards}</div>
     </div>`;
   }).join('');
+}
+
+function toggleOrgSearchPopover(e){
+  e.stopPropagation();
+  const btn = document.getElementById('org-search-btn');
+  if(document.getElementById('anchored-menu')){ closeAnchoredMenu(); return; }
+  const html = `
+    <div style="padding:10px;width:280px;max-height:340px;overflow-y:auto;box-sizing:border-box;">
+      <input type="text" id="org-search-input" placeholder="Rechercher un véhicule..." oninput="filterOrgSearch()" style="width:100%;padding:9px 10px;background:var(--surface-2);border:none;border-radius:8px;font-size:14px;color:var(--text);outline:none;box-sizing:border-box;margin-bottom:6px;">
+      <div id="org-search-results"></div>
+    </div>`;
+  openAnchoredMenu(btn, html);
+  setTimeout(() => document.getElementById('org-search-input')?.focus(), 0);
+}
+function filterOrgSearch(){
+  const q = (document.getElementById('org-search-input')?.value || '').trim().toLowerCase();
+  const resultsEl = document.getElementById('org-search-results');
+  if(!resultsEl) return;
+  if(!q){ resultsEl.innerHTML = ''; return; }
+  const matches = orgEntries
+    .map(e => ({ e, v: vehicles.find(x => String(x.id) === String(e.vehicleId)) }))
+    .filter(({v}) => v && ((v.marque + ' ' + v.modele).toLowerCase().includes(q) || (v.numVo || '').toLowerCase().includes(q)))
+    .slice(0, 30);
+  if(matches.length === 0){ resultsEl.innerHTML = '<div style="text-align:center;padding:16px 8px;color:var(--text2);font-size:13px;">Aucun résultat</div>'; return; }
+  resultsEl.innerHTML = matches.map(({e, v}) => {
+    const color = orgThemeColor(e.theme);
+    const p = prestataires.find(x => x.id === e.prestataireId);
+    const colLabel = (ORG_COLUMNS.find(c => c.k === e.status) || {}).l || '';
+    return `<div onclick="goToOrgSearchResult('${e.id}')" style="display:flex;align-items:center;gap:8px;padding:8px 6px;cursor:pointer;border-radius:8px;" onmouseover="this.style.background='var(--surface-2)'" onmouseout="this.style.background='transparent'">
+      <div style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0;"></div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13.5px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(v.marque + ' ' + v.modele)}</div>
+        <div style="font-size:11.5px;color:var(--text2);margin-top:1px;">${p ? 'Chez ' + escapeHtml(p.nom) : ''}${colLabel ? ' · ' + colLabel : ''}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function goToOrgSearchResult(entryId){
+  closeAnchoredMenu();
+  const entry = orgEntries.find(x => x.id === entryId);
+  if(!entry) return;
+  selectPrestataire(entry.prestataireId);
+  setTimeout(() => {
+    const card = document.querySelector(`.org-card[data-entry-id="${entryId}"]`);
+    if(!card) return;
+    card.scrollIntoView({behavior:'smooth', block:'center'});
+    card.classList.add('org-card-highlight');
+    setTimeout(() => card.classList.remove('org-card-highlight'), 1400);
+  }, 0);
 }
 
 function removeOrgEntry(id){
