@@ -1170,9 +1170,12 @@
         padding: 18px 0 8px !important;
         margin-top: 4px !important;
         border-top: 1px solid var(--border) !important;
-        font-size: 11px !important;
+        font-size: 13px !important;
+        font-weight: 800 !important;
+        color: var(--text) !important;
+        letter-spacing: 0.3px !important;
       }
-      #detail-tab-inforight .ntask-section-label-primary { font-size: 12px !important; border-top: none !important; margin-top: 0 !important; padding-top: 0 !important; }
+      #detail-tab-inforight .ntask-section-label-primary { font-size: 13px !important; border-top: none !important; margin-top: 0 !important; padding-top: 0 !important; }
       #detail-tab-inforight .ntask-row:not(.ntask-row-static) {
         display: flex !important;
         flex-direction: column !important;
@@ -1214,16 +1217,18 @@
       #detail-tab-finances #fin-stats-row { gap: 16px !important; margin-bottom: 20px !important; }
       #detail-tab-finances .bft-card { padding: 0 !important; }
       #detail-tab-finances .bft-group {
-        background: transparent !important;
+        background: var(--surface-2) !important;
         color: var(--text) !important;
-        border-top: 1px solid var(--border) !important;
+        border-top: none !important;
         border-bottom: none !important;
-        padding: 18px 20px 8px !important;
-        font-size: 13px !important;
+        margin: 22px 12px 8px !important;
+        padding: 8px 14px !important;
+        border-radius: 8px !important;
+        font-size: 12.5px !important;
         font-weight: 800 !important;
-        letter-spacing: 0.3px !important;
+        letter-spacing: 0.4px !important;
       }
-      #detail-tab-finances .bft-card > .bft-group:first-child { border-top: none !important; padding-top: 4px !important; }
+      #detail-tab-finances .bft-card > .bft-group:first-child { margin-top: 12px !important; }
       /* Titres de sections (avant + apres vente) plus visibles que le reste du contenu */
       #detail-tab-finances .bft-card-title,
       #detail-tab-finances .fin-section-label {
@@ -1246,13 +1251,6 @@
       #detail-tab-finances .bft-row-simple:hover { background: var(--surface-2) !important; }
       #detail-tab-finances .bft-row { padding: 10px 20px !important; margin: 0 4px !important; width: calc(100% - 8px) !important; box-sizing: border-box !important; border-radius: 8px !important; }
       #detail-tab-finances .bft-row:hover { background: var(--surface-2) !important; }
-      /* Recapitulatif + detail comptable (apres vente) : meme habillage carte que les sections avant vente */
-      #detail-tab-finances .bft-mini-table {
-        background: var(--surface) !important;
-        border-radius: var(--card-radius) !important;
-        box-shadow: var(--card-shadow) !important;
-        padding: 4px 0 !important;
-      }
       #detail-tab-finances .bft-mini-row {
         padding: 11px 20px !important;
         margin: 0 4px !important;
@@ -1263,6 +1261,41 @@
         transition: background 0.15s ease !important;
       }
       #detail-tab-finances .bft-mini-row:hover { background: var(--surface-2) !important; }
+      /* Recapitulatif + detail comptable (apres vente) : regroupes dans un seul bloc, comme la section avant vente */
+      #detail-tab-finances #fin-frozen-table-wrap {
+        background: var(--surface) !important;
+        border-radius: var(--card-radius) var(--card-radius) 0 0 !important;
+        box-shadow: var(--card-shadow) !important;
+        padding: 4px 0 8px !important;
+        margin-bottom: 0 !important;
+      }
+      #detail-tab-finances #fin-comptable-wrap {
+        background: var(--surface) !important;
+        border-radius: 0 0 var(--card-radius) var(--card-radius) !important;
+        box-shadow: var(--card-shadow) !important;
+        padding: 0 0 8px !important;
+        margin-top: 0 !important;
+        border-top: 1px solid var(--border) !important;
+      }
+      #detail-tab-finances #fin-frozen-table-wrap .bft-card-title,
+      #detail-tab-finances #fin-comptable-wrap .fin-section-label {
+        background: var(--surface-2) !important;
+        color: var(--text) !important;
+        margin: 12px 12px 8px !important;
+        padding: 8px 14px !important;
+        border-radius: 8px !important;
+        font-size: 12.5px !important;
+        font-weight: 800 !important;
+        letter-spacing: 0.4px !important;
+      }
+      #detail-tab-finances #fin-frozen-table-wrap .bft-mini-table,
+      #detail-tab-finances #fin-comptable-wrap .bft-mini-table {
+        background: transparent !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+        margin-bottom: 0 !important;
+      }
       #detail-tab-finances .fin-section-label { margin: 20px 4px 8px !important; padding: 0 16px !important; }
       #detail-tab-finances #finalize-sale-btn { border-radius: 12px !important; }
       /* Clientele desktop : grille 2 colonnes pour les champs, comme un formulaire bureau */
