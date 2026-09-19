@@ -239,6 +239,11 @@
     .btn-danger-soft:active { transform: scale(0.98); }
     /* .btn-success-block = action de validation positive pleine largeur (ex: Valider la vente) */
     .btn-success-block { width: 100%; padding: 14px; background: var(--success); color: #fff; border: none; border-radius: 9999px; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    /* Transition glissement lors du changement de page du planning (fleches prev/next + swipe mobile) */
+    @keyframes planSlideInNext { from { transform: translateX(28px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @keyframes planSlideInPrev { from { transform: translateX(-28px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    .plan-slide-in-next { animation: planSlideInNext 0.22s cubic-bezier(0.25,0.46,0.45,0.94) both; }
+    .plan-slide-in-prev { animation: planSlideInPrev 0.22s cubic-bezier(0.25,0.46,0.45,0.94) both; }
     /* Rail Planning "À venir" — masqué par défaut (mobile), visible desktop */
     #planning-rail { display: none; }
     .planning-rail-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 14px; }
@@ -4591,7 +4596,17 @@ function shiftPlanningDate(direction){
   else if(viewMode === '1') currentDisplayDate.setDate(currentDisplayDate.getDate() + direction);
   else if(viewMode === '3') currentDisplayDate.setDate(currentDisplayDate.getDate() + (direction * 3));
   else currentDisplayDate.setDate(currentDisplayDate.getDate() + (direction * 7));
+  window.__planSlideDir = direction;
   renderPlanning();
+}
+
+function applyPlanningSlideAnim(){
+  const el = document.getElementById('calendar-content');
+  if(!el || !window.__planSlideDir) return;
+  el.classList.remove('plan-slide-in-next', 'plan-slide-in-prev');
+  void el.offsetWidth;
+  el.classList.add(window.__planSlideDir > 0 ? 'plan-slide-in-next' : 'plan-slide-in-prev');
+  window.__planSlideDir = null;
 }
 
 function goToPlanningToday(){
@@ -4687,6 +4702,7 @@ function handleSwipeEnd(e){
   else if(viewMode === '1') currentDisplayDate.setDate(currentDisplayDate.getDate() + direction);
   else if(viewMode === '3') currentDisplayDate.setDate(currentDisplayDate.getDate() + (direction * 3));
   else currentDisplayDate.setDate(currentDisplayDate.getDate() + (direction * 7));
+  window.__planSlideDir = direction;
   renderPlanning();
 }
 
@@ -4722,6 +4738,7 @@ function renderMonthView(date){
   }
   html += '</div></div>';
   document.getElementById('calendar-content').innerHTML = html;
+  applyPlanningSlideAnim();
 }
 
 function renderWeekView(date){
@@ -4867,6 +4884,7 @@ function renderWeekView(date){
   </div>`;
 
   document.getElementById('calendar-content').innerHTML = html;
+  applyPlanningSlideAnim();
 
   // Scroll vers l'heure actuelle
   const scrollArea = document.getElementById('calendar-scroll-area');
