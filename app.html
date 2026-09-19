@@ -1215,13 +1215,25 @@
       #detail-tab-finances .bft-card { padding: 0 !important; }
       #detail-tab-finances .bft-group {
         background: transparent !important;
-        color: var(--text2) !important;
+        color: var(--text) !important;
         border-top: 1px solid var(--border) !important;
         border-bottom: none !important;
         padding: 18px 20px 8px !important;
-        font-size: 11px !important;
+        font-size: 13px !important;
+        font-weight: 800 !important;
+        letter-spacing: 0.3px !important;
       }
       #detail-tab-finances .bft-card > .bft-group:first-child { border-top: none !important; padding-top: 4px !important; }
+      /* Titres de sections (avant + apres vente) plus visibles que le reste du contenu */
+      #detail-tab-finances .bft-card-title,
+      #detail-tab-finances .fin-section-label {
+        color: var(--text) !important;
+        font-size: 13px !important;
+        font-weight: 800 !important;
+        letter-spacing: 0.3px !important;
+      }
+      #detail-tab-finances .bft-card-title { margin: 0 4px 10px !important; }
+      #detail-tab-finances #fin-comptable-wrap .fin-section-label { margin: 24px 4px 10px !important; }
       #detail-tab-finances .bft-row-simple,
       #detail-tab-finances .bft-subgroup {
         padding: 10px 20px !important;
