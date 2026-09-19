@@ -1314,7 +1314,19 @@
       #detail-tab-clients .bft-card > div:nth-child(4) { grid-column: span 1 !important; }
       #detail-tab-clients .bft-card:last-of-type { display: block !important; padding: 0 !important; }
       #detail-tab-clients #dtc-notes { padding: 18px 20px !important; min-height: 140px !important; }
-      #detail-tab-clients > div[style*="margin-bottom:16px"] { margin: 4px 4px 10px !important; }
+      /* Titres de section : meme bandeau que les pages Details et Finances */
+      #detail-tab-clients .dtc-section-label {
+        background: var(--surface-2) !important;
+        margin: 4px 4px 10px !important;
+        padding: 8px 14px !important;
+        border-radius: 8px !important;
+      }
+      #detail-tab-clients .dtc-section-label span {
+        font-size: 12.5px !important;
+        font-weight: 800 !important;
+        color: var(--text) !important;
+        letter-spacing: 0.4px !important;
+      }
       /* ── Finances desktop ── */
       .fin-section-label {
         display: flex !important;
@@ -2172,7 +2184,7 @@
       <button id="tab-inforight" onclick="switchDetailTab('inforight')" style="display:none;">Détails</button>
       <button id="tab-infos" onclick="switchDetailTab('infos')" style="display:none;">Détails</button>
       <button id="tab-finances" onclick="switchDetailTab('finances')" style="display:none;">Finances</button>
-      <button id="tab-clients" onclick="switchDetailTab('clients')" style="display:none;">Clientèle</button>
+      <button id="tab-clients" onclick="switchDetailTab('clients')" style="display:none;">Client</button>
       <div id="detail-tab-dropdown-desktop" class="desktop-only" onclick="openDetailTabMenuDesktop(this)" style="display:none;align-items:center;justify-content:space-between;gap:8px;background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--card-shadow);padding:10px 14px;cursor:pointer;">
         <span id="detail-tab-dropdown-desktop-label" style="font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;">Détails</span>
         <svg width="11" height="11" viewBox="0 0 10 10" fill="none" stroke="var(--text2)" stroke-width="2" stroke-linecap="round" style="opacity:0.7;flex-shrink:0;"><polyline points="2,3 5,7 8,3"/></svg>
@@ -2422,7 +2434,7 @@
 
       <!-- Onglet Clientele (mobile + desktop) -->
       <div id="detail-tab-clients" class="detail-tab-content" style="display:none;">
-        <div style="margin-bottom:16px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Informations client</span></div>
+        <div class="dtc-section-label" style="margin-bottom:16px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Informations client</span></div>
         <div class="bft-card" style="margin-bottom:20px;">
           <div style="padding:12px 16px;border-bottom:1px solid var(--border);">
             <div style="font-size:11px;color:var(--text2);margin-bottom:2px;">Nom</div>
@@ -2452,7 +2464,7 @@
           </div>
         </div>
 
-        <div style="margin-bottom:16px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Notes</span></div>
+        <div class="dtc-section-label" style="margin-bottom:16px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Notes</span></div>
         <div class="bft-card" style="margin-bottom:20px;">
           <textarea id="dtc-notes" placeholder="Notes sur le client..." onblur="saveClientField('notes', this.value)" style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:90px;resize:none;color:var(--text);background:transparent;padding:14px 16px;box-sizing:border-box;"></textarea>
         </div>
@@ -4182,8 +4194,8 @@ let currentDisplayDate = new Date();
 let planningIndex = {};
 
 const DETAIL_TABS = ['infos', 'finances'];
-const DETAIL_TAB_LABELS = {infos: 'Détails', finances: 'Finances', clients: 'Clientèle'};
-const DETAIL_TAB_LABELS_DESKTOP = {inforight: 'Détails', finances: 'Finances', clients: 'Clientèle'};
+const DETAIL_TAB_LABELS = {infos: 'Détails', finances: 'Finances', clients: 'Client'};
+const DETAIL_TAB_LABELS_DESKTOP = {inforight: 'Détails', finances: 'Finances', clients: 'Client'};
 function openDetailTabMenu(anchorEl){
   const html = Object.keys(DETAIL_TAB_LABELS).map(k => `<div class="ntask-opt" onclick="switchDetailTab('${k}');closeAnchoredMenu();"><span>${DETAIL_TAB_LABELS[k]}</span></div>`).join('');
   openAnchoredMenu(anchorEl, html);
