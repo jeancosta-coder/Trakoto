@@ -239,11 +239,6 @@
     .btn-danger-soft:active { transform: scale(0.98); }
     /* .btn-success-block = action de validation positive pleine largeur (ex: Valider la vente) */
     .btn-success-block { width: 100%; padding: 14px; background: var(--success); color: #fff; border: none; border-radius: 9999px; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
-    /* Transition glissement lors du changement de page du planning (fleches prev/next + swipe mobile) */
-    @keyframes planSlideInNext { from { transform: translateX(56px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-    @keyframes planSlideInPrev { from { transform: translateX(-56px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-    .plan-slide-in-next { animation: planSlideInNext 0.38s cubic-bezier(0.32,0.72,0,1) both; }
-    .plan-slide-in-prev { animation: planSlideInPrev 0.38s cubic-bezier(0.32,0.72,0,1) both; }
     /* Rail Planning "À venir" — masqué par défaut (mobile), visible desktop */
     #planning-rail { display: none; }
     .planning-rail-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 14px; }
@@ -4591,6 +4586,7 @@ function setDateAndViewDay(dateStr){
 function setViewMode(mode){ localStorage.setItem('at_planning_viewmode', mode); renderPlanning(); updateViewSelectorUI(mode); }
 
 function shiftPlanningDate(direction){
+  capturePlanningSnapshot();
   const viewMode = localStorage.getItem('at_planning_viewmode') || '3';
   if(viewMode === 'month') currentDisplayDate.setMonth(currentDisplayDate.getMonth() + direction);
   else if(viewMode === '1') currentDisplayDate.setDate(currentDisplayDate.getDate() + direction);
@@ -4600,13 +4596,42 @@ function shiftPlanningDate(direction){
   renderPlanning();
 }
 
-function applyPlanningSlideAnim(){
+function capturePlanningSnapshot(){
   const el = document.getElementById('calendar-content');
-  if(!el || !window.__planSlideDir) return;
-  el.classList.remove('plan-slide-in-next', 'plan-slide-in-prev');
-  void el.offsetWidth;
-  el.classList.add(window.__planSlideDir > 0 ? 'plan-slide-in-next' : 'plan-slide-in-prev');
+  if(!el) return;
+  const clone = el.cloneNode(true);
+  clone.removeAttribute('id');
+  clone.removeAttribute('ontouchstart');
+  clone.removeAttribute('ontouchend');
+  window.__planOldSnapshot = clone;
+}
+
+function applyPlanningSlideAnim(){
+  const dir = window.__planSlideDir;
+  const oldEl = window.__planOldSnapshot;
   window.__planSlideDir = null;
+  window.__planOldSnapshot = null;
+  const container = document.getElementById('calendar-container');
+  const newEl = document.getElementById('calendar-content');
+  if(!dir || !oldEl || !container || !newEl){ if(oldEl) oldEl.remove(); return; }
+  const dist = dir > 0 ? '-100%' : '100%';
+  const distIn = dir > 0 ? '100%' : '-100%';
+  const easing = 'transform 0.36s cubic-bezier(0.32,0.72,0,1)';
+  oldEl.style.cssText += 'position:absolute;top:0;left:0;width:100%;height:100%;z-index:2;transition:' + easing + ';';
+  container.appendChild(oldEl);
+  newEl.style.transition = 'none';
+  newEl.style.transform = `translateX(${distIn})`;
+  void newEl.offsetWidth;
+  newEl.style.transition = easing;
+  requestAnimationFrame(() => {
+    oldEl.style.transform = `translateX(${dist})`;
+    newEl.style.transform = 'translateX(0)';
+  });
+  setTimeout(() => {
+    oldEl.remove();
+    newEl.style.transition = '';
+    newEl.style.transform = '';
+  }, 380);
 }
 
 function goToPlanningToday(){
@@ -4696,6 +4721,7 @@ function handleSwipeEnd(e){
   const diffY = window.swipeStartY - e.changedTouches[0].clientY;
   const elapsed = Date.now() - window.swipeStartTime;
   if(Math.abs(diffY) > Math.abs(diffX) || Math.abs(diffX) < 40 || elapsed > 400) return;
+  capturePlanningSnapshot();
   const viewMode = localStorage.getItem('at_planning_viewmode') || '3';
   const direction = diffX > 0 ? 1 : -1;
   if(viewMode === 'month') currentDisplayDate.setMonth(currentDisplayDate.getMonth() + direction);
