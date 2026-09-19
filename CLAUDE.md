@@ -1,7 +1,14 @@
 # Trakoto (Autotrack) — Contexte pour Claude Code
 
-CRM de gestion de parc automobile pour marchands indépendants (négoce VO), déployé sur Netlify.
-Utilisateur : Jean Costa, non-développeur, écrit en français direct. Voir `docs/` pour le détail.
+CRM pour marchands indépendants de véhicules d'occasion (VO). Un marchand y suit son stock du bout en bout : achat d'un véhicule → remise en état (coûts, prestataires) → mise en vente → vente → marge réalisée. Les 5 vues (`docs/architecture.md`) couvrent chaque étape : Parc (stock), Planning (tâches/rdv), Organisation (suivi prestataires), Dashboard (marge, seuil de rentabilité), Compte.
+Déployé sur Netlify. Utilisateur : Jean Costa, non-développeur, écrit en français direct. Voir `docs/` pour le détail.
+
+Note nommage : le produit s'appelle "Trakoto" (titre de l'app), le repo/dossier s'appelle `autotrack` — même projet, deux noms.
+
+## Lancer en local / déployer
+
+- Preview locale : serveur `.claude/launch.json` (config `trakoto`, port 3456) — pas de build à lancer, sert les fichiers statiques tels quels.
+- Déploiement : tout `git push` sur `main` déploie directement en production via Netlify (pas de branche de preview, pas de review). Un commit cassé sur `app.html`/`payment.html` est visible immédiatement par l'utilisateur final.
 
 ## Stack (pas de build, pas de framework)
 
@@ -53,5 +60,5 @@ Historique des choix techniques : voir [docs/decisions.md](docs/decisions.md).
 
 - **Finalisation de vente & verrouillage finance** (`isFinanceLocked`, `unlockFinanceForEdit`, `openFinalizeSaleModal`, `venteValidee` dans `app.html`) : logique métier qui verrouille les champs finance après une vente validée. Une régression ici peut fausser des données financières réelles.
 - **Synchro localStorage ↔ Supabase** (`save()`, `syncToSupabase()`, `syncOrgToSupabase()`, `loadFromSupabase()` dans `app.html`) : pas de résolution de conflit, écrasement simple. Les données d'organisation (`prestataires`/`orgEntries`) sont stockées dans la table `vehicles` sous un id `_organisation` (bidouille assumée, voir `docs/decisions.md`) — ne pas "corriger" ça sans migration explicite, ça casserait les données existantes des utilisateurs.
-- **Paiement Stripe** (`payment.html`, `netlify/functions/create-subscription.js`) : logique de paiement réel (essai 14 jours, clé publique `pk_live`). Toute modif doit être testée avant push, ne jamais committer de clé secrète.
+- **Paiement Stripe** (`payment.html`, `netlify/functions/create-subscription.js`) : logique de paiement réel (essai 14 jours, clé publique `pk_live`). Toute modif doit être testée avant push, ne jamais committer de clé secrète. `STRIPE_SECRET_KEY` (`process.env`) est configurée côté dashboard Netlify, pas dans le repo — ne pas la chercher dans le code.
 - **Auth Supabase** (`sb.auth.onAuthStateChange`, `getSession` dans `app.html`) : n'écoute que l'event `SIGNED_OUT` pour éviter une boucle infinie — ne pas ajouter d'autres listeners sans vérifier ce risque.

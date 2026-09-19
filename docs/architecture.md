@@ -77,6 +77,14 @@ Pas de framework/store. Variables JS globales déclarées en tête du script app
 
 **Flux de données** : `localStorage` est la source de vérité immédiate (`at_vehicles`, `at_planning`, `at_prestataires`, `at_org_entries`), chargée au démarrage. Un objet `DataLayer` (~2600) encapsule le CRUD véhicules/planning avec une liste blanche de champs modifiables. `save()` (~2621) écrit en local puis déclenche `syncToSupabase()`/`syncOrgToSupabase()` en best-effort si `sbUser` existe — pas de gestion de conflit, écrasement simple.
 
+### Modèle de données véhicule
+
+Un élément du tableau `vehicles` (champs confirmés dans le code) :
+
+- Identité/specs : `numVo`, `year`, `km`, `carburant`, `transmission`, `puissance`, `couleur`, `gen`, `immatriculation`, `clesDouble`, `histoEntretien`
+- Finance : `achat` (prix d'achat), `vente` (prix de vente), `prepCost` (coût de remise en état) — marge = `vente - achat - prepCost`, `margeCible` (objectif de marge, %)
+- Statut : `statut` ∈ `'En cours'`, `'Prêt à vendre'`, `'Vendu'`
+
 ## Conventions CSS
 
 - **Breakpoint desktop officiel : `@media (min-width: 900px)`.** Autres breakpoints présents (ajustements mobiles fins uniquement) : `max-width: 899px`, `max-width: 768px`, `max-width: 480px`.
