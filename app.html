@@ -1217,7 +1217,24 @@
       #detail-tab-inforight .dt-info-wrap { padding: 0 !important; margin-bottom: 16px !important; }
       /* Finances desktop : grille de fiches, meme langage visuel que la fiche detail (inforight) */
       #detail-tab-finances { padding: 24px 28px 32px !important; }
-      #detail-tab-finances #fin-stats-row { gap: 16px !important; margin-bottom: 20px !important; }
+      /* Chiffres cles (apres vente) : premiere piece du bloc unique, avec Recapitulatif + Detail comptable */
+      #detail-tab-finances #fin-stats-row {
+        background: var(--surface) !important;
+        border-radius: var(--card-radius) var(--card-radius) 0 0 !important;
+        box-shadow: var(--card-shadow) !important;
+        gap: 0 !important;
+        margin-bottom: 0 !important;
+        padding: 0 0 12px !important;
+        overflow: hidden !important;
+      }
+      #detail-tab-finances #fin-stats-row .fin-stats-title { grid-column: 1 / -1 !important; margin-top: 20px !important; }
+      #detail-tab-finances #fin-stats-row .bft-stat {
+        background: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0 20px !important;
+      }
+      #detail-tab-finances #fin-stats-row .bft-stat:not(:first-child) { border-left: 1px solid var(--border) !important; }
       #detail-tab-finances .bft-card { padding: 0 !important; }
       #detail-tab-finances .bft-group {
         background: none !important;
@@ -1269,13 +1286,14 @@
         transition: background 0.15s ease !important;
       }
       #detail-tab-finances .bft-mini-row:hover { background: var(--surface-2) !important; }
-      /* Recapitulatif + detail comptable (apres vente) : regroupes dans un seul bloc, comme la section avant vente */
+      /* Chiffres cles + Recapitulatif + detail comptable (apres vente) : un seul bloc, comme la section avant vente */
       #detail-tab-finances #fin-frozen-table-wrap {
         background: var(--surface) !important;
-        border-radius: var(--card-radius) var(--card-radius) 0 0 !important;
+        border-radius: 0 !important;
         box-shadow: var(--card-shadow) !important;
         padding: 0 0 8px !important;
         margin-bottom: 0 !important;
+        margin-top: 0 !important;
         overflow: hidden !important;
       }
       #detail-tab-finances #fin-comptable-wrap {
@@ -2350,6 +2368,7 @@
 
         <!-- Widget prix de revient / vente / marge : visible uniquement une fois la vente validée (figee) -->
         <div id="fin-stats-row" style="display:none;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;">
+          <div class="bft-card-title fin-stats-title">Chiffres clés</div>
           <div class="bft-stat"><div class="bft-stat-lbl">Prix de revient</div><div id="stat-revient" class="bft-stat-val">—</div></div>
           <div class="bft-stat"><div class="bft-stat-lbl">Prix de vente</div><div id="stat-vente" class="bft-stat-val">—</div></div>
           <div class="bft-stat"><div class="bft-stat-lbl">Marge</div><div id="stat-marge" class="bft-stat-val">—</div></div>
