@@ -1,4 +1,4 @@
-# État d'avancement — Trakoto (Autotrack)
+# État d'avancement — Trakoto
 
 Dernière mise à jour : 2026-09-19. Ce fichier est un instantané, pas un journal en temps réel — croiser avec `git log` et `git status` pour l'état exact au moment présent.
 

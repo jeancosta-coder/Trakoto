@@ -1,4 +1,4 @@
-# Architecture technique — Trakoto (Autotrack)
+# Architecture technique — Trakoto
 
 Vue technique détaillée. Pour les règles de travail, voir [CLAUDE.md](../CLAUDE.md) à la racine.
 

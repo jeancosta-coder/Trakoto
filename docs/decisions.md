@@ -1,4 +1,4 @@
-# Décisions techniques — Trakoto (Autotrack)
+# Décisions techniques — Trakoto
 
 Choix structurants constatés dans le code et l'historique git, avec la raison connue quand elle est identifiable. Ne pas "corriger" ces points sans en avoir discuté — ce sont des choix assumés, pas des oublis.
 

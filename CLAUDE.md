@@ -1,9 +1,7 @@
-# Trakoto (Autotrack) — Contexte pour Claude Code
+# Trakoto — Contexte pour Claude Code
 
 CRM pour marchands indépendants de véhicules d'occasion (VO). Un marchand y suit son stock du bout en bout : achat d'un véhicule → remise en état (coûts, prestataires) → mise en vente → vente → marge réalisée. Les 5 vues (`docs/architecture.md`) couvrent chaque étape : Parc (stock), Planning (tâches/rdv), Organisation (suivi prestataires), Dashboard (marge, seuil de rentabilité), Compte.
 Déployé sur Netlify. Utilisateur : Jean Costa, non-développeur, écrit en français direct. Voir `docs/` pour le détail.
-
-Note nommage : le produit s'appelle "Trakoto" (titre de l'app), le repo/dossier s'appelle `autotrack` — même projet, deux noms.
 
 ## Lancer en local / déployer
 
