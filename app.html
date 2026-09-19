@@ -240,10 +240,10 @@
     /* .btn-success-block = action de validation positive pleine largeur (ex: Valider la vente) */
     .btn-success-block { width: 100%; padding: 14px; background: var(--success); color: #fff; border: none; border-radius: 9999px; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
     /* Transition glissement lors du changement de page du planning (fleches prev/next + swipe mobile) */
-    @keyframes planSlideInNext { from { transform: translateX(28px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-    @keyframes planSlideInPrev { from { transform: translateX(-28px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-    .plan-slide-in-next { animation: planSlideInNext 0.22s cubic-bezier(0.25,0.46,0.45,0.94) both; }
-    .plan-slide-in-prev { animation: planSlideInPrev 0.22s cubic-bezier(0.25,0.46,0.45,0.94) both; }
+    @keyframes planSlideInNext { from { transform: translateX(56px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @keyframes planSlideInPrev { from { transform: translateX(-56px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    .plan-slide-in-next { animation: planSlideInNext 0.38s cubic-bezier(0.32,0.72,0,1) both; }
+    .plan-slide-in-prev { animation: planSlideInPrev 0.38s cubic-bezier(0.32,0.72,0,1) both; }
     /* Rail Planning "À venir" — masqué par défaut (mobile), visible desktop */
     #planning-rail { display: none; }
     .planning-rail-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 14px; }
