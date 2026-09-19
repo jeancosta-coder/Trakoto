@@ -1179,7 +1179,7 @@
         text-transform: uppercase !important;
         letter-spacing: 0.5px !important;
       }
-      #detail-tab-inforight .ntask-section-label-primary { border-top: none !important; margin-top: -24px !important; }
+      /* "Informations principales" suit le bloc Notes dans la meme carte : garder l'espacement standard, pas de collage */
       #detail-tab-inforight .ntask-row:not(.ntask-row-static) {
         display: flex !important;
         flex-direction: column !important;
@@ -1300,12 +1300,12 @@
         display: grid !important;
         grid-template-columns: 1fr 1fr !important;
         gap: 0 20px !important;
-        padding: 4px 20px 20px !important;
+        padding: 0 20px 20px !important;
       }
       #detail-tab-clients .dtc-field { grid-column: span 1 !important; border-bottom: none !important; padding: 14px 0 !important; }
       #detail-tab-clients .dtc-field-bordered { border-bottom: 1px solid var(--border) !important; }
-      #detail-tab-clients .dtc-field:has(textarea) { grid-column: 1 / -1 !important; }
-      #detail-tab-clients #dtc-notes { padding: 18px 20px !important; min-height: 140px !important; }
+      #detail-tab-clients .dtc-field-notes { grid-column: 1 / -1 !important; padding: 6px 0 14px !important; }
+      #detail-tab-clients #dtc-notes { min-height: 140px !important; }
       /* Titres de section : bandeau accent, meme traitement fort-contraste que Details et Finances */
       #detail-tab-clients .dtc-section-label {
         grid-column: 1 / -1 !important;
@@ -1315,7 +1315,7 @@
         margin: 16px -20px 8px !important;
         padding: 10px 20px !important;
       }
-      #detail-tab-clients .dtc-section-label:first-child { margin-top: 4px !important; border-top: none !important; }
+      #detail-tab-clients .dtc-section-label:first-child { margin: 0 -20px 8px !important; border-top: none !important; }
       #detail-tab-clients .dtc-section-label span {
         font-size: 11px !important;
         font-weight: 800 !important;
@@ -1636,7 +1636,6 @@
       .dt-client-wrap { display: none !important; }
       /* Onglet Clientele : format plus compact sur mobile (evite l'effet trop large) */
       #detail-tab-clients .dtc-field { padding: 10px 14px !important; }
-      #detail-tab-clients .dtc-field:has(textarea) { padding: 0 !important; }
       /* Le titre de section est desormais dans la carte (edge-to-edge) : lui redonner un inset pour ne pas se faire couper par l'arrondi */
       #detail-tab-clients .dtc-section-label { padding: 14px 16px 6px !important; }
       #detail-tab-clients input, #detail-tab-clients textarea { font-size: 14px !important; }
@@ -2462,8 +2461,10 @@
             </button>
           </div>
           <div class="dtc-section-label"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Notes</span></div>
-          <div class="dtc-field" style="padding:0;">
-            <textarea id="dtc-notes" placeholder="Notes sur le client..." onblur="saveClientField('notes', this.value)" style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:90px;resize:none;color:var(--text);background:transparent;padding:14px 16px;box-sizing:border-box;"></textarea>
+          <div class="dtc-field dtc-field-notes">
+            <div class="dt-notes-frame">
+              <textarea id="dtc-notes" placeholder="Notes sur le client..." onblur="saveClientField('notes', this.value)" style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:90px;resize:none;color:var(--text);background:transparent;padding:0;box-sizing:border-box;"></textarea>
+            </div>
           </div>
         </div>
       </div>
