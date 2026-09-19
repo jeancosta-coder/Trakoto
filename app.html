@@ -1229,7 +1229,7 @@
         margin-bottom: 0 !important;
         padding: 0 0 12px !important;
       }
-      #detail-tab-finances #fin-stats-row .fin-stats-title { grid-column: 1 / -1 !important; margin-top: 20px !important; }
+      #detail-tab-finances #fin-stats-row .fin-stats-title { grid-column: 1 / -1 !important; border-top: none !important; }
       #detail-tab-finances #fin-stats-row .bft-stat {
         background: none !important;
         box-shadow: none !important;
@@ -1241,31 +1241,38 @@
       #detail-tab-finances .bft-group {
         background: none !important;
         color: var(--text) !important;
-        border-top: none !important;
+        border-top: 1px solid var(--border-strong) !important;
         border-bottom: none !important;
-        margin: 28px 20px 10px !important;
-        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 20px 20px 8px !important;
         font-size: 14px !important;
         font-weight: 800 !important;
         text-transform: uppercase !important;
         letter-spacing: 0.6px !important;
       }
-      #detail-tab-finances .bft-card > .bft-group:first-child { margin-top: 20px !important; }
+      #detail-tab-finances .bft-card > .bft-group:first-child { border-top: none !important; padding-top: 20px !important; }
+      /* Pas de trait juste apres un titre de section : le trait est au-dessus du titre, pas entre le titre et sa premiere ligne */
+      #detail-tab-finances .bft-group + .bft-row-simple,
+      #detail-tab-finances .bft-group + .bft-subgroup,
+      #detail-tab-finances .bft-group + .bft-row { border-top: none !important; }
       /* Titres de sections (avant + apres vente) : meme traitement, texte plus gros/gras que le reste */
       #detail-tab-finances .bft-card-title,
       #detail-tab-finances .fin-section-label {
         background: none !important;
         color: var(--text) !important;
-        border-top: none !important;
+        border-top: 1px solid var(--border-strong) !important;
         border-bottom: none !important;
-        margin: 28px 20px 10px !important;
-        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 20px 20px 8px !important;
         font-size: 14px !important;
         font-weight: 800 !important;
         text-transform: uppercase !important;
         letter-spacing: 0.6px !important;
       }
-      #detail-tab-finances #fin-frozen-table-wrap .bft-card-title { border-top: none !important; }
       #detail-tab-finances .bft-row-simple,
       #detail-tab-finances .bft-subgroup {
         padding: 10px 20px !important;
