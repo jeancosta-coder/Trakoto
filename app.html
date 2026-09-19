@@ -1167,17 +1167,16 @@
       #detail-tab-inforight .ntask-row.ntask-row-static { grid-column: 1 / -1 !important; padding: 0 0 4px !important; }
       #detail-tab-inforight .ntask-section-label {
         grid-column: 1 / -1 !important;
-        background: color-mix(in srgb, var(--accent) 8%, var(--surface)) !important;
-        border-top: 1px solid var(--border) !important;
-        border-bottom: 1px solid var(--border) !important;
-        margin: 18px -24px 8px !important;
-        padding: 10px 24px !important;
-        border-radius: 0 !important;
+        background: none !important;
+        border-top: none !important;
+        border-bottom: 2px solid var(--accent) !important;
+        margin: 20px 0 8px !important;
+        padding: 0 0 8px !important;
         font-size: 11px !important;
         font-weight: 800 !important;
-        color: var(--accent) !important;
+        color: var(--text) !important;
         text-transform: uppercase !important;
-        letter-spacing: 0.5px !important;
+        letter-spacing: 0.6px !important;
       }
       /* "Informations principales" suit le bloc Notes dans la meme carte : garder l'espacement standard, pas de collage */
       #detail-tab-inforight .ntask-row:not(.ntask-row-static) {
@@ -1221,32 +1220,31 @@
       #detail-tab-finances #fin-stats-row { gap: 16px !important; margin-bottom: 20px !important; }
       #detail-tab-finances .bft-card { padding: 0 !important; }
       #detail-tab-finances .bft-group {
-        background: color-mix(in srgb, var(--accent) 8%, var(--surface)) !important;
-        color: var(--accent) !important;
-        border-top: 1px solid var(--border) !important;
-        border-bottom: 1px solid var(--border) !important;
-        margin: 0 !important;
-        padding: 10px 20px !important;
-        border-radius: 0 !important;
+        background: none !important;
+        color: var(--text) !important;
+        border-top: none !important;
+        border-bottom: 2px solid var(--accent) !important;
+        margin: 20px 20px 8px !important;
+        padding: 0 0 8px !important;
         font-size: 11px !important;
         font-weight: 800 !important;
         text-transform: uppercase !important;
-        letter-spacing: 0.5px !important;
+        letter-spacing: 0.6px !important;
       }
-      #detail-tab-finances .bft-card > .bft-group:first-child { border-top: none !important; }
-      /* Titres de sections (avant + apres vente) : meme bandeau accent, fort contraste */
+      #detail-tab-finances .bft-card > .bft-group:first-child { margin-top: 16px !important; }
+      /* Titres de sections (avant + apres vente) : meme soulignement accent, fort contraste */
       #detail-tab-finances .bft-card-title,
       #detail-tab-finances .fin-section-label {
-        background: color-mix(in srgb, var(--accent) 8%, var(--surface)) !important;
-        color: var(--accent) !important;
-        border-top: 1px solid var(--border) !important;
-        border-bottom: 1px solid var(--border) !important;
-        margin: 0 !important;
-        padding: 10px 20px !important;
+        background: none !important;
+        color: var(--text) !important;
+        border-top: none !important;
+        border-bottom: 2px solid var(--accent) !important;
+        margin: 20px 20px 8px !important;
+        padding: 0 0 8px !important;
         font-size: 11px !important;
         font-weight: 800 !important;
         text-transform: uppercase !important;
-        letter-spacing: 0.5px !important;
+        letter-spacing: 0.6px !important;
       }
       #detail-tab-finances #fin-frozen-table-wrap .bft-card-title { border-top: none !important; }
       #detail-tab-finances .bft-row-simple,
@@ -1309,19 +1307,19 @@
       /* Titres de section : bandeau accent, meme traitement fort-contraste que Details et Finances */
       #detail-tab-clients .dtc-section-label {
         grid-column: 1 / -1 !important;
-        background: color-mix(in srgb, var(--accent) 8%, var(--surface)) !important;
-        border-top: 1px solid var(--border) !important;
-        border-bottom: 1px solid var(--border) !important;
-        margin: 16px -20px 8px !important;
-        padding: 10px 20px !important;
+        background: none !important;
+        border-top: none !important;
+        border-bottom: 2px solid var(--accent) !important;
+        margin: 20px 0 8px !important;
+        padding: 0 0 8px !important;
       }
-      #detail-tab-clients .dtc-section-label:first-child { margin: 0 -20px 8px !important; border-top: none !important; }
+      #detail-tab-clients .dtc-section-label:first-child { margin-top: 16px !important; }
       #detail-tab-clients .dtc-section-label span {
         font-size: 11px !important;
         font-weight: 800 !important;
-        color: var(--accent) !important;
+        color: var(--text) !important;
         text-transform: uppercase !important;
-        letter-spacing: 0.5px !important;
+        letter-spacing: 0.6px !important;
       }
       /* ── Finances desktop ── */
       .fin-section-label {
