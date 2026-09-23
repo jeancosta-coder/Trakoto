@@ -2320,14 +2320,14 @@
             </button>
 
             <div class="ntask-row ntask-row-static" style="cursor:default;flex-direction:column;align-items:stretch;min-height:0;padding-top:16px;padding-bottom:14px;">
-              <span class="ntask-row-label" style="margin-bottom:8px;">Notes</span>
+              <span class="ntask-row-label" style="margin-bottom:8px;display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.55;"><path d="M17 3a2.83 2.83 0 0 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>Notes</span>
               <div class="dt-notes-frame">
                 <textarea id="detail-notes" oninput="autoGrowNotes(this)" style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:22px;resize:none;color:var(--text);background:transparent;padding:0;box-sizing:border-box;overflow:hidden;" placeholder="Pas encore de note pour ce véhicule…" onblur="saveVehicleNotes()"></textarea>
               </div>
             </div>
             <div class="ntask-sep"></div>
 
-            <div class="ntask-section-label ntask-section-label-primary">Informations principales</div>
+            <div class="ntask-section-label ntask-section-label-primary" style="display:flex;align-items:center;gap:7px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.55;"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="8.5" cy="13.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 0 0-2.8 0L8 17"/></svg>Informations principales</div>
             <div class="dt-hero-group">
               <div class="ntask-row ntask-row-hero" onclick="editVsgField(this,'numVo')"><span class="ntask-row-label">N° de VO</span><span class="ntask-row-val"><span class="vsg-value" id="detail-numvo"></span></span></div>
               <div class="ntask-row ntask-row-hero" onclick="editVsgField(this,'year')"><span class="ntask-row-label">Année</span><span class="ntask-row-val"><span class="vsg-value" id="detail-year"></span></span></div>
@@ -2335,7 +2335,7 @@
             </div>
             <div class="ntask-sep"></div>
 
-            <div class="ntask-section-label">Mécanique</div>
+            <div class="ntask-section-label" style="display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.55;"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Mécanique</div>
             <div class="ntask-row" onclick="openVsgCarburantMenu(this)"><span class="ntask-row-label">Carburant</span><span class="ntask-row-val"><span class="vsg-value" id="detail-carburant"></span><span class="chev">›</span></span></div>
             <div class="ntask-sep"></div>
             <div class="ntask-row" onclick="openVsgTransmissionMenu(this)"><span class="ntask-row-label">Transmission</span><span class="ntask-row-val"><span class="vsg-value" id="detail-transmission"></span><span class="chev">›</span></span></div>
@@ -2343,13 +2343,13 @@
             <div class="ntask-row" onclick="editVsgField(this,'puissance')"><span class="ntask-row-label">Puissance</span><span class="ntask-row-val"><span class="vsg-value" id="detail-puissance"></span></span></div>
             <div class="ntask-sep"></div>
 
-            <div class="ntask-section-label">Apparence</div>
+            <div class="ntask-section-label" style="display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.55;"><path d="M12 22a9.94 9.94 0 0 1-7.07-2.93A9.94 9.94 0 0 1 2 12a10 10 0 0 1 10-10 9 9 0 0 1 9 9c0 1.5-1 3-3 3h-2.5a1.5 1.5 0 0 0-1.5 1.5c0 .4.2.8.5 1.1.3.3.5.7.5 1.1a2.5 2.5 0 0 1-2.5 2.5z"/><circle cx="7.5" cy="10.5" r="1"/><circle cx="12" cy="7.5" r="1"/><circle cx="16.5" cy="10.5" r="1"/></svg>Apparence</div>
             <div class="ntask-row" onclick="editVsgField(this,'couleur')"><span class="ntask-row-label">Couleur</span><span class="ntask-row-val"><span class="vsg-value" id="detail-couleur"></span></span></div>
             <div class="ntask-sep"></div>
             <div class="ntask-row" onclick="editVsgField(this,'gen')"><span class="ntask-row-label">Génération</span><span class="ntask-row-val"><span class="vsg-value" id="detail-gen"></span></span></div>
             <div class="ntask-sep"></div>
 
-            <div class="ntask-section-label">Administratif</div>
+            <div class="ntask-section-label" style="display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.55;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>Administratif</div>
             <div class="ntask-row" onclick="editVsgField(this,'immatriculation')"><span class="ntask-row-label">Immatriculation</span><span class="ntask-row-val"><span class="vsg-value" id="detail-immat"></span></span></div>
             <div class="ntask-sep"></div>
             <div class="ntask-row" onclick="openVsgBoolMenu(this,'clesDouble','detail-cles')"><span class="ntask-row-label">Clés</span><span class="ntask-row-val"><span class="vsg-value" id="detail-cles"></span><span class="chev">›</span></span></div>
