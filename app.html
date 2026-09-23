@@ -2422,15 +2422,7 @@
         <!-- Bloc unique apres vente : chiffres cles + statut vente + recapitulatif + detail comptable, un seul tableau continu -->
         <div id="fin-postsale-block" style="display:none;">
           <div class="bft-card">
-            <!-- Widget prix de revient / vente / marge : visible uniquement une fois la vente validée (figee) -->
-            <div id="fin-stats-row" style="display:none;grid-template-columns:repeat(3,1fr);gap:10px;">
-              <div class="bft-card-title fin-stats-title">Chiffres clés</div>
-              <div class="bft-stat"><div class="bft-stat-lbl">Prix de revient</div><div id="stat-revient" class="bft-stat-val">—</div></div>
-              <div class="bft-stat"><div class="bft-stat-lbl">Prix de vente</div><div id="stat-vente" class="bft-stat-val">—</div></div>
-              <div class="bft-stat"><div class="bft-stat-lbl">Marge</div><div id="stat-marge" class="bft-stat-val">—</div></div>
-            </div>
-
-            <!-- Vente finalisée : bandeau statut + action, plus visible qu'une simple ligne de tableau -->
+            <!-- Vente finalisée : bandeau statut + action, en tête du bloc pour confirmer l'etat avant les chiffres -->
             <div id="finalize-sale-done" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 16px;background:color-mix(in srgb, var(--success) 10%, var(--surface));border-bottom:1px solid var(--border-strong);">
               <div style="display:flex;align-items:center;gap:8px;min-width:0;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="12" cy="12" r="10" fill="var(--success)" stroke="none"/><polyline points="7 12.5 10.5 16 17 9" stroke="#fff"/></svg>
@@ -2440,6 +2432,14 @@
                 </div>
               </div>
               <button onclick="unlockFinanceForEdit()" class="btn-outline" style="padding:9px 16px;min-height:auto;font-size:13.5px;border-radius:9999px;flex-shrink:0;">Modifier les chiffres</button>
+            </div>
+
+            <!-- Widget prix de revient / vente / marge : visible uniquement une fois la vente validée (figee) -->
+            <div id="fin-stats-row" style="display:none;grid-template-columns:repeat(3,1fr);gap:10px;">
+              <div class="bft-card-title fin-stats-title">Chiffres clés</div>
+              <div class="bft-stat"><div class="bft-stat-lbl">Prix de revient</div><div id="stat-revient" class="bft-stat-val">—</div></div>
+              <div class="bft-stat"><div class="bft-stat-lbl">Prix de vente</div><div id="stat-vente" class="bft-stat-val">—</div></div>
+              <div class="bft-stat"><div class="bft-stat-lbl">Marge</div><div id="stat-marge" class="bft-stat-val">—</div></div>
             </div>
 
             <!-- Tableau recapitulatif figé : le detail chiffre de la vente validee ci-dessus -->
