@@ -793,8 +793,8 @@
     .bft-stat.accent .bft-stat-val { color:var(--accent); }
     .bft-stat.pos .bft-stat-val { color:var(--success); }
     .bft-card { background:var(--surface); border-radius:var(--card-radius); box-shadow:var(--card-shadow); overflow:hidden; margin-bottom:12px; }
-    .bft-group { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:18px; padding:4px 16px 4px 13px; border-left:3px solid var(--accent); color:var(--text); font-size:12.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.6px; }
-    .bft-card > .bft-group:first-child { margin-top:0; }
+    .bft-group { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:14px; padding:10px 16px; background:none; color:var(--text); border-top:1px solid var(--border-strong); border-bottom:1px solid var(--border-strong); font-size:12.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.6px; }
+    .bft-card > .bft-group:first-child { margin-top:0; border-top:none; }
     .bft-subgroup { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 16px 9px 26px; border-top:1px solid var(--border-strong); font-size:12px; font-weight:600; color:var(--text2); position:relative; }
     .bft-subgroup::before { content:''; position:absolute; left:16px; top:50%; transform:translateY(-50%); width:5px; height:5px; border-radius:50%; background:var(--accent); opacity:0.5; }
     .bft-card-title { font-size:12px; font-weight:600; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; margin:0 4px 8px; }
@@ -1263,18 +1263,18 @@
       #detail-tab-finances .bft-group {
         background: none !important;
         color: var(--text) !important;
-        border: none !important;
-        border-left: 3px solid var(--accent) !important;
-        margin: 18px 0 0 !important;
+        border-top: 1px solid var(--border-strong) !important;
+        border-bottom: 1px solid var(--border-strong) !important;
+        margin: 14px 0 0 !important;
         width: 100% !important;
         box-sizing: border-box !important;
-        padding: 6px 20px 6px 17px !important;
+        padding: 10px 20px !important;
         font-size: 13px !important;
         font-weight: 800 !important;
         text-transform: uppercase !important;
         letter-spacing: 0.6px !important;
       }
-      #detail-tab-finances .bft-card > .bft-group:first-child { margin-top: 0 !important; }
+      #detail-tab-finances .bft-card > .bft-group:first-child { margin-top: 0 !important; border-top: none !important; }
       /* Titres de sections (avant + apres vente) : meme traitement, texte plus gros/gras que le reste. Pas de trait sur les titres : uniquement entre les lignes d'une meme section. */
       #detail-tab-finances .bft-card-title,
       #detail-tab-finances .fin-section-label {
