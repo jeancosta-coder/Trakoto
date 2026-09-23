@@ -760,6 +760,24 @@
     .dt-info-card .ntask-row.ntask-row-hero .ntask-row-val .vsg-value { font-size: 21px; }
     .dt-info-card .ntask-row { min-height: 46px; }
     .dt-info-card .ntask-row.ntask-row-hero { min-height: 52px; }
+    /* Informations principales (N VO/Annee/Km) en ligne horizontale, y compris sur mobile */
+    .dt-hero-group { display: flex; gap: 8px; padding: 4px 16px 8px; }
+    .dt-hero-group .ntask-row {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 3px;
+      padding: 10px 4px;
+      background: var(--surface-2);
+      border-radius: 10px;
+    }
+    .dt-hero-group .ntask-row-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .dt-hero-group .ntask-row-val { width: 100%; justify-content: center; }
+    .dt-hero-group .ntask-row-val .vsg-value { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     /* Verrouille l'edition tant que le pinceau n'est pas active */
     .dt-info-card .ntask-row:not(.ntask-row-static) { cursor: default; }
     .dt-info-card .ntask-row:not(.ntask-row-static) .chev { opacity: 0; transition: opacity 0.15s ease; }
@@ -777,24 +795,22 @@
     .bft-card { background:var(--surface); border-radius:var(--card-radius); box-shadow:var(--card-shadow); overflow:hidden; margin-bottom:12px; }
     .bft-group { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 16px; background:color-mix(in srgb, var(--accent) 8%, var(--surface)); color:var(--accent); border-top:1px solid var(--border); border-bottom:1px solid var(--border); font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; }
     .bft-group:first-child { border-top:none; }
-    .bft-subgroup { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:8px 16px; border-top:1px solid var(--border); font-size:12px; font-weight:600; color:var(--text2); }
+    .bft-subgroup { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:8px 16px; border-top:1px solid var(--border-strong); font-size:12px; font-weight:600; color:var(--text2); }
     .bft-card-title { font-size:12px; font-weight:600; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; margin:0 4px 8px; }
     .bft-mini-table { background:var(--surface); border-radius:14px; padding:2px 14px; margin-bottom:16px; box-shadow:0 1px 2px rgba(0,0,0,0.03); }
-    .bft-mini-row { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 0; font-size:12.5px; border-top:1px solid var(--border); }
-    .bft-mini-row:first-child { border-top:none; }
+    .bft-mini-row { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 0; font-size:12.5px; border-top:1px solid var(--border-strong); }
     .bft-mini-detail-row { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:4px 0 4px 14px; font-size:11.5px; color:var(--text2); }
     .bft-mini-detail-row span:last-child { font-variant-numeric:tabular-nums; }
     .bft-mini-row span:first-child { color:var(--text2); }
     .bft-mini-row span:last-child { font-weight:600; color:var(--text); font-variant-numeric:tabular-nums; }
     .bft-plus { width:22px; height:22px; border-radius:50%; background:var(--accent); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
     .bft-plus svg { width:11px; height:11px; }
-    .bft-row { display:grid; grid-template-columns:1fr 100px 92px 26px; align-items:center; gap:8px; padding:12px 16px; border-top:1px solid var(--border); font-size:14px; }
+    .bft-row { display:grid; grid-template-columns:1fr 100px 92px 26px; align-items:center; gap:8px; padding:12px 16px; border-top:1px solid var(--border-strong); font-size:14px; }
     .bft-name { color:var(--text); }
     .bft-amt { text-align:right; font-variant-numeric:tabular-nums; font-weight:600; color:var(--text); }
     .bft-inp { grid-column:2; width:100%; text-align:right; font-variant-numeric:tabular-nums; font-weight:600; color:var(--text); border:none; outline:none; background:transparent; font-size:14px; font-family:inherit; }
     .bft-inp:disabled { color:var(--text2); opacity:0.7; }
-    .bft-row-simple { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 16px; border-top:1px solid var(--border); font-size:14px; }
-    .bft-row-simple:first-child { border-top:none; }
+    .bft-row-simple { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 16px; border-top:1px solid var(--border-strong); font-size:14px; }
     .bft-inp-simple { width:110px; text-align:right; font-variant-numeric:tabular-nums; font-weight:600; color:var(--text); border:none; outline:none; background:transparent; font-size:14px; font-family:inherit; }
     .bft-inp-simple:disabled { color:var(--text2); opacity:0.7; }
     .bft-badge { justify-self:end; font-size:11px; font-weight:600; padding:3px 9px; border-radius:20px; white-space:nowrap; }
@@ -1167,6 +1183,8 @@
         padding: 24px !important;
       }
       #detail-tab-inforight .ntask-sep { display: none !important; }
+      #detail-tab-inforight .dt-hero-group { display: contents !important; }
+      #detail-tab-inforight .dt-hero-group .ntask-row { background: none !important; border-radius: 0 !important; padding: 0 !important; }
       #detail-tab-inforight .ntask-row.ntask-row-static { grid-column: 1 / -1 !important; padding: 0 0 4px !important; }
       #detail-tab-inforight .ntask-section-label {
         grid-column: 1 / -1 !important;
@@ -1256,10 +1274,6 @@
         letter-spacing: 0.6px !important;
       }
       #detail-tab-finances .bft-card > .bft-group:first-child { padding-top: 20px !important; }
-      /* Pas de trait sur la premiere ligne d'une section (juste apres le titre) : uniquement entre les lignes d'une meme section */
-      #detail-tab-finances .bft-group + .bft-row-simple,
-      #detail-tab-finances .bft-group + .bft-subgroup,
-      #detail-tab-finances .bft-group + .bft-row { border-top: none !important; }
       /* Titres de sections (avant + apres vente) : meme traitement, texte plus gros/gras que le reste. Pas de trait sur les titres : uniquement entre les lignes d'une meme section. */
       #detail-tab-finances .bft-card-title,
       #detail-tab-finances .fin-section-label {
@@ -1288,7 +1302,6 @@
         border-top: 1px solid var(--border-strong) !important;
         transition: background 0.15s ease !important;
       }
-      #detail-tab-finances .bft-row-simple:first-child, #detail-tab-finances .bft-subgroup:first-child { border-top: none !important; }
       #detail-tab-finances .bft-row-simple:hover { background: var(--surface-2) !important; }
       #detail-tab-finances .bft-row { padding: 10px 20px !important; margin: 0 !important; width: 100% !important; box-sizing: border-box !important; border-radius: 0 !important; border-top: 1px solid var(--border-strong) !important; }
       #detail-tab-finances .bft-row:hover { background: var(--surface-2) !important; }
@@ -1302,7 +1315,6 @@
         font-size: 14px !important;
         transition: background 0.15s ease !important;
       }
-      #detail-tab-finances .bft-mini-row:first-child { border-top: none !important; }
       #detail-tab-finances .bft-mini-row:hover { background: var(--surface-2) !important; }
       #detail-tab-finances .bft-mini-row span:first-child { color: var(--text) !important; }
       #detail-tab-finances #fin-frozen-table-wrap {
@@ -2311,11 +2323,11 @@
             <div class="ntask-sep"></div>
 
             <div class="ntask-section-label ntask-section-label-primary">Informations principales</div>
-            <div class="ntask-row ntask-row-hero" onclick="editVsgField(this,'numVo')"><span class="ntask-row-label">N° de VO</span><span class="ntask-row-val"><span class="vsg-value" id="detail-numvo"></span></span></div>
-            <div class="ntask-sep"></div>
-            <div class="ntask-row ntask-row-hero" onclick="editVsgField(this,'year')"><span class="ntask-row-label">Année</span><span class="ntask-row-val"><span class="vsg-value" id="detail-year"></span></span></div>
-            <div class="ntask-sep"></div>
-            <div class="ntask-row ntask-row-hero" onclick="editVsgField(this,'km')"><span class="ntask-row-label">Kilométrage</span><span class="ntask-row-val"><span class="vsg-value" id="detail-km"></span></span></div>
+            <div class="dt-hero-group">
+              <div class="ntask-row ntask-row-hero" onclick="editVsgField(this,'numVo')"><span class="ntask-row-label">N° de VO</span><span class="ntask-row-val"><span class="vsg-value" id="detail-numvo"></span></span></div>
+              <div class="ntask-row ntask-row-hero" onclick="editVsgField(this,'year')"><span class="ntask-row-label">Année</span><span class="ntask-row-val"><span class="vsg-value" id="detail-year"></span></span></div>
+              <div class="ntask-row ntask-row-hero" onclick="editVsgField(this,'km')"><span class="ntask-row-label">Kilométrage</span><span class="ntask-row-val"><span class="vsg-value" id="detail-km"></span></span></div>
+            </div>
             <div class="ntask-sep"></div>
 
             <div class="ntask-section-label">Mécanique</div>
