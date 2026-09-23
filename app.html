@@ -2232,7 +2232,7 @@
     <div id="detail-tab-bar-wrap" style="background:var(--surface-2);flex-shrink:0;">
       <button id="tab-inforight" onclick="switchDetailTab('inforight')" style="display:none;">Détails</button>
       <button id="tab-infos" onclick="switchDetailTab('infos')" style="display:none;">Détails</button>
-      <button id="tab-finances" onclick="switchDetailTab('finances')" style="display:none;">Finances</button>
+      <button id="tab-finances" onclick="switchDetailTab('finances')" style="display:none;">Transaction</button>
       <button id="tab-clients" onclick="switchDetailTab('clients')" style="display:none;">Client</button>
       <div id="detail-tab-dropdown-desktop" class="desktop-only" onclick="openDetailTabMenuDesktop(this)" style="display:none;align-items:center;justify-content:space-between;gap:8px;background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--card-shadow);padding:10px 14px;cursor:pointer;">
         <span id="detail-tab-dropdown-desktop-label" style="font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;">Détails</span>
@@ -4274,8 +4274,8 @@ let currentDisplayDate = new Date();
 let planningIndex = {};
 
 const DETAIL_TABS = ['infos', 'finances'];
-const DETAIL_TAB_LABELS = {infos: 'Détails', finances: 'Finances', clients: 'Client'};
-const DETAIL_TAB_LABELS_DESKTOP = {inforight: 'Détails', finances: 'Finances', clients: 'Client'};
+const DETAIL_TAB_LABELS = {infos: 'Détails', finances: 'Transaction', clients: 'Client'};
+const DETAIL_TAB_LABELS_DESKTOP = {inforight: 'Détails', finances: 'Transaction', clients: 'Client'};
 function openDetailTabMenu(anchorEl){
   const html = Object.keys(DETAIL_TAB_LABELS).map(k => `<div class="ntask-opt" onclick="switchDetailTab('${k}');closeAnchoredMenu();"><span>${DETAIL_TAB_LABELS[k]}</span></div>`).join('');
   openAnchoredMenu(anchorEl, html);
