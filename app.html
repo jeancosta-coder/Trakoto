@@ -2377,7 +2377,7 @@
         <!-- Section editable : un seul tableau continu, visible tant que la vente n'est pas figee -->
         <div id="fin-editable-section">
           <div class="bft-card">
-            <div class="bft-group"><span>Dates</span></div>
+            <div class="bft-group"><span style="display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.55;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Dates</span></div>
             <div style="position:relative;padding:10px 16px;cursor:pointer;">
               <div style="display:flex;align-items:center;justify-content:space-between;pointer-events:none;">
                 <span class="fin-label-text" style="font-size:14px;">Date d'achat</span>
@@ -2393,18 +2393,18 @@
               <input type="date" id="detail-sale-date-edit" onchange="saveVehicleDateInline('vente',this.value)" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;border:none;cursor:pointer;">
             </div>
 
-            <div class="bft-group"><span>Acquisition</span></div>
-            <div class="bft-row-simple"><span class="bft-name">Prix d'achat</span><input type="number" id="detail-achat-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="bft-inp-simple"></div>
-            <div class="bft-row-simple"><span class="bft-name">Prix de vente cible</span><input type="number" id="detail-vente-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="bft-inp-simple"></div>
+            <div class="bft-group"><span style="display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.55;"><circle cx="12" cy="12" r="9"/><path d="M15 9.5c0-1.1-1.3-2-3-2s-3 .9-3 2 1.3 1.6 3 2 3 .9 3 2-1.3 2-3 2-3-.9-3-2"/><line x1="12" y1="6" x2="12" y2="18"/></svg>Acquisition</span></div>
+            <div class="bft-row-simple"><span class="bft-name">Prix d'achat</span><div class="fin-input-wrap"><input type="number" id="detail-achat-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="bft-inp-simple"><span class="fin-unit">€</span></div></div>
+            <div class="bft-row-simple"><span class="bft-name">Prix de vente cible</span><div class="fin-input-wrap"><input type="number" id="detail-vente-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="bft-inp-simple"><span class="fin-unit">€</span></div></div>
 
-            <div class="bft-group"><span>Frais</span></div>
+            <div class="bft-group"><span style="display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.55;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>Frais</span></div>
             <div class="bft-subgroup"><span>Sans TVA · <span id="fin-total-sansTva">0 €</span></span><button class="bft-plus" onclick="addCostItemForm('sansTva')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
             <div id="fin-list-sansTva"></div>
             <div class="bft-subgroup"><span>Soumis à la TVA · <span id="fin-total-avecTva">0 €</span></span><button class="bft-plus" onclick="addCostItemForm('avecTva')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
             <div id="fin-list-avecTva"></div>
 
-            <div class="bft-group"><span>Autres frais</span></div>
-            <div class="bft-row-simple"><span class="bft-name">Carte grise</span><input type="number" id="detail-cg-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="bft-inp-simple"></div>
+            <div class="bft-group"><span style="display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.55;"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="6" y1="15" x2="10" y2="15"/></svg>Autres frais</span></div>
+            <div class="bft-row-simple"><span class="bft-name">Carte grise</span><div class="fin-input-wrap"><input type="number" id="detail-cg-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="bft-inp-simple"><span class="fin-unit">€</span></div></div>
 
             <!-- Valider la vente : action finale du bloc, visible tant que la vente n'est pas validée -->
             <div class="fin-finalize-wrap">
