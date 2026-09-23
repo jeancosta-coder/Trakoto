@@ -1334,8 +1334,8 @@
         padding: 0 0 20px !important;
         margin-top: 0 !important;
       }
-      #detail-tab-finances #fin-frozen-table-wrap .bft-mini-table,
-      #detail-tab-finances #fin-comptable-wrap .bft-mini-table {
+      #detail-tab-finances #fin-frozen-table-wrap .bft-card,
+      #detail-tab-finances #fin-comptable-wrap .bft-card {
         background: transparent !important;
         box-shadow: none !important;
         border-radius: 0 !important;
@@ -2377,16 +2377,26 @@
 
       <div id="detail-tab-finances" class="detail-tab-content" style="display:none;flex:1;overflow-y:auto;padding:16px 16px calc(140px + env(safe-area-inset-bottom)) 16px;">
 
-        <!-- Vente finalisée (tout en haut, visible uniquement une fois validée et non déverrouillée) -->
-        <div id="finalize-sale-done" style="display:none;background:color-mix(in srgb, var(--success) 12%, var(--surface));border-radius:14px;padding:14px 16px;margin-bottom:16px;align-items:center;gap:10px;">
-          <div style="width:30px;height:30px;border-radius:50%;background:var(--success);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        <!-- Vente finalisée : integree dans le meme style de tableau que le reste (bft-group/bft-row-simple), visible uniquement une fois validee et non deverrouillee -->
+        <div id="finalize-sale-done" style="display:none;">
+          <div class="bft-card">
+            <div class="bft-group"><span>Vente</span></div>
+            <div class="bft-row-simple">
+              <span class="bft-name">Statut</span>
+              <span style="display:flex;align-items:center;gap:6px;color:var(--success);font-weight:700;font-size:14px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Vente finalisée
+              </span>
+            </div>
+            <div class="bft-row-simple">
+              <span class="bft-name">Date de vente</span>
+              <span id="finalize-sale-done-date" style="font-weight:600;color:var(--text);font-size:14px;"></span>
+            </div>
+            <div class="bft-row-simple" onclick="unlockFinanceForEdit()" style="cursor:pointer;">
+              <span class="bft-name" style="color:var(--accent);font-weight:600;">Modifier les chiffres</span>
+              <span class="chev">›</span>
+            </div>
           </div>
-          <div style="flex:1;min-width:0;">
-            <div style="font-size:14px;font-weight:600;color:var(--success);">Vente finalisée</div>
-            <div id="finalize-sale-done-date" style="font-size:12px;color:var(--text2);margin-top:1px;"></div>
-          </div>
-          <button onclick="unlockFinanceForEdit()" style="background:none;border:1px solid var(--success);color:var(--success);border-radius:9999px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;flex-shrink:0;">Modifier</button>
         </div>
 
         <!-- Section editable : un seul tableau continu, visible tant que la vente n'est pas figee -->
@@ -2444,33 +2454,33 @@
             <div class="bft-stat"><div class="bft-stat-lbl">Marge</div><div id="stat-marge" class="bft-stat-val">—</div></div>
           </div>
 
-          <!-- Tableau recapitulatif figé : visible uniquement une fois la vente validee -->
+          <!-- Tableau recapitulatif figé : meme style bft-group/bft-row-simple que le reste du tableau finances, visible uniquement une fois la vente validee -->
           <div id="fin-frozen-table-wrap" style="display:none;">
-            <div class="bft-card-title">Récapitulatif de la vente</div>
-            <div class="bft-mini-table">
-              <div class="bft-mini-row"><span>Date d'achat</span><span id="fz-achat-date">—</span></div>
-              <div class="bft-mini-row"><span>Date de vente</span><span id="fz-vente-date">—</span></div>
-              <div class="bft-mini-row"><span>Prix d'achat</span><span id="fz-achat">—</span></div>
-              <div class="bft-mini-row"><span>Prix de vente cible</span><span id="fz-vente-cible">—</span></div>
-              <div class="bft-mini-row"><span>Frais sans TVA</span><span id="fz-sans-tva">—</span></div>
+            <div class="bft-card">
+              <div class="bft-group"><span>Récapitulatif de la vente</span></div>
+              <div class="bft-row-simple"><span class="bft-name">Date d'achat</span><span id="fz-achat-date" class="bft-amt">—</span></div>
+              <div class="bft-row-simple"><span class="bft-name">Date de vente</span><span id="fz-vente-date" class="bft-amt">—</span></div>
+              <div class="bft-row-simple"><span class="bft-name">Prix d'achat</span><span id="fz-achat" class="bft-amt">—</span></div>
+              <div class="bft-row-simple"><span class="bft-name">Prix de vente cible</span><span id="fz-vente-cible" class="bft-amt">—</span></div>
+              <div class="bft-row-simple"><span class="bft-name">Frais sans TVA</span><span id="fz-sans-tva" class="bft-amt">—</span></div>
               <div id="fz-sansTva-detail"></div>
-              <div class="bft-mini-row"><span>Frais soumis à la TVA</span><span id="fz-avec-tva">—</span></div>
+              <div class="bft-row-simple"><span class="bft-name">Frais soumis à la TVA</span><span id="fz-avec-tva" class="bft-amt">—</span></div>
               <div id="fz-avecTva-detail"></div>
-              <div class="bft-mini-row"><span>Carte grise</span><span id="fz-cg">—</span></div>
+              <div class="bft-row-simple"><span class="bft-name">Carte grise</span><span id="fz-cg" class="bft-amt">—</span></div>
             </div>
           </div>
 
-          <!-- Détail comptable : visible uniquement une fois la vente validée (figee) -->
+          <!-- Détail comptable : meme style bft-group/bft-row-simple, visible uniquement une fois la vente validée (figee) -->
           <div id="fin-comptable-wrap" style="display:none;">
-            <div class="fin-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l2 2"/></svg><span>Détail comptable</span></div>
-            <div class="bft-mini-table">
-              <div class="bft-mini-row"><span>Marge TTC</span><span id="ind-marge-ttc">—</span></div>
-              <div class="bft-mini-row"><span>Marge HT</span><span id="ind-marge-ht">—</span></div>
-              <div class="bft-mini-row"><span>TVA sur marge (20%)</span><span id="ind-tva-marge">—</span></div>
-              <div class="bft-mini-row"><span>% de la marge</span><span id="ind-pct-marge">—</span></div>
-              <div class="bft-mini-row"><span>Bénéf. net comptable</span><span id="ind-benef-net">—</span></div>
-              <div class="bft-mini-row"><span>Trésorerie</span><span id="ind-tresorerie">—</span></div>
-              <div class="bft-mini-row"><span>% marge trésorerie</span><span id="ind-pct-tresorerie">—</span></div>
+            <div class="bft-card">
+              <div class="bft-group"><span>Détail comptable</span></div>
+              <div class="bft-row-simple"><span class="bft-name">Marge TTC</span><span id="ind-marge-ttc" class="bft-amt">—</span></div>
+              <div class="bft-row-simple"><span class="bft-name">Marge HT</span><span id="ind-marge-ht" class="bft-amt">—</span></div>
+              <div class="bft-row-simple"><span class="bft-name">TVA sur marge (20%)</span><span id="ind-tva-marge" class="bft-amt">—</span></div>
+              <div class="bft-row-simple"><span class="bft-name">% de la marge</span><span id="ind-pct-marge" class="bft-amt">—</span></div>
+              <div class="bft-row-simple"><span class="bft-name">Bénéf. net comptable</span><span id="ind-benef-net" class="bft-amt">—</span></div>
+              <div class="bft-row-simple"><span class="bft-name">Trésorerie</span><span id="ind-tresorerie" class="bft-amt">—</span></div>
+              <div class="bft-row-simple"><span class="bft-name">% marge trésorerie</span><span id="ind-pct-tresorerie" class="bft-amt">—</span></div>
             </div>
           </div>
         </div>
