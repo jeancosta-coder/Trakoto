@@ -2430,31 +2430,25 @@
               <div class="bft-stat"><div class="bft-stat-lbl">Marge</div><div id="stat-marge" class="bft-stat-val">—</div></div>
             </div>
 
-            <!-- Vente finalisée : integree dans le meme tableau, visible uniquement une fois validee et non deverrouillee -->
-            <div id="finalize-sale-done">
-              <div class="bft-group"><span>Vente</span></div>
-              <div class="bft-row-simple">
-                <span class="bft-name">Statut</span>
-                <span style="display:flex;align-items:center;gap:6px;color:var(--success);font-weight:700;font-size:14px;">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                  Vente finalisée
-                </span>
+            <!-- Vente finalisée : bandeau statut + action, plus visible qu'une simple ligne de tableau -->
+            <div id="finalize-sale-done" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 16px;background:color-mix(in srgb, var(--success) 10%, var(--surface));border-bottom:1px solid var(--border-strong);">
+              <div style="display:flex;align-items:center;gap:8px;min-width:0;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="12" cy="12" r="10" fill="var(--success)" stroke="none"/><polyline points="7 12.5 10.5 16 17 9" stroke="#fff"/></svg>
+                <div style="min-width:0;">
+                  <div style="color:var(--success);font-weight:700;font-size:14px;line-height:1.3;">Vente finalisée</div>
+                  <div id="finalize-sale-done-date" style="font-size:12.5px;color:var(--text2);line-height:1.3;"></div>
+                </div>
               </div>
-              <div class="bft-row-simple">
-                <span class="bft-name">Date de vente</span>
-                <span id="finalize-sale-done-date" style="font-weight:600;color:var(--text);font-size:14px;"></span>
-              </div>
-              <div class="bft-row-simple" onclick="unlockFinanceForEdit()" style="cursor:pointer;">
-                <span class="bft-name" style="color:var(--accent);font-weight:600;">Modifier les chiffres</span>
-                <span class="chev">›</span>
-              </div>
+              <button onclick="unlockFinanceForEdit()" class="btn-outline" style="padding:9px 16px;min-height:auto;font-size:13.5px;border-radius:9999px;flex-shrink:0;">Modifier les chiffres</button>
             </div>
 
-            <!-- Tableau recapitulatif figé : visible uniquement une fois la vente validee -->
+            <!-- Tableau recapitulatif figé : le detail chiffre de la vente validee ci-dessus -->
             <div id="fin-frozen-table-wrap" style="display:none;">
               <div class="bft-group"><span>Récapitulatif de la vente</span></div>
-              <div class="bft-row-simple"><span class="bft-name">Date d'achat</span><span id="fz-achat-date" class="bft-amt">—</span></div>
-              <div class="bft-row-simple"><span class="bft-name">Date de vente</span><span id="fz-vente-date" class="bft-amt">—</span></div>
+              <div class="bft-row-simple" style="display:flex;gap:16px;">
+                <span style="flex:1;min-width:0;"><span class="bft-name" style="display:block;">Date d'achat</span><span id="fz-achat-date" class="bft-amt" style="display:block;margin-top:2px;">—</span></span>
+                <span style="flex:1;min-width:0;text-align:right;"><span class="bft-name" style="display:block;">Date de vente</span><span id="fz-vente-date" class="bft-amt" style="display:block;margin-top:2px;">—</span></span>
+              </div>
               <div class="bft-row-simple"><span class="bft-name">Prix d'achat</span><span id="fz-achat" class="bft-amt">—</span></div>
               <div class="bft-row-simple"><span class="bft-name">Prix de vente cible</span><span id="fz-vente-cible" class="bft-amt">—</span></div>
               <div class="bft-row-simple"><span class="bft-name">Frais sans TVA</span><span id="fz-sans-tva" class="bft-amt">—</span></div>
@@ -4403,7 +4397,7 @@ function renderFinanceValidationState(v){
   if(!btn || !done) return;
   const locked = isFinanceLocked(v);
   btn.style.display = locked ? 'none' : 'flex';
-  done.style.display = locked ? 'block' : 'none';
+  done.style.display = locked ? 'flex' : 'none';
   if(postsaleBlock) postsaleBlock.style.display = locked ? 'block' : 'none';
   if(statsRow) statsRow.style.display = locked ? 'grid' : 'none';
   if(comptableWrap) comptableWrap.style.display = locked ? 'block' : 'none';
