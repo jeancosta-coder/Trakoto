@@ -239,7 +239,7 @@
     .btn-danger-soft:active { transform: scale(0.98); }
     /* .btn-success-block = action de validation positive pleine largeur (ex: Valider la vente) */
     .btn-success-block { width: 100%; padding: 14px; background: var(--success); color: #fff; border: none; border-radius: 9999px; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
-    .fin-finalize-wrap { padding: 16px; }
+    .fin-finalize-wrap { padding: 16px; margin-top: 14px; background: color-mix(in srgb, var(--success) 7%, var(--surface)); border-top: 1px solid var(--border-strong); }
     /* Rail Planning "À venir" — masqué par défaut (mobile), visible desktop */
     #planning-rail { display: none; }
     .planning-rail-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 14px; }
@@ -793,9 +793,10 @@
     .bft-stat.accent .bft-stat-val { color:var(--accent); }
     .bft-stat.pos .bft-stat-val { color:var(--success); }
     .bft-card { background:var(--surface); border-radius:var(--card-radius); box-shadow:var(--card-shadow); overflow:hidden; margin-bottom:12px; }
-    .bft-group { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:20px 16px 8px; background:none; color:var(--text); border:none; font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:0.6px; }
-    .bft-card > .bft-group:first-child { padding-top:20px; }
-    .bft-subgroup { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 16px; border-top:1px solid var(--border-strong); font-size:12px; font-weight:600; color:var(--text2); }
+    .bft-group { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:14px; padding:10px 16px; background:color-mix(in srgb, var(--accent) 8%, var(--surface)); color:var(--accent); border-top:1px solid var(--border-strong); border-bottom:1px solid var(--border-strong); font-size:12.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.6px; }
+    .bft-card > .bft-group:first-child { margin-top:0; border-top:none; }
+    .bft-subgroup { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 16px 9px 26px; border-top:1px solid var(--border-strong); font-size:12px; font-weight:600; color:var(--text2); position:relative; }
+    .bft-subgroup::before { content:''; position:absolute; left:16px; top:50%; transform:translateY(-50%); width:5px; height:5px; border-radius:50%; background:var(--accent); opacity:0.5; }
     .bft-card-title { font-size:12px; font-weight:600; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; margin:0 4px 8px; }
     .bft-mini-table { background:var(--surface); border-radius:14px; padding:2px 14px; margin-bottom:16px; box-shadow:0 1px 2px rgba(0,0,0,0.03); }
     .bft-mini-row { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 0; font-size:12.5px; border-top:1px solid var(--border-strong); }
@@ -1260,20 +1261,20 @@
       #detail-tab-finances #fin-stats-row .bft-stat:not(:first-child) { border-left: 1px solid var(--border) !important; }
       #detail-tab-finances .bft-card { padding: 0 !important; }
       #detail-tab-finances .bft-group {
-        background: none !important;
-        color: var(--text) !important;
-        border-top: none !important;
-        border-bottom: none !important;
-        margin: 0 !important;
+        background: color-mix(in srgb, var(--accent) 8%, var(--surface)) !important;
+        color: var(--accent) !important;
+        border-top: 1px solid var(--border-strong) !important;
+        border-bottom: 1px solid var(--border-strong) !important;
+        margin: 14px 0 0 !important;
         width: 100% !important;
         box-sizing: border-box !important;
-        padding: 20px 20px 8px !important;
-        font-size: 14px !important;
+        padding: 10px 20px !important;
+        font-size: 13px !important;
         font-weight: 800 !important;
         text-transform: uppercase !important;
         letter-spacing: 0.6px !important;
       }
-      #detail-tab-finances .bft-card > .bft-group:first-child { padding-top: 20px !important; }
+      #detail-tab-finances .bft-card > .bft-group:first-child { margin-top: 0 !important; border-top: none !important; }
       /* Titres de sections (avant + apres vente) : meme traitement, texte plus gros/gras que le reste. Pas de trait sur les titres : uniquement entre les lignes d'une meme section. */
       #detail-tab-finances .bft-card-title,
       #detail-tab-finances .fin-section-label {
@@ -1292,8 +1293,7 @@
       }
       /* Ligne Date de vente : meme trait que le reste du tableau (au lieu du 0.5px hérité du mobile) */
       #detail-tab-finances #fin-vente-date-row { border-top: 1px solid var(--border-strong) !important; padding: 10px 20px !important; }
-      #detail-tab-finances .bft-row-simple,
-      #detail-tab-finances .bft-subgroup {
+      #detail-tab-finances .bft-row-simple {
         padding: 10px 20px !important;
         margin: 0 !important;
         width: 100% !important;
@@ -1302,6 +1302,15 @@
         border-top: 1px solid var(--border-strong) !important;
         transition: background 0.15s ease !important;
       }
+      #detail-tab-finances .bft-subgroup {
+        padding: 9px 20px 9px 32px !important;
+        margin: 0 !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        border-radius: 0 !important;
+        border-top: 1px solid var(--border-strong) !important;
+      }
+      #detail-tab-finances .bft-subgroup::before { left: 20px !important; }
       #detail-tab-finances .bft-row-simple:hover { background: var(--surface-2) !important; }
       #detail-tab-finances .bft-row { padding: 10px 20px !important; margin: 0 !important; width: 100% !important; box-sizing: border-box !important; border-radius: 0 !important; border-top: 1px solid var(--border-strong) !important; }
       #detail-tab-finances .bft-row:hover { background: var(--surface-2) !important; }
@@ -1357,7 +1366,7 @@
         padding: 0 !important;
       }
       #detail-tab-clients .dtc-section-label:first-child { margin-top: 20px !important; }
-      #detail-tab-clients .dtc-section-label span {
+      #detail-tab-clients .dtc-section-label {
         font-size: 14px !important;
         font-weight: 800 !important;
         color: var(--text) !important;
@@ -2472,7 +2481,7 @@
       <!-- Onglet Clientele (mobile + desktop) -->
       <div id="detail-tab-clients" class="detail-tab-content" style="display:none;">
         <div class="bft-card" style="margin-bottom:20px;">
-          <div class="dtc-section-label"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Informations client</span></div>
+          <div class="ntask-section-label ntask-section-label-primary dtc-section-label">Informations client</div>
           <div class="dtc-field dtc-field-bordered" style="padding:12px 16px;border-bottom:1px solid var(--border);">
             <div style="font-size:11px;color:var(--text2);margin-bottom:2px;">Nom</div>
             <input type="text" id="dtc-nom" placeholder="Nom" onblur="saveClientField('nom', this.value)" style="width:100%;border:none;outline:none;font-size:15px;color:var(--text);background:transparent;padding:2px 0;">
@@ -2499,7 +2508,7 @@
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
             </button>
           </div>
-          <div class="dtc-section-label"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Notes</span></div>
+          <div class="ntask-section-label dtc-section-label">Notes</div>
           <div class="dtc-field dtc-field-notes">
             <div class="dt-notes-frame">
               <textarea id="dtc-notes" placeholder="Notes sur le client..." onblur="saveClientField('notes', this.value)" style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:90px;resize:none;color:var(--text);background:transparent;padding:0;box-sizing:border-box;"></textarea>
