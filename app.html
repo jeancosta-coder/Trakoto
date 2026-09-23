@@ -795,6 +795,11 @@
     .bft-card { background:var(--surface); border-radius:var(--card-radius); box-shadow:var(--card-shadow); overflow:hidden; margin-bottom:12px; }
     .bft-group { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:14px; padding:10px 16px; background:none; color:var(--text); border:none; border-bottom:1px solid var(--border-strong); font-size:12.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.6px; }
     .bft-card > .bft-group:first-child { margin-top:0; }
+    /* Chiffres cles integres dans le bloc unique post-vente : pas de carte flottante, aligne sur les lignes du tableau */
+    #fin-stats-row { padding:0 0 12px; margin-bottom:0; }
+    #fin-stats-row .fin-stats-title { grid-column:1 / -1; padding:10px 16px 0; margin:0; font-size:12px; font-weight:600; color:var(--text2); }
+    #fin-stats-row .bft-stat { background:none; box-shadow:none; border-radius:0; padding:0 16px; }
+    #fin-stats-row .bft-stat:not(:first-child) { border-left:1px solid var(--border); }
     .bft-subgroup { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 16px 9px 26px; border:none; font-size:12px; font-weight:600; color:var(--text2); position:relative; }
     .bft-subgroup::before { content:''; position:absolute; left:16px; top:50%; transform:translateY(-50%); width:5px; height:5px; border-radius:50%; background:var(--accent); opacity:0.5; }
     .bft-card-title { font-size:12px; font-weight:600; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; margin:0 4px 8px; }
