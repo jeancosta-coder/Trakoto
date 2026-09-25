@@ -302,6 +302,58 @@
       flex-wrap: wrap;
       gap: 12px;
     }
+    /* ── Vue Finance (desktop) ── */
+    .fin-period-bar { display:flex; align-items:center; justify-content:space-between; gap:16px; background:var(--surface); border-radius:var(--card-radius); box-shadow:var(--card-shadow); padding:12px 16px; margin-bottom:24px; }
+    .fin-period-nav { display:flex; align-items:center; gap:10px; }
+    .fin-period-arrow { width:32px; height:32px; border-radius:50%; background:var(--surface-2); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--text); transition:background 0.15s; }
+    .fin-period-arrow:hover { background:var(--surface-3); }
+    .fin-period-today { padding:7px 14px; border:1px solid var(--border-strong); border-radius:9999px; background:transparent; color:var(--text); font-size:13px; font-weight:500; cursor:pointer; transition:background 0.15s; }
+    .fin-period-today:hover { background:var(--surface-2); }
+    .fin-scope-btn { border:none; background:transparent; color:var(--text2); font-size:13px; font-weight:500; padding:6px 14px; border-radius:8px; cursor:pointer; transition:background 0.15s, color 0.15s; }
+    .fin-scope-btn.active { background:var(--surface); color:var(--accent); box-shadow:var(--shadow-sm); font-weight:600; }
+    .fin-summary-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-bottom:28px; }
+    .fin-kpi { background:var(--surface); border-radius:var(--card-radius); box-shadow:var(--card-shadow); padding:16px 18px; }
+    .fin-kpi-label { font-size:11px; text-transform:uppercase; letter-spacing:0.5px; color:var(--text2); margin-bottom:8px; font-weight:600; }
+    .fin-kpi-val { font-size:22px; font-weight:800; letter-spacing:-0.5px; color:var(--text); font-variant-numeric:tabular-nums; }
+    .fin-kpi-sub { font-size:12px; color:var(--text2); margin-top:3px; }
+    .fin-kpi.pos .fin-kpi-val { color:var(--success); }
+    .fin-kpi.neg .fin-kpi-val { color:var(--danger); }
+    .fin-cols { display:grid; grid-template-columns:1fr 1fr; gap:24px; align-items:start; }
+    .fin-section { background:var(--surface); border-radius:var(--card-radius); box-shadow:var(--card-shadow); overflow:hidden; }
+    .fin-section-head { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:18px 20px 14px; border-bottom:1px solid var(--border); }
+    .fin-section-title { font-size:15px; font-weight:800; color:var(--text); text-transform:uppercase; letter-spacing:0.4px; }
+    .fin-add-btn { border:none; background:var(--accent); color:var(--accent-contrast); font-size:13px; font-weight:600; padding:8px 14px; border-radius:9999px; cursor:pointer; white-space:nowrap; transition:opacity 0.15s; }
+    .fin-add-btn:hover { opacity:0.88; }
+    .fin-add-btn-alt { background:var(--surface-2); color:var(--text); }
+    .fin-row { display:flex; align-items:center; gap:12px; padding:13px 20px; border-top:1px solid var(--border); transition:background 0.15s; }
+    .fin-row:first-child { border-top:none; }
+    .fin-row:hover { background:var(--surface-2); }
+    .fin-row-main { flex:1; min-width:0; }
+    .fin-row-title { font-size:14.5px; color:var(--text); font-weight:500; display:flex; align-items:center; gap:8px; }
+    .fin-row-sub { font-size:12px; color:var(--text2); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .fin-row-amt { font-size:15px; font-weight:700; color:var(--text); font-variant-numeric:tabular-nums; white-space:nowrap; }
+    .fin-row-del { background:none; border:none; color:var(--text2); opacity:0.5; cursor:pointer; display:flex; padding:4px; flex-shrink:0; transition:opacity 0.15s, color 0.15s; }
+    .fin-row-del:hover { opacity:1; color:var(--danger); }
+    .fin-badge { display:inline-block; font-size:10.5px; font-weight:600; padding:2px 8px; border-radius:20px; letter-spacing:0.2px; white-space:nowrap; }
+    .fin-badge-recur { background:var(--info-soft); color:var(--info); }
+    .fin-badge-cat { background:var(--surface-2); color:var(--text2); }
+    .fin-empty { padding:32px 20px; text-align:center; color:var(--text2); font-size:13.5px; }
+    .fin-veh-invoice-input { border:1px solid var(--border); border-radius:8px; background:var(--surface-2); padding:5px 9px; font-size:12.5px; color:var(--text); outline:none; width:110px; font-family:inherit; }
+    .fin-veh-invoice-input:focus { border-color:var(--accent); }
+    .fin-veh-vat { border:1px solid var(--border); border-radius:8px; background:var(--surface-2); padding:5px 9px; font-size:12.5px; color:var(--text); outline:none; font-family:inherit; cursor:pointer; }
+    @media (max-width: 1100px) { .fin-cols { grid-template-columns:1fr; } }
+    .fin-fld { display:flex; flex-direction:column; gap:6px; }
+    .fin-fld label { font-size:12px; color:var(--text2); font-weight:500; }
+    .fin-fld input, .fin-fld select { padding:11px 12px; border:1px solid var(--border); border-radius:10px; background:var(--surface-2); color:var(--text); font-size:15px; outline:none; font-family:inherit; box-sizing:border-box; width:100%; }
+    .fin-fld input:focus, .fin-fld select:focus { border-color:var(--accent); }
+    /* Impression PDF du récap comptable */
+    #fin-print-holder { display:none; }
+    @media print {
+      body.fin-printing > *:not(#fin-print-holder) { display:none !important; }
+      body.fin-printing #fin-print-holder { display:block !important; padding:24px; color:#111; }
+      #fin-print-area table th, #fin-print-area table td { padding:5px 8px; border-bottom:1px solid #ddd; }
+      #fin-print-area .fin-print-sum td { padding:7px 10px; border:1px solid #ddd; }
+    }
     .form-group {
       margin-bottom: 20px;
     }
@@ -1936,6 +1988,7 @@
     <button class="nav-link" type="button" onclick="switchView('organisation')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 0 0 4.486-6.336l-3.276 3.277a3.004 3.004 0 0 1-2.25-2.25l3.276-3.276a4.5 4.5 0 0 0-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.11 4.109m-1.745 1.437 1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008Z"/></svg><span class="nav-label">Organisation</span></button>
     <button class="nav-link" type="button" onclick="switchView('parc')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h18v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/><path d="M5 13l3-5h8l3 5"/><line x1="3" y1="17" x2="6" y2="17"/><circle cx="7.5" cy="17" r="1.5" fill="white"/><line x1="9" y1="17" x2="15" y2="17"/><circle cx="16.5" cy="17" r="1.5" fill="white"/><line x1="18" y1="17" x2="21" y2="17"/></svg><span class="nav-label">Parc</span></button>
     <button class="nav-link" type="button" onclick="switchView('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="4" height="10" rx="1"/><rect x="10" y="6" width="4" height="14" rx="1"/><rect x="17" y="3" width="4" height="17" rx="1"/></svg><span class="nav-label">Dashboard</span></button>
+    <button class="nav-link" type="button" onclick="switchView('finance')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3h16a1 1 0 0 1 1 1v17l-3-2-2 2-2-2-2 2-2-2-3 2V4a1 1 0 0 1 1-1z"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="14" y2="12"/></svg><span class="nav-label">Finance</span></button>
   </nav>
   <div class="sidebar-footer" style="margin-top:auto;display:flex;flex-direction:column;gap:10px;">
     <button class="sidebar-profile" type="button" onclick="switchView('compte')">
@@ -2188,6 +2241,72 @@
     </button>
   </div>
 
+  <!-- VUE FINANCE (desktop uniquement) -->
+  <div id="finance" class="view" style="display:none;">
+    <!-- Message mobile -->
+    <div class="fin-mobile-notice mobile-only" style="flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 28px;gap:14px;color:var(--text2);">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      <div style="font-size:16px;font-weight:600;color:var(--text);">Gestion comptable</div>
+      <div style="font-size:14px;max-width:280px;line-height:1.5;">Cette partie se gère depuis un ordinateur, pour saisir confortablement charges et factures et générer les exports.</div>
+    </div>
+
+    <!-- Contenu desktop -->
+    <div class="fin-desktop desktop-only">
+      <div class="desktop-view-header">
+        <div>
+          <h1>Finance</h1>
+          <p>Centralise charges, factures et marges pour transmettre à ton comptable en un clic.</p>
+        </div>
+        <div class="desktop-header-actions" style="gap:10px;">
+          <button class="desktop-card-btn" type="button" onclick="exportFinanceCsv()">Export Excel</button>
+          <button class="desktop-card-btn" type="button" onclick="exportFinancePdf()">Export PDF</button>
+        </div>
+      </div>
+
+      <!-- Sélecteur de période -->
+      <div class="fin-period-bar">
+        <div class="fin-period-nav">
+          <button type="button" onclick="finShiftPeriod(-1)" class="fin-period-arrow" title="Précédent"><svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,1 1,6 6,11"/></svg></button>
+          <span id="fin-period-label" style="font-weight:600;font-size:16px;color:var(--text);min-width:150px;text-align:center;">—</span>
+          <button type="button" onclick="finShiftPeriod(1)" class="fin-period-arrow" title="Suivant"><svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,1 6,6 1,11"/></svg></button>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <button type="button" onclick="finSetToday()" class="fin-period-today">Ce mois-ci</button>
+          <div id="fin-scope-seg" style="display:inline-flex;background:var(--surface-2);border-radius:10px;padding:3px;gap:2px;">
+            <button type="button" data-scope="month" onclick="finSetScope('month')" class="fin-scope-btn">Mois</button>
+            <button type="button" data-scope="year" onclick="finSetScope('year')" class="fin-scope-btn">Année</button>
+            <button type="button" data-scope="all" onclick="finSetScope('all')" class="fin-scope-btn">Tout</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Résumé comptable -->
+      <div id="fin-summary" class="fin-summary-grid"></div>
+
+      <div class="fin-cols">
+        <!-- Colonne gauche : charges -->
+        <section class="fin-section">
+          <div class="fin-section-head">
+            <span class="fin-section-title">Charges de l'entreprise</span>
+            <div style="display:flex;gap:8px;">
+              <button type="button" class="fin-add-btn" onclick="openChargeModal(null,false)">+ Charge</button>
+              <button type="button" class="fin-add-btn fin-add-btn-alt" onclick="openChargeModal(null,true)">+ Récurrente</button>
+            </div>
+          </div>
+          <div id="fin-charges-list"></div>
+        </section>
+
+        <!-- Colonne droite : véhicules vendus -->
+        <section class="fin-section">
+          <div class="fin-section-head">
+            <span class="fin-section-title">Véhicules vendus</span>
+          </div>
+          <div id="fin-veh-list"></div>
+        </section>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL Dashboard : Gérer les données (Données avant Trakoto + Suivi financier) -->
   <div id="modal-finance-data" style="position:fixed;top:0;left:0;width:100%;height:100%;background:var(--surface);z-index:9999;display:none;flex-direction:column;animation:slideUpFull 0.3s ease;">
     <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;min-height:56px;">
@@ -2294,6 +2413,17 @@
             <input type="number" id="param-marge-cible" onchange="saveDefaultMargeCible(this.value)" style="border:none;outline:none;font-size:15px;color:var(--text);text-align:right;width:50px;background:transparent;"/>
             <span style="font-size:15px;color:var(--text2);">%</span>
           </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:0.5px solid var(--border);gap:12px;">
+          <div>
+            <div style="font-size:15px;color:var(--text);">Régime de TVA par défaut</div>
+            <div style="font-size:12px;color:var(--text2);margin-top:1px;">Utilisé dans Finance, réglable par véhicule</div>
+          </div>
+          <select id="param-vat-default" onchange="saveDefaultVat(this.value)" style="border:1px solid var(--border);border-radius:8px;background:var(--surface-2);color:var(--text);font-size:14px;padding:7px 10px;outline:none;font-family:inherit;cursor:pointer;flex-shrink:0;">
+            <option value="marge">TVA sur marge</option>
+            <option value="classique">TVA classique</option>
+            <option value="exonere">Exonéré</option>
+          </select>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;gap:12px;">
           <div>
@@ -2876,6 +3006,9 @@ let currentDetailVehicleId = null;
 let financeUnlocked = false;
 let currentParcFilter = 'all';
 let currentConfirmationVehicleId = null;
+let financeData = JSON.parse(localStorage.getItem('at_finance') || '{"charges":[],"recurring":[],"vehMeta":{},"vatDefault":"marge"}');
+let finScope = 'month';      // 'month' | 'year' | 'all'
+let finPeriod = new Date();  // mois/année de référence
 
 const DataLayer = {
   getVehicles: () => vehicles,
@@ -2934,11 +3067,22 @@ async function syncOrgToSupabase(){
   } catch(e) { console.error('Org sync error:', e); }
 }
 
+function saveFinance(){
+  localStorage.setItem('at_finance', JSON.stringify(financeData));
+  if(sbUser) syncFinanceToSupabase();
+}
+async function syncFinanceToSupabase(){
+  try {
+    await sb.from('vehicles').upsert({id: sbUser.id + '_finance', user_id: sbUser.id, data: financeData}, {onConflict: 'id'});
+  } catch(e) { console.error('Finance sync error:', e); }
+}
+
 async function loadFromSupabase(){
   try {
     const {data: vRow} = await sb.from('vehicles').select('data').eq('id', sbUser.id + '_vehicles').single();
     const {data: pRow} = await sb.from('planning_tasks').select('data').eq('user_id', sbUser.id).single();
     const {data: oRow} = await sb.from('vehicles').select('data').eq('id', sbUser.id + '_organisation').single();
+    const {data: fRow} = await sb.from('vehicles').select('data').eq('id', sbUser.id + '_finance').single();
     if(vRow?.data) { vehicles = vRow.data; localStorage.setItem('at_vehicles', JSON.stringify(vehicles)); }
     if(pRow?.data) { planning = pRow.data; localStorage.setItem('at_planning', JSON.stringify(planning)); }
     if(oRow?.data) {
@@ -2946,6 +3090,10 @@ async function loadFromSupabase(){
       orgEntries = oRow.data.orgEntries || [];
       localStorage.setItem('at_prestataires', JSON.stringify(prestataires));
       localStorage.setItem('at_org_entries', JSON.stringify(orgEntries));
+    }
+    if(fRow?.data) {
+      financeData = Object.assign({charges:[],recurring:[],vehMeta:{},vatDefault:'marge'}, fRow.data);
+      localStorage.setItem('at_finance', JSON.stringify(financeData));
     }
   } catch(e) { console.error('Load error:', e); }
 }
@@ -3413,7 +3561,7 @@ function switchView(view){
   Utils.removeActiveClass('.bottom-nav-item');
   const el = Utils.el(view);
   if(el) { el.classList.add('active'); el.style.display = (view === 'planning' || view === 'organisation') ? 'flex' : 'block'; }
-  ['planning','parc','dashboard','organisation','compte'].forEach(v => {
+  ['planning','parc','dashboard','organisation','finance','compte'].forEach(v => {
     const btn = document.getElementById('nav-' + v);
     if(!btn) return;
     const outline = btn.querySelector('.nav-icon-outline');
@@ -3437,6 +3585,7 @@ function switchView(view){
   else if(view === 'planning') renderPlanning();
   else if(view === 'dashboard') renderDashboard();
   else if(view === 'organisation') renderOrganisation();
+  else if(view === 'finance') renderFinance();
   else if(view === 'compte') renderCompte();
 }
 
@@ -3502,6 +3651,11 @@ function saveDefaultMargeCible(val){
   localStorage.setItem('at_default_marge_cible', n);
   showToast('✓ Marge cible par défaut enregistrée');
 }
+function saveDefaultVat(val){
+  financeData.vatDefault = val || 'marge';
+  saveFinance();
+  showToast('✓ Régime de TVA par défaut enregistré');
+}
 function isVoAutoincEnabled(){ return localStorage.getItem('at_vo_autoinc_enabled') === '1'; }
 function getVoPrefix(){ return localStorage.getItem('at_vo_prefix') || 'VO'; }
 function getVoNext(){ return Number(localStorage.getItem('at_vo_next')) || 1; }
@@ -3549,11 +3703,319 @@ function openParametresModal(){
   const _ai = document.getElementById('param-vo-autoinc'); if(_ai) _ai.checked = isVoAutoincEnabled();
   const _pf = document.getElementById('param-vo-prefix'); if(_pf) _pf.value = getVoPrefix();
   const _nx = document.getElementById('param-vo-next'); if(_nx) _nx.value = getVoNext();
+  const _vat = document.getElementById('param-vat-default'); if(_vat) _vat.value = financeData.vatDefault || 'marge';
   syncVoAutoincUI();
   document.getElementById('modal-parametres').style.display = 'flex';
 }
 function closeParametresModal(){
   document.getElementById('modal-parametres').style.display = 'none';
+}
+
+/* ══════════════════ VUE FINANCE (comptabilité) ══════════════════ */
+const FIN_CHARGE_CATS = ['Loyer','Assurance','Salaires','Charges sociales','Comptable','Banque','Carburant','Marketing','Fournitures','Local / entretien','Téléphone / Internet','Impôts & taxes','Autre'];
+const FIN_VAT_LABELS = { marge:'TVA sur marge', classique:'TVA classique', exonere:'Exonéré' };
+const FIN_TVA_RATES = [0, 5.5, 10, 20];
+
+function finFmt(n){ return Math.round(n).toLocaleString('fr-FR') + ' €'; }
+function finMonthKey(d){ return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0'); }
+function finPeriodLabel(){
+  if(finScope === 'all') return "Tout l'historique";
+  if(finScope === 'year') return String(finPeriod.getFullYear());
+  return finPeriod.toLocaleDateString('fr-FR', {month:'long', year:'numeric'});
+}
+function finDateInPeriod(dateStr){
+  if(finScope === 'all') return true;
+  if(!dateStr) return false;
+  const ym = dateStr.slice(0,7);
+  if(finScope === 'year') return ym.startsWith(String(finPeriod.getFullYear()));
+  return ym === finMonthKey(finPeriod);
+}
+function finRecurActive(r, ym){
+  if(r.startMonth && ym < r.startMonth) return false;
+  if(r.endMonth && ym > r.endMonth) return false;
+  return true;
+}
+function finRecurMonths(){
+  const now = new Date(); const nowKey = finMonthKey(now);
+  let start, end;
+  if(finScope === 'month'){ start = end = finMonthKey(finPeriod); }
+  else if(finScope === 'year'){ start = finPeriod.getFullYear()+'-01'; end = finPeriod.getFullYear()+'-12'; }
+  else {
+    let earliest = nowKey;
+    financeData.recurring.forEach(r => { if(r.startMonth && r.startMonth < earliest) earliest = r.startMonth; });
+    financeData.charges.forEach(c => { const k=(c.date||'').slice(0,7); if(k && k < earliest) earliest = k; });
+    start = earliest; end = nowKey;
+  }
+  if(finScope !== 'month' && end > nowKey) end = nowKey;
+  const arr = []; let [cy,cm] = start.split('-').map(Number); const [ey,em] = end.split('-').map(Number);
+  while(cy < ey || (cy === ey && cm <= em)){ arr.push(cy+'-'+String(cm).padStart(2,'0')); cm++; if(cm>12){cm=1;cy++;} if(arr.length>600) break; }
+  return arr;
+}
+function finChargesForPeriod(){
+  const list = [];
+  financeData.charges.forEach(c => { if(finDateInPeriod(c.date)) list.push(Object.assign({}, c, {_recur:false})); });
+  const months = finRecurMonths();
+  financeData.recurring.forEach(r => {
+    months.forEach(ym => {
+      if(finRecurActive(r, ym)) list.push(Object.assign({}, r, {_recur:true, _tplId:r.id, date: ym+'-'+String(r.dayOfMonth||1).padStart(2,'0'), _ym:ym}));
+    });
+  });
+  list.sort((a,b) => (b.date||'').localeCompare(a.date||''));
+  return list;
+}
+function finVehSoldInPeriod(){
+  return vehicles.filter(v => {
+    if(v.statut !== 'Livré' && v.statut !== 'Vendu') return false;
+    const sm = _soldMonth(v);
+    if(finScope === 'all') return true;
+    if(!sm) return false;
+    if(finScope === 'year') return sm.startsWith(String(finPeriod.getFullYear()));
+    return sm === finMonthKey(finPeriod);
+  });
+}
+function finVehFigures(v){
+  const achat = Number(v.achat) || 0;
+  const fraisSansTva = costTotal(costItemsOf(v,'sansTva'));
+  const fraisAvecTva = costTotal(costItemsOf(v,'avecTva'));
+  const cg = Number(v.carteGrise) || 0;
+  const frais = fraisSansTva + fraisAvecTva + cg;
+  const vente = Number(v.venteFinale || v.vente) || 0;
+  const revient = achat + frais;
+  const marge = vente - revient;
+  const meta = financeData.vehMeta[v.id] || {};
+  const regime = meta.vatRegime || financeData.vatDefault || 'marge';
+  let tva = 0;
+  if(regime === 'marge') tva = marge > 0 ? (marge - marge/1.2) : 0;
+  else if(regime === 'classique') tva = vente > 0 ? (vente - vente/1.2) : 0;
+  return {achat, frais, fraisSansTva, fraisAvecTva, cg, vente, revient, marge, regime, tva, meta};
+}
+function finComputeSummary(){
+  const vehs = finVehSoldInPeriod();
+  let ca=0, cogs=0, margeVeh=0, tvaVeh=0;
+  vehs.forEach(v => { const f = finVehFigures(v); ca+=f.vente; cogs+=f.revient; margeVeh+=f.marge; tvaVeh+=f.tva; });
+  const charges = finChargesForPeriod().reduce((s,c)=> s + (Number(c.amount)||0), 0);
+  return {ca, cogs, margeVeh, tvaVeh, charges, resultat: margeVeh - charges, nbVehs: vehs.length};
+}
+
+function finShiftPeriod(dir){
+  if(finScope === 'all') return;
+  if(finScope === 'year') finPeriod.setFullYear(finPeriod.getFullYear() + dir);
+  else finPeriod.setMonth(finPeriod.getMonth() + dir);
+  renderFinance();
+}
+function finSetToday(){ finPeriod = new Date(); if(finScope === 'all') finScope = 'month'; renderFinance(); }
+function finSetScope(s){ finScope = s; renderFinance(); }
+
+function renderFinance(){
+  const lbl = document.getElementById('fin-period-label'); if(lbl) lbl.textContent = finPeriodLabel();
+  document.querySelectorAll('#fin-scope-seg .fin-scope-btn').forEach(b => b.classList.toggle('active', b.getAttribute('data-scope') === finScope));
+  document.querySelectorAll('.fin-period-arrow').forEach(b => { b.style.opacity = finScope === 'all' ? '0.35' : '1'; b.style.pointerEvents = finScope === 'all' ? 'none' : 'auto'; });
+  renderFinanceSummary();
+  renderFinanceCharges();
+  renderFinanceVehicles();
+}
+function renderFinanceSummary(){
+  const el = document.getElementById('fin-summary'); if(!el) return;
+  const s = finComputeSummary();
+  el.innerHTML = `
+    <div class="fin-kpi"><div class="fin-kpi-label">Chiffre d'affaires</div><div class="fin-kpi-val">${finFmt(s.ca)}</div><div class="fin-kpi-sub">${s.nbVehs} véhicule${s.nbVehs>1?'s':''} vendu${s.nbVehs>1?'s':''}</div></div>
+    <div class="fin-kpi"><div class="fin-kpi-label">Coût des véhicules</div><div class="fin-kpi-val">${finFmt(s.cogs)}</div><div class="fin-kpi-sub">Achats + frais + CG</div></div>
+    <div class="fin-kpi"><div class="fin-kpi-label">Marge véhicules</div><div class="fin-kpi-val">${finFmt(s.margeVeh)}</div><div class="fin-kpi-sub">CA − coût</div></div>
+    <div class="fin-kpi"><div class="fin-kpi-label">Charges</div><div class="fin-kpi-val">${finFmt(s.charges)}</div><div class="fin-kpi-sub">Frais de structure</div></div>
+    <div class="fin-kpi ${s.resultat>=0?'pos':'neg'}"><div class="fin-kpi-label">Résultat</div><div class="fin-kpi-val">${finFmt(s.resultat)}</div><div class="fin-kpi-sub">Marge − charges</div></div>
+    <div class="fin-kpi"><div class="fin-kpi-label">TVA estimée</div><div class="fin-kpi-val">${finFmt(s.tvaVeh)}</div><div class="fin-kpi-sub">Sur ventes véhicules</div></div>`;
+}
+function renderFinanceCharges(){
+  const el = document.getElementById('fin-charges-list'); if(!el) return;
+  const list = finChargesForPeriod();
+  if(list.length === 0){ el.innerHTML = '<div class="fin-empty">Aucune charge sur cette période. Ajoute tes frais de structure (loyer, assurance, salaires…).</div>'; return; }
+  el.innerHTML = list.map(c => {
+    const d = c.date ? new Date(c.date+'T00:00:00').toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'}) : '';
+    const sub = [c.category, d, c.supplier, c.invoiceNo ? 'Fact. '+c.invoiceNo : ''].filter(Boolean).join(' · ');
+    const editId = c._recur ? c._tplId : c.id;
+    return `<div class="fin-row" onclick="openChargeModal('${editId}',${c._recur})">
+      <div class="fin-row-main">
+        <div class="fin-row-title">${escapeHtml(c.label||'Charge')}${c._recur?' <span class="fin-badge fin-badge-recur">Récurrent</span>':''}</div>
+        <div class="fin-row-sub">${escapeHtml(sub)}</div>
+      </div>
+      <div class="fin-row-amt">${finFmt(Number(c.amount)||0)}</div>
+      <button class="fin-row-del" onclick="event.stopPropagation();deleteCharge('${editId}',${c._recur})" title="Supprimer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+    </div>`;
+  }).join('');
+}
+function renderFinanceVehicles(){
+  const el = document.getElementById('fin-veh-list'); if(!el) return;
+  const vehs = finVehSoldInPeriod();
+  if(vehs.length === 0){ el.innerHTML = '<div class="fin-empty">Aucun véhicule vendu sur cette période.</div>'; return; }
+  el.innerHTML = vehs.map(v => {
+    const f = finVehFigures(v);
+    const name = escapeHtml((v.marque||'') + ' ' + (v.modele||''));
+    const sm = _soldMonth(v);
+    const dsold = v.saleDate ? new Date(v.saleDate+'T00:00:00').toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'}) : (sm||'');
+    const opts = Object.keys(FIN_VAT_LABELS).map(k => `<option value="${k}"${f.regime===k?' selected':''}>${FIN_VAT_LABELS[k]}</option>`).join('');
+    return `<div class="fin-row" style="flex-wrap:wrap;cursor:default;">
+      <div class="fin-row-main" style="flex:1 1 160px;">
+        <div class="fin-row-title">${name}</div>
+        <div class="fin-row-sub">${v.numVo?('N°'+escapeHtml(v.numVo)+' · '):''}Vendu ${dsold}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0;">
+        <div class="fin-row-amt">${finFmt(f.vente)}</div>
+        <div class="fin-row-sub">Marge ${finFmt(f.marge)}</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-basis:100%;margin-top:4px;flex-wrap:wrap;">
+        <select class="fin-veh-vat" onchange="finSetVehMeta(${JSON.stringify(String(v.id))},'vatRegime',this.value)">${opts}</select>
+        <input class="fin-veh-invoice-input" placeholder="N° fact. achat" value="${escapeHtml(f.meta.achatInvoice||'')}" onchange="finSetVehMeta(${JSON.stringify(String(v.id))},'achatInvoice',this.value)">
+        <input class="fin-veh-invoice-input" placeholder="N° fact. vente" value="${escapeHtml(f.meta.venteInvoice||'')}" onchange="finSetVehMeta(${JSON.stringify(String(v.id))},'venteInvoice',this.value)">
+      </div>
+    </div>`;
+  }).join('');
+}
+function finSetVehMeta(vehId, field, value){
+  if(!financeData.vehMeta[vehId]) financeData.vehMeta[vehId] = {};
+  financeData.vehMeta[vehId][field] = value;
+  saveFinance();
+  if(field === 'vatRegime') renderFinanceSummary();
+}
+
+function openChargeModal(editId, isRecurring){
+  let c = {};
+  if(editId){
+    c = (isRecurring ? financeData.recurring : financeData.charges).find(x => String(x.id) === String(editId)) || {};
+  }
+  const catOpts = FIN_CHARGE_CATS.map(cat => `<option value="${cat}"${c.category===cat?' selected':''}>${cat}</option>`).join('');
+  const tvaOpts = FIN_TVA_RATES.map(r => `<option value="${r}"${(c.tvaRate!=null?c.tvaRate:20)===r?' selected':''}>${r} %</option>`).join('');
+  const today = Utils.today();
+  const dateField = isRecurring
+    ? `<div class="fin-fld"><label>Depuis le mois</label><input type="month" id="chg-startMonth" value="${c.startMonth||finMonthKey(new Date())}"></div>
+       <div class="fin-fld"><label>Jour du prélèvement</label><input type="number" id="chg-day" min="1" max="28" placeholder="1" value="${c.dayOfMonth||''}"></div>`
+    : `<div class="fin-fld"><label>Date</label><input type="date" id="chg-date" value="${c.date||today}"></div>`;
+  const innerHtml = `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);">
+      <span style="font-size:17px;font-weight:600;color:var(--text);">${editId?'Modifier':'Nouvelle'} charge${isRecurring?' récurrente':''}</span>
+      <button onclick="document.getElementById('charge-modal')?.remove()" class="modal-close-btn">✕</button>
+    </div>
+    <div style="padding:20px;display:flex;flex-direction:column;gap:14px;">
+      <div class="fin-fld"><label>Libellé</label><input type="text" id="chg-label" placeholder="Loyer du local" value="${escapeHtml(c.label||'')}"></div>
+      <div style="display:flex;gap:12px;">
+        <div class="fin-fld" style="flex:1;"><label>Catégorie</label><select id="chg-cat">${catOpts}</select></div>
+        <div class="fin-fld" style="width:120px;"><label>Montant TTC</label><input type="number" id="chg-amount" placeholder="0" value="${c.amount||''}"></div>
+      </div>
+      <div style="display:flex;gap:12px;">
+        ${dateField}
+        <div class="fin-fld" style="width:110px;"><label>TVA</label><select id="chg-tva">${tvaOpts}</select></div>
+      </div>
+      <div style="display:flex;gap:12px;">
+        <div class="fin-fld" style="flex:1;"><label>Fournisseur</label><input type="text" id="chg-supplier" placeholder="Optionnel" value="${escapeHtml(c.supplier||'')}"></div>
+        <div class="fin-fld" style="flex:1;"><label>N° de facture</label><input type="text" id="chg-invoice" placeholder="Optionnel" value="${escapeHtml(c.invoiceNo||'')}"></div>
+      </div>
+      <button onclick="commitCharge('${editId||''}',${!!isRecurring})" class="ntask-save-btn" style="margin-top:6px;">${editId?'Enregistrer':'Ajouter'}</button>
+    </div>`;
+  createDialogOrSheet('charge-modal', innerHtml, {desktopWidth:'520px'});
+  setTimeout(() => document.getElementById('chg-label')?.focus(), 150);
+}
+function commitCharge(editId, isRecurring){
+  const label = document.getElementById('chg-label').value.trim();
+  const amount = Number(document.getElementById('chg-amount').value) || 0;
+  if(!label || !amount){ showToast('⚠️ Libellé et montant requis'); return; }
+  const base = {
+    label, amount,
+    category: document.getElementById('chg-cat').value,
+    tvaRate: Number(document.getElementById('chg-tva').value) || 0,
+    supplier: document.getElementById('chg-supplier').value.trim(),
+    invoiceNo: document.getElementById('chg-invoice').value.trim()
+  };
+  if(isRecurring){
+    base.startMonth = document.getElementById('chg-startMonth').value || finMonthKey(new Date());
+    base.dayOfMonth = Number(document.getElementById('chg-day').value) || 1;
+    if(editId){ const r = financeData.recurring.find(x => String(x.id) === String(editId)); if(r) Object.assign(r, base); }
+    else { financeData.recurring.push(Object.assign({id:String(Date.now())}, base)); }
+  } else {
+    base.date = document.getElementById('chg-date').value || Utils.today();
+    if(editId){ const c = financeData.charges.find(x => String(x.id) === String(editId)); if(c) Object.assign(c, base); }
+    else { financeData.charges.push(Object.assign({id:String(Date.now())}, base)); }
+  }
+  saveFinance();
+  document.getElementById('charge-modal')?.remove();
+  renderFinance();
+  showToast('✓ Charge enregistrée');
+}
+function deleteCharge(id, isRecurring){
+  const arr = isRecurring ? 'recurring' : 'charges';
+  const msg = isRecurring ? 'Supprimer cette charge récurrente ? Elle disparaîtra de tous les mois.' : 'Supprimer cette charge ?';
+  const innerHtml = `<div style="padding:24px 20px 32px 20px;">
+    <div style="font-weight:600;font-size:17px;margin-bottom:8px;color:var(--text);">Supprimer ?</div>
+    <div style="color:var(--text2);font-size:15px;margin-bottom:24px;">${msg}</div>
+    <div style="display:flex;gap:8px;">
+      <button onclick="this.closest('[style*=fixed]').remove()" class="btn-secondary">Annuler</button>
+      <button onclick="financeData.${arr}=financeData.${arr}.filter(x=>String(x.id)!==String('${id}'));saveFinance();renderFinance();this.closest('[style*=fixed]').remove();showToast('✓ Charge supprimée');" class="btn-danger">Supprimer</button>
+    </div>
+  </div>`;
+  createDialogOrSheet('confirm-del-charge', innerHtml, {desktopWidth:'420px', forceCenter:true});
+}
+
+/* ── Export comptable ── */
+function finExportRows(){
+  const rows = [];
+  finVehSoldInPeriod().forEach(v => {
+    const f = finVehFigures(v);
+    const name = (v.marque||'')+' '+(v.modele||'')+(v.numVo?(' (N°'+v.numVo+')'):'');
+    const dsold = v.saleDate || (_soldMonth(v)||'');
+    const dachat = v.achatDate || '';
+    if(f.achat) rows.push([dachat,'Achat véhicule',name,'Prix achat',v.marque||'',f.meta.achatInvoice||'',f.achat,'',FIN_VAT_LABELS[f.regime]]);
+    costItemsOf(v,'sansTva').forEach(it => rows.push(['','Frais véhicule',name,it.label||'Frais','',it.invoiceNo||'',Number(it.amount)||0,'0 %','']));
+    costItemsOf(v,'avecTva').forEach(it => rows.push(['','Frais véhicule',name,it.label||'Frais','',it.invoiceNo||'',Number(it.amount)||0,'20 %','']));
+    if(f.cg) rows.push(['','Frais véhicule',name,'Carte grise','','',f.cg,'','']);
+    if(f.vente) rows.push([dsold,'Vente véhicule',name,'Prix vente','',f.meta.venteInvoice||'',f.vente,FIN_VAT_LABELS[f.regime],Math.round(f.tva)]);
+  });
+  finChargesForPeriod().forEach(c => {
+    rows.push([c.date||'', c._recur?'Charge récurrente':'Charge', c.category||'', c.label||'', c.supplier||'', c.invoiceNo||'', Number(c.amount)||0, (c.tvaRate||0)+' %', '']);
+  });
+  return rows;
+}
+function exportFinanceCsv(){
+  const headers = ['Date','Type','Catégorie / Véhicule','Libellé','Fournisseur','N° facture','Montant TTC','Taux TVA','TVA'];
+  const rows = finExportRows();
+  if(!rows.length){ showToast('Rien à exporter sur cette période'); return; }
+  const esc = v => '"' + String(v==null?'':v).replace(/"/g,'""') + '"';
+  const csv = '﻿' + [headers.map(esc).join(';'), ...rows.map(r => r.map(esc).join(';'))].join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'trakoto-compta-' + finPeriodLabel().replace(/\s/g,'-').toLowerCase() + '.csv';
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  showToast('✓ Export Excel/CSV téléchargé');
+}
+function exportFinancePdf(){
+  const s = finComputeSummary();
+  const rows = finExportRows();
+  if(!rows.length){ showToast('Rien à exporter sur cette période'); return; }
+  const user = sbUser?.user_metadata || {};
+  const garage = user.garage_name || 'Mon activité';
+  const th = ['Date','Type','Catégorie / Véhicule','Libellé','Fournisseur','N° facture','Montant TTC','TVA'];
+  const bodyRows = rows.map(r => `<tr><td>${r[0]||''}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]||''}</td><td>${r[5]||''}</td><td style="text-align:right">${finFmt(Number(r[6])||0)}</td><td style="text-align:right">${r[8]!==''?finFmt(Number(r[8])||0):(r[7]||'')}</td></tr>`).join('');
+  const html = `<div id="fin-print-area">
+    <h1 style="margin:0 0 4px;font-size:22px;">Récapitulatif comptable</h1>
+    <div style="color:#555;margin-bottom:2px;">${escapeHtml(garage)}</div>
+    <div style="color:#555;margin-bottom:18px;">Période : ${finPeriodLabel()} · édité le ${new Date().toLocaleDateString('fr-FR')}</div>
+    <table class="fin-print-sum" style="width:100%;border-collapse:collapse;margin-bottom:22px;">
+      <tr><td>Chiffre d'affaires</td><td style="text-align:right;font-weight:700;">${finFmt(s.ca)}</td>
+          <td>Coût des véhicules</td><td style="text-align:right;font-weight:700;">${finFmt(s.cogs)}</td></tr>
+      <tr><td>Marge véhicules</td><td style="text-align:right;font-weight:700;">${finFmt(s.margeVeh)}</td>
+          <td>Charges</td><td style="text-align:right;font-weight:700;">${finFmt(s.charges)}</td></tr>
+      <tr><td>Résultat</td><td style="text-align:right;font-weight:700;">${finFmt(s.resultat)}</td>
+          <td>TVA estimée (ventes)</td><td style="text-align:right;font-weight:700;">${finFmt(s.tvaVeh)}</td></tr>
+    </table>
+    <table style="width:100%;border-collapse:collapse;font-size:12px;">
+      <thead><tr>${th.map(h=>`<th style="text-align:left;border-bottom:2px solid #222;padding:6px 8px;">${h}</th>`).join('')}</tr></thead>
+      <tbody>${bodyRows}</tbody>
+    </table>
+  </div>`;
+  let holder = document.getElementById('fin-print-holder');
+  if(!holder){ holder = document.createElement('div'); holder.id = 'fin-print-holder'; document.body.appendChild(holder); }
+  holder.innerHTML = html;
+  document.body.classList.add('fin-printing');
+  window.print();
+  setTimeout(() => { document.body.classList.remove('fin-printing'); holder.innerHTML = ''; }, 500);
 }
 
 function renderCompte(){
