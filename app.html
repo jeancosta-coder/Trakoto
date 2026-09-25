@@ -1426,40 +1426,102 @@
         overflow: hidden !important;
       }
       /* Ajout vehicule desktop : occupe toute la page, contenu centre sur une largeur lisible */
+      /* Modal Ajouter un vehicule desktop : dialogue centre plutot que plein ecran, forme plus agreable a remplir */
       #modal-add-vehicle {
-        padding: 0 !important;
+        padding: 40px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background: transparent !important;
       }
-      #modal-add-vehicle #add-veh-stepper,
+      #add-veh-dialog {
+        width: 100% !important;
+        max-width: 720px !important;
+        max-height: 88vh !important;
+        height: auto !important;
+        background: var(--surface) !important;
+        border-radius: 24px !important;
+        box-shadow: 0 24px 70px rgba(0,0,0,0.28) !important;
+        overflow: hidden !important;
+        animation: none !important;
+      }
+      #modal-add-vehicle > div:first-child { border-radius: 24px 24px 0 0 !important; }
+      #modal-add-vehicle #add-veh-stepper {
+        padding: 20px 28px 0 !important;
+        gap: 8px !important;
+      }
+      .add-veh-step-dot { height: 5px !important; }
       #modal-add-vehicle #add-veh-stepper-label-wrap {
-        max-width: 900px !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
+        padding: 10px 28px 0 !important;
       }
+      #add-veh-step-label { font-size: 12.5px !important; letter-spacing: 0.5px !important; }
       #modal-add-vehicle #add-veh-body {
-        max-width: 900px !important;
-        margin: 0 auto !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
-        padding: 28px 0 40px !important;
+        padding: 24px 28px 28px !important;
       }
-      /* Bordure nette sur les cartes : l'ombre seule est trop subtile pour marquer les contours en desktop */
+      /* Cartes : bordure nette (l'ombre seule est trop subtile), plus d'air interne */
       #modal-add-vehicle .ntask-card {
         border: 1px solid var(--border) !important;
+        border-radius: 16px !important;
+      }
+      /* Champs : label au-dessus, valeur en dessous en plus gros - plus agreable a lire et remplir qu'une ligne dense */
+      #modal-add-vehicle .ntask-row {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        justify-content: center !important;
+        gap: 6px !important;
+        min-height: 0 !important;
+        padding: 14px 18px !important;
+      }
+      #modal-add-vehicle .ntask-row-label {
+        font-size: 11px !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        color: var(--text2) !important;
+      }
+      #modal-add-vehicle .ntask-row input,
+      #modal-add-vehicle .ntask-row textarea,
+      #modal-add-vehicle #f-achat-date-disp {
+        font-size: 17px !important;
+        text-align: left !important;
+        width: 100% !important;
+      }
+      #modal-add-vehicle .ntask-row-val {
+        width: 100% !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+      }
+      #modal-add-vehicle .ntask-row-val .vsg-value,
+      #modal-add-vehicle #veh-carburant-label,
+      #modal-add-vehicle #veh-transmission-label {
+        font-size: 17px !important;
+        color: var(--text) !important;
+      }
+      #modal-add-vehicle .veh-bool-toggle { width: auto !important; }
+      #modal-add-vehicle .ntask-sep { margin-left: 18px !important; }
+      /* Photo : zone d'ajout plus accueillante */
+      #modal-add-vehicle #add-veh-step-1 > .ntask-card:first-child {
+        border: 1.5px dashed var(--border-strong) !important;
+        background: var(--surface-2) !important;
+        box-shadow: none !important;
+        height: 140px !important;
+        transition: background 0.15s ease, border-color 0.15s ease !important;
+      }
+      #modal-add-vehicle #add-veh-step-1 > .ntask-card:first-child:hover {
+        background: var(--surface-3) !important;
+        border-color: var(--accent) !important;
       }
       #modal-add-vehicle .ntask-save-bar {
-        max-width: 900px !important;
-        margin: 0 auto !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
+        padding: 16px 28px !important;
+        border-top: 1px solid var(--border) !important;
       }
       #add-veh-step-1.add-veh-cols, #add-veh-step-3.add-veh-cols {
         grid-template-columns: 1fr 1fr;
-        gap: 0 24px;
+        gap: 16px 20px;
         align-items: start;
       }
       #add-veh-step-1.add-veh-cols > :first-child { grid-column: 1 / 3; }
+      #add-veh-step-2 .ntask-card { margin-bottom: 16px !important; }
       #new-task-modal > *,
       #simple-task-modal > *,
       #edit-simple-task-modal > *,
@@ -2667,6 +2729,7 @@
 <!-- VUE COMPTE (ancien emplacement supprimé) -->
 
 <div id="modal-add-vehicle" style="position:fixed;top:0;left:0;width:100%;height:100%;background:var(--surface);z-index:9999;display:none;flex-direction:column;animation:slideUpFull 0.3s ease;">
+ <div id="add-veh-dialog" style="display:flex;flex-direction:column;height:100%;">
   <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;min-height:56px;">
     <button onclick="closeAddModal()" class="modal-close-btn">✕</button>
     <span id="add-vehicle-title" style="font-size:17px;font-weight:600;color:var(--text);flex:1;text-align:center;">Nouveau véhicule</span>
@@ -2764,6 +2827,7 @@
     <button id="add-veh-next-btn" class="ntask-save-btn" onclick="addVehModalNextStep()" style="flex:1;">Suivant</button>
     <button id="add-veh-save-btn" class="ntask-save-btn" onclick="addVehicle()" style="flex:1;display:none;">Enregistrer</button>
   </div>
+ </div>
 </div>
 
 
