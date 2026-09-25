@@ -2685,6 +2685,12 @@
             <div class="bft-group"><span style="display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.55;"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="6" y1="15" x2="10" y2="15"/></svg>Autres frais</span></div>
             <div class="bft-row-simple"><span class="bft-name">Carte grise</span><div class="fin-input-wrap"><input type="number" id="detail-cg-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="bft-inp-simple"><span class="fin-unit">€</span></div></div>
 
+            <!-- Comptabilité : régime TVA + n° de factures (source unique partagée avec l'onglet Finance) -->
+            <div class="bft-group"><span style="display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.55;"><path d="M9 7h6M9 11h6M9 15h4"/><rect x="4" y="3" width="16" height="18" rx="2"/></svg>Comptabilité</span></div>
+            <div class="bft-row-simple"><span class="bft-name">Régime de TVA</span><select id="detail-vat-regime" onchange="finSetVehMeta(String(currentDetailVehicleId),'vatRegime',this.value)" class="fin-veh-vat" style="width:auto;"><option value="marge">TVA sur marge</option><option value="classique">TVA classique</option><option value="exonere">Exonéré</option></select></div>
+            <div class="bft-row-simple"><span class="bft-name">N° facture d'achat</span><input type="text" id="detail-achat-invoice" placeholder="—" onchange="finSetVehMeta(String(currentDetailVehicleId),'achatInvoice',this.value)" class="bft-inp-simple" style="text-align:right;"></div>
+            <div class="bft-row-simple"><span class="bft-name">N° facture de vente</span><input type="text" id="detail-vente-invoice" placeholder="—" onchange="finSetVehMeta(String(currentDetailVehicleId),'venteInvoice',this.value)" class="bft-inp-simple" style="text-align:right;"></div>
+
             <!-- Valider la vente : action finale du bloc, visible tant que la vente n'est pas validée -->
             <div class="fin-finalize-wrap">
               <button id="finalize-sale-btn" onclick="openFinalizeSaleModal()" class="btn-success-block">
@@ -4824,6 +4830,10 @@ function openVehicleDetails(id){
   renderCostList('sansTva');
   renderCostList('avecTva');
   document.getElementById('detail-marge-cible-input').value = v.margeCible || getDefaultMargeCible();
+  const _meta = financeData.vehMeta[v.id] || {};
+  const _vr = document.getElementById('detail-vat-regime'); if(_vr) _vr.value = _meta.vatRegime || financeData.vatDefault || 'marge';
+  const _ai = document.getElementById('detail-achat-invoice'); if(_ai) _ai.value = _meta.achatInvoice || '';
+  const _vi = document.getElementById('detail-vente-invoice'); if(_vi) _vi.value = _meta.venteInvoice || '';
   const _sd = document.getElementById('detail-sale-date'); if(_sd) _sd.value = v.saleDate || '';
   const _fmtD = (d) => d ? new Date(d + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'}) : '—';
   const _ad = document.getElementById('detail-achat-date-disp'); if(_ad) _ad.textContent = _fmtD(v.achatDate);
