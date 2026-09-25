@@ -751,7 +751,8 @@
     .dt-info-edit-fab:active { transform: scale(0.9); }
     .dt-info-edit-fab.active { background: var(--accent); color: var(--accent-contrast); }
     .dt-notes-frame { border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px; background: var(--surface-2); }
-    .notes-save-btn { display: block; margin: 8px 0 0 auto; padding: 6px 14px; background: var(--accent); color: var(--accent-contrast); border: none; border-radius: 9999px; font-size: 12.5px; font-weight: 600; cursor: pointer; }
+    .notes-save-btn { display: none; margin: 8px 0 0 auto; padding: 6px 14px; background: var(--accent); color: var(--accent-contrast); border: none; border-radius: 9999px; font-size: 12.5px; font-weight: 600; cursor: pointer; }
+    .notes-save-btn.visible { display: block; }
     .ntask-section-label { padding: 18px 16px 8px; font-size: 13px; font-weight: 700; color: var(--text); letter-spacing: 0.1px; }
     .ntask-section-label-primary { font-size: 18px; padding-top: 16px; }
     /* Fiche unifiee : lignes label/valeur epurees (libelle gris a gauche, valeur en gras a droite) */
@@ -2321,8 +2322,8 @@
             <div class="ntask-row ntask-row-static" style="cursor:default;flex-direction:column;align-items:stretch;min-height:0;padding-top:16px;padding-bottom:14px;">
               <span class="ntask-row-label" style="margin-bottom:8px;display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.55;"><path d="M17 3a2.83 2.83 0 0 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>Notes</span>
               <div class="dt-notes-frame">
-                <textarea id="detail-notes" oninput="autoGrowNotes(this)" style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:22px;resize:none;color:var(--text);background:transparent;padding:0;box-sizing:border-box;overflow:hidden;" placeholder="Pas encore de note pour ce véhicule…" onblur="saveVehicleNotes()"></textarea>
-                <button type="button" class="notes-save-btn" onclick="saveVehicleNotes()">Enregistrer</button>
+                <textarea id="detail-notes" oninput="autoGrowNotes(this);document.getElementById('detail-notes-save-btn').classList.add('visible')" style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:22px;resize:none;color:var(--text);background:transparent;padding:0;box-sizing:border-box;overflow:hidden;" placeholder="Pas encore de note pour ce véhicule…" onblur="saveVehicleNotes()"></textarea>
+                <button type="button" id="detail-notes-save-btn" class="notes-save-btn" onclick="saveVehicleNotes()">Enregistrer</button>
               </div>
             </div>
             <div class="ntask-sep"></div>
@@ -2505,8 +2506,8 @@
           <div class="ntask-section-label dtc-section-label">Notes</div>
           <div class="dtc-field dtc-field-notes">
             <div class="dt-notes-frame">
-              <textarea id="dtc-notes" placeholder="Notes sur le client..." onblur="saveClientField('notes', this.value)" style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:90px;resize:none;color:var(--text);background:transparent;padding:0;box-sizing:border-box;"></textarea>
-              <button type="button" class="notes-save-btn" onclick="saveClientNotes()">Enregistrer</button>
+              <textarea id="dtc-notes" placeholder="Notes sur le client..." oninput="document.getElementById('dtc-notes-save-btn').classList.add('visible')" onblur="saveClientNotes()" style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:90px;resize:none;color:var(--text);background:transparent;padding:0;box-sizing:border-box;"></textarea>
+              <button type="button" id="dtc-notes-save-btn" class="notes-save-btn" onclick="saveClientNotes()">Enregistrer</button>
             </div>
           </div>
         </div>
@@ -3891,6 +3892,7 @@ function saveClientField(field, val){
 }
 function saveClientNotes(){
   saveClientField('notes', document.getElementById('dtc-notes').value);
+  document.getElementById('dtc-notes-save-btn')?.classList.remove('visible');
   showToast('✓ Notes enregistrées');
 }
 function callClientPhone(){
@@ -4362,7 +4364,7 @@ function initDetailSwipe(){
 
 function saveVehicleNotes(){
   const v = vehicles.find(x => x.id === currentDetailVehicleId);
-  if(v) { v.notes = document.getElementById('detail-notes').value; save(); showToast('✓ Notes enregistrées'); }
+  if(v) { v.notes = document.getElementById('detail-notes').value; save(); document.getElementById('detail-notes-save-btn')?.classList.remove('visible'); showToast('✓ Notes enregistrées'); }
 }
 
 function savePrices(){
