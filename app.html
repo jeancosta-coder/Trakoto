@@ -1153,13 +1153,8 @@
         flex-shrink: 0 !important;
         padding: 12px 20px 0 !important;
       }
-      /* Bouton supprimer : tout en bas */
-      .dt-delete-wrap {
-        display: block !important;
-        margin-top: auto !important;
-        padding: 16px 20px 28px !important;
-        flex-shrink: 0 !important;
-      }
+      /* Suppression : menu contextuel "···" dans le nav desktop, comme sur mobile - plus de bouton dedie en bas */
+      .dt-delete-wrap { display: none !important; }
 
       /* === COLONNE DROITE : barre onglets + contenu === */
       /* Barre d'onglets : col 2, row 1 (cible directement l'id, pas nth-child : l'ordre des freres a change) */
@@ -2253,6 +2248,7 @@
               <svg width="6" height="10" viewBox="0 0 6 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="5,1 1,5 5,9"/></svg>
               Parc
             </button>
+            <button onclick="event.stopPropagation();showVehicleContextMenu(currentDetailVehicleId, this)" class="card-menu-btn" title="Options" style="background:var(--surface-2);border:none;cursor:pointer;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:16px;line-height:1;letter-spacing:1px;flex-shrink:0;">···</button>
           </div>
           <div style="padding:0 16px 12px;">
             <div id="detail-photo-thumb-desktop" onclick="openVehiclePhotoPicker()" style="position:relative;cursor:pointer;width:100%;aspect-ratio:16/10;border-radius:16px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;color:var(--text2);overflow:hidden;">
