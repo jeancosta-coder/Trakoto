@@ -2622,10 +2622,14 @@
     <!-- Abonnement -->
     <div style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Abonnement</span></div>
     <div style="background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--card-shadow);overflow:hidden;margin:0 16px 24px 16px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:0.5px solid var(--border);">
         <span style="font-size:15px;color:var(--text);">Plan actuel</span>
-        <span style="font-size:12px;font-weight:600;color:#34C759;background:rgba(52,199,89,0.12);padding:4px 10px;border-radius:20px;letter-spacing:0.2px;">GRATUIT</span>
+        <span id="compte-abo-badge" style="font-size:12px;font-weight:600;color:var(--text2);background:var(--surface-2);padding:4px 10px;border-radius:20px;letter-spacing:0.2px;">…</span>
       </div>
+      <div id="compte-abo-detail" style="display:none;padding:14px 16px;border-bottom:0.5px solid var(--border);">
+        <span style="font-size:13px;color:var(--text2);"></span>
+      </div>
+      <button id="compte-abo-cancel-btn" onclick="confirmCancelSubscription()" style="display:none;width:100%;padding:14px 16px;background:none;border:none;cursor:pointer;font-size:15px;color:var(--danger);text-align:left;">Résilier mon abonnement</button>
     </div>
 
 
@@ -3486,6 +3490,73 @@ function renderCompte(){
   const _sav = document.getElementById('sidebar-avatar');
   if(_sav){ const src = nom !== '—' ? nom : (email !== '—' ? email : '?'); const parts = src.trim().split(/\s+/); _sav.textContent = (parts.length > 1 ? parts[0][0] + parts[1][0] : src.substring(0,2)); }
 
+  if(email !== '—') loadSubscriptionStatus(email);
+}
+
+const SUB_STATUS_LABELS = {
+  trialing: {label: 'ESSAI GRATUIT', color: 'var(--info)', bg: 'var(--info-soft)'},
+  active: {label: 'ACTIF', color: 'var(--success)', bg: 'var(--success-soft)'},
+  canceled: {label: 'RÉSILIÉ', color: 'var(--text2)', bg: 'var(--surface-2)'},
+  past_due: {label: 'IMPAYÉ', color: 'var(--danger)', bg: 'var(--danger-soft)'},
+  none: {label: 'AUCUN', color: 'var(--text2)', bg: 'var(--surface-2)'}
+};
+async function loadSubscriptionStatus(email){
+  const badge = document.getElementById('compte-abo-badge');
+  const detailWrap = document.getElementById('compte-abo-detail');
+  const cancelBtn = document.getElementById('compte-abo-cancel-btn');
+  if(!badge) return;
+  try {
+    const res = await fetch('/.netlify/functions/get-subscription-status', {
+      method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({email})
+    });
+    const data = await res.json();
+    const info = SUB_STATUS_LABELS[data.status] || SUB_STATUS_LABELS.none;
+    badge.textContent = info.label;
+    badge.style.color = info.color;
+    badge.style.background = info.bg;
+    document._subStatus = data;
+    if(detailWrap){
+      const span = detailWrap.querySelector('span');
+      if(data.status === 'trialing' && data.trialEnd){
+        span.textContent = "Essai jusqu'au " + new Date(data.trialEnd * 1000).toLocaleDateString('fr-FR');
+        detailWrap.style.display = 'block';
+      } else if(data.status === 'active' && data.cancelAtPeriodEnd && data.currentPeriodEnd){
+        span.textContent = "Résiliation prévue le " + new Date(data.currentPeriodEnd * 1000).toLocaleDateString('fr-FR');
+        detailWrap.style.display = 'block';
+      } else {
+        detailWrap.style.display = 'none';
+      }
+    }
+    if(cancelBtn) cancelBtn.style.display = (['trialing', 'active'].includes(data.status) && !data.cancelAtPeriodEnd) ? 'block' : 'none';
+  } catch(e){
+    badge.textContent = '—';
+  }
+}
+function confirmCancelSubscription(){
+  const innerHtml = `<div style="padding:24px 20px 32px 20px;">
+    <div style="font-weight:600;font-size:17px;margin-bottom:8px;color:var(--text);">Résilier ton abonnement ?</div>
+    <div style="color:var(--text2);font-size:15px;margin-bottom:24px;">Tu garderas l'accès jusqu'à la fin de la période déjà payée, puis ton compte repassera en accès limité.</div>
+    <div style="display:flex;gap:8px;">
+      <button onclick="this.closest('[style*=fixed]').remove()" class="btn-secondary">Annuler</button>
+      <button onclick="cancelMySubscription();this.closest('[style*=fixed]').remove();" class="btn-danger">Résilier</button>
+    </div>
+  </div>`;
+  createDialogOrSheet('confirm-cancel-sub-sheet', innerHtml, {desktopWidth:'420px', forceCenter:true});
+}
+async function cancelMySubscription(){
+  const email = sbUser?.email;
+  if(!email) return;
+  try {
+    const res = await fetch('/.netlify/functions/cancel-subscription', {
+      method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({email})
+    });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.message || 'Erreur');
+    showToast('✓ Abonnement résilié');
+    loadSubscriptionStatus(email);
+  } catch(e){
+    showToast('⚠️ ' + (e.message || 'Erreur lors de la résiliation'));
+  }
 }
 
 async function doLogout(){
