@@ -2260,11 +2260,23 @@
 
       <!-- Application -->
       <div style="margin-bottom:6px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Application</span></div>
-      <div style="background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--card-shadow);overflow:hidden;">
+      <div style="background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--card-shadow);overflow:hidden;margin-bottom:24px;">
         <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;">
           <span style="font-size:15px;color:var(--text);">Version</span>
           <span style="font-size:15px;color:var(--text2);">1.0.0</span>
         </div>
+      </div>
+
+      <!-- Zone de danger -->
+      <div style="margin-bottom:6px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Zone de danger</span></div>
+      <div style="background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--card-shadow);overflow:hidden;">
+        <button onclick="confirmDeleteAccount()" style="width:100%;display:flex;align-items:center;gap:10px;padding:14px 16px;background:none;border:none;cursor:pointer;text-align:left;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          <div>
+            <div style="font-size:15px;font-weight:500;color:var(--danger);letter-spacing:-0.2px;">Supprimer mon compte</div>
+            <div style="font-size:12px;color:var(--text2);margin-top:2px;">Efface immédiatement tes données et ton compte, et arrête les prélèvements tout de suite. Irréversible.</div>
+          </div>
+        </button>
       </div>
 
     </div>
@@ -2635,18 +2647,6 @@
       </button>
     </div>
 
-
-    <!-- Zone de danger -->
-    <div style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Zone de danger</span></div>
-    <div style="background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--card-shadow);overflow:hidden;margin:0 16px 24px 16px;">
-      <button onclick="confirmDeleteAccount()" style="width:100%;display:flex;align-items:center;gap:10px;padding:14px 16px;background:none;border:none;cursor:pointer;text-align:left;">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-        <div>
-          <div style="font-size:15px;font-weight:500;color:var(--danger);letter-spacing:-0.2px;">Supprimer mon compte</div>
-          <div style="font-size:12px;color:var(--text2);margin-top:2px;">Efface immédiatement tes données et ton compte, et arrête les prélèvements tout de suite. Irréversible.</div>
-        </div>
-      </button>
-    </div>
 
     <!-- Déconnexion -->
     <div style="background:var(--surface);border-radius:var(--r-md);box-shadow:var(--shadow-sm);border:1px solid var(--border);overflow:hidden;margin:0 16px 24px 16px;">
