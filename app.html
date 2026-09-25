@@ -3571,7 +3571,7 @@ async function cancelMySubscription(){
 function confirmDeleteAccount(){
   const innerHtml = `<div style="padding:24px 20px 32px 20px;">
     <div style="font-weight:600;font-size:17px;margin-bottom:8px;color:var(--danger);">Supprimer définitivement ton compte ?</div>
-    <div style="color:var(--text2);font-size:15px;margin-bottom:16px;">Tous tes véhicules, tâches et données seront supprimés immédiatement. Cette action est irréversible.</div>
+    <div style="color:var(--text2);font-size:15px;margin-bottom:16px;">Tous tes véhicules, tâches et données seront supprimés immédiatement, et ton abonnement sera résilié sur-le-champ (arrêt immédiat des prélèvements). Cette action est irréversible.</div>
     <div style="color:var(--text2);font-size:13px;margin-bottom:8px;">Tape <strong>SUPPRIMER</strong> pour confirmer :</div>
     <input type="text" id="delete-account-confirm-input" oninput="const b = document.getElementById('delete-account-confirm-btn'); const ok = this.value.trim() === 'SUPPRIMER'; b.disabled = !ok; b.style.opacity = ok ? '1' : '0.5';" style="width:100%;box-sizing:border-box;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:15px;outline:none;margin-bottom:20px;">
     <div style="display:flex;gap:8px;">
