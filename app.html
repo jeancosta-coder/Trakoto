@@ -239,7 +239,7 @@
     .btn-danger-soft:active { transform: scale(0.98); }
     /* .btn-success-block = action de validation positive pleine largeur (ex: Valider la vente) */
     .btn-success-block { width: 100%; padding: 14px; background: var(--success); color: #fff; border: none; border-radius: 9999px; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
-    .fin-finalize-wrap { padding: 16px; }
+    .fin-finalize-wrap { padding: 16px; margin-top: 14px; background: color-mix(in srgb, var(--success) 7%, var(--surface)); border-top: 1px solid var(--border-strong); }
     /* Rail Planning "À venir" — masqué par défaut (mobile), visible desktop */
     #planning-rail { display: none; }
     .planning-rail-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 14px; }
@@ -761,6 +761,24 @@
     .dt-info-card .ntask-row.ntask-row-hero .ntask-row-val .vsg-value { font-size: 21px; }
     .dt-info-card .ntask-row { min-height: 46px; }
     .dt-info-card .ntask-row.ntask-row-hero { min-height: 52px; }
+    /* Informations principales (N VO/Annee/Km) en ligne horizontale, y compris sur mobile */
+    .dt-hero-group { display: flex; gap: 8px; padding: 4px 16px 8px; }
+    .dt-hero-group .ntask-row {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 3px;
+      padding: 10px 4px;
+      background: var(--surface-2);
+      border-radius: 10px;
+    }
+    .dt-hero-group .ntask-row-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .dt-hero-group .ntask-row-val { width: 100%; justify-content: center; }
+    .dt-hero-group .ntask-row-val .vsg-value { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     /* Verrouille l'edition tant que le pinceau n'est pas active */
     .dt-info-card .ntask-row:not(.ntask-row-static) { cursor: default; }
     .dt-info-card .ntask-row:not(.ntask-row-static) .chev { opacity: 0; transition: opacity 0.15s ease; }
@@ -776,26 +794,30 @@
     .bft-stat.accent .bft-stat-val { color:var(--accent); }
     .bft-stat.pos .bft-stat-val { color:var(--success); }
     .bft-card { background:var(--surface); border-radius:var(--card-radius); box-shadow:var(--card-shadow); overflow:hidden; margin-bottom:12px; }
-    .bft-group { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 16px; background:color-mix(in srgb, var(--accent) 8%, var(--surface)); color:var(--accent); border-top:1px solid var(--border); border-bottom:1px solid var(--border); font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; }
-    .bft-group:first-child { border-top:none; }
-    .bft-subgroup { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:8px 16px; border-top:1px solid var(--border); font-size:12px; font-weight:600; color:var(--text2); }
+    .bft-group { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:14px; padding:10px 16px; background:none; color:var(--text); border:none; border-bottom:1px solid var(--border-strong); font-size:12.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.6px; }
+    .bft-card > .bft-group:first-child { margin-top:0; }
+    /* Chiffres cles integres dans le bloc unique post-vente : pas de carte flottante, aligne sur les lignes du tableau */
+    #fin-stats-row { padding:0 0 12px; margin-bottom:0; }
+    #fin-stats-row .fin-stats-title { grid-column:1 / -1; padding:10px 16px 0; margin:0; font-size:12px; font-weight:600; color:var(--text2); }
+    #fin-stats-row .bft-stat { background:none; box-shadow:none; border-radius:0; padding:0 16px; }
+    #fin-stats-row .bft-stat:not(:first-child) { border-left:1px solid var(--border); }
+    .bft-subgroup { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 16px 9px 26px; border:none; font-size:12px; font-weight:600; color:var(--text2); position:relative; }
+    .bft-subgroup::before { content:''; position:absolute; left:16px; top:50%; transform:translateY(-50%); width:5px; height:5px; border-radius:50%; background:var(--accent); opacity:0.5; }
     .bft-card-title { font-size:12px; font-weight:600; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; margin:0 4px 8px; }
     .bft-mini-table { background:var(--surface); border-radius:14px; padding:2px 14px; margin-bottom:16px; box-shadow:0 1px 2px rgba(0,0,0,0.03); }
-    .bft-mini-row { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 0; font-size:12.5px; border-top:1px solid var(--border); }
-    .bft-mini-row:first-child { border-top:none; }
+    .bft-mini-row { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 0; font-size:12.5px; border:none; }
     .bft-mini-detail-row { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:4px 0 4px 14px; font-size:11.5px; color:var(--text2); }
     .bft-mini-detail-row span:last-child { font-variant-numeric:tabular-nums; }
     .bft-mini-row span:first-child { color:var(--text2); }
     .bft-mini-row span:last-child { font-weight:600; color:var(--text); font-variant-numeric:tabular-nums; }
     .bft-plus { width:22px; height:22px; border-radius:50%; background:var(--accent); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
     .bft-plus svg { width:11px; height:11px; }
-    .bft-row { display:grid; grid-template-columns:1fr 100px 92px 26px; align-items:center; gap:8px; padding:12px 16px; border-top:1px solid var(--border); font-size:14px; }
+    .bft-row { display:grid; grid-template-columns:1fr 100px 92px 26px; align-items:center; gap:8px; padding:10px 16px; border:none; font-size:14px; }
     .bft-name { color:var(--text); }
     .bft-amt { text-align:right; font-variant-numeric:tabular-nums; font-weight:600; color:var(--text); }
     .bft-inp { grid-column:2; width:100%; text-align:right; font-variant-numeric:tabular-nums; font-weight:600; color:var(--text); border:none; outline:none; background:transparent; font-size:14px; font-family:inherit; }
     .bft-inp:disabled { color:var(--text2); opacity:0.7; }
-    .bft-row-simple { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 16px; border-top:1px solid var(--border); font-size:14px; }
-    .bft-row-simple:first-child { border-top:none; }
+    .bft-row-simple { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 16px; border:none; font-size:14px; }
     .bft-inp-simple { width:110px; text-align:right; font-variant-numeric:tabular-nums; font-weight:600; color:var(--text); border:none; outline:none; background:transparent; font-size:14px; font-family:inherit; }
     .bft-inp-simple:disabled { color:var(--text2); opacity:0.7; }
     .bft-badge { justify-self:end; font-size:11px; font-weight:600; padding:3px 9px; border-radius:20px; white-space:nowrap; }
@@ -1168,6 +1190,8 @@
         padding: 24px !important;
       }
       #detail-tab-inforight .ntask-sep { display: none !important; }
+      #detail-tab-inforight .dt-hero-group { display: contents !important; }
+      #detail-tab-inforight .dt-hero-group .ntask-row { background: none !important; border-radius: 0 !important; padding: 0 !important; }
       #detail-tab-inforight .ntask-row.ntask-row-static { grid-column: 1 / -1 !important; padding: 0 0 4px !important; }
       #detail-tab-inforight .ntask-section-label {
         grid-column: 1 / -1 !important;
@@ -1245,22 +1269,18 @@
       #detail-tab-finances .bft-group {
         background: none !important;
         color: var(--text) !important;
-        border-top: none !important;
-        border-bottom: none !important;
-        margin: 0 !important;
+        border: none !important;
+        border-bottom: 1px solid var(--border-strong) !important;
+        margin: 14px 0 0 !important;
         width: 100% !important;
         box-sizing: border-box !important;
-        padding: 20px 20px 8px !important;
-        font-size: 14px !important;
+        padding: 10px 20px !important;
+        font-size: 13px !important;
         font-weight: 800 !important;
         text-transform: uppercase !important;
         letter-spacing: 0.6px !important;
       }
-      #detail-tab-finances .bft-card > .bft-group:first-child { padding-top: 20px !important; }
-      /* Pas de trait sur la premiere ligne d'une section (juste apres le titre) : uniquement entre les lignes d'une meme section */
-      #detail-tab-finances .bft-group + .bft-row-simple,
-      #detail-tab-finances .bft-group + .bft-subgroup,
-      #detail-tab-finances .bft-group + .bft-row { border-top: none !important; }
+      #detail-tab-finances .bft-card > .bft-group:first-child { margin-top: 0 !important; }
       /* Titres de sections (avant + apres vente) : meme traitement, texte plus gros/gras que le reste. Pas de trait sur les titres : uniquement entre les lignes d'une meme section. */
       #detail-tab-finances .bft-card-title,
       #detail-tab-finances .fin-section-label {
@@ -1277,21 +1297,27 @@
         text-transform: uppercase !important;
         letter-spacing: 0.6px !important;
       }
-      /* Ligne Date de vente : meme trait que le reste du tableau (au lieu du 0.5px hérité du mobile) */
-      #detail-tab-finances #fin-vente-date-row { border-top: 1px solid var(--border-strong) !important; padding: 10px 20px !important; }
-      #detail-tab-finances .bft-row-simple,
-      #detail-tab-finances .bft-subgroup {
+      #detail-tab-finances #fin-vente-date-row { border-top: none !important; padding: 10px 20px !important; }
+      #detail-tab-finances .bft-row-simple {
         padding: 10px 20px !important;
         margin: 0 !important;
         width: 100% !important;
         box-sizing: border-box !important;
         border-radius: 0 !important;
-        border-top: 1px solid var(--border-strong) !important;
+        border: none !important;
         transition: background 0.15s ease !important;
       }
-      #detail-tab-finances .bft-row-simple:first-child, #detail-tab-finances .bft-subgroup:first-child { border-top: none !important; }
+      #detail-tab-finances .bft-subgroup {
+        padding: 9px 20px 9px 32px !important;
+        margin: 0 !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        border-radius: 0 !important;
+        border: none !important;
+      }
+      #detail-tab-finances .bft-subgroup::before { left: 20px !important; }
       #detail-tab-finances .bft-row-simple:hover { background: var(--surface-2) !important; }
-      #detail-tab-finances .bft-row { padding: 10px 20px !important; margin: 0 !important; width: 100% !important; box-sizing: border-box !important; border-radius: 0 !important; border-top: 1px solid var(--border-strong) !important; }
+      #detail-tab-finances .bft-row { padding: 10px 20px !important; margin: 0 !important; width: 100% !important; box-sizing: border-box !important; border-radius: 0 !important; border: none !important; }
       #detail-tab-finances .bft-row:hover { background: var(--surface-2) !important; }
       #detail-tab-finances .bft-mini-row {
         padding: 11px 20px !important;
@@ -1299,11 +1325,10 @@
         width: 100% !important;
         box-sizing: border-box !important;
         border-radius: 0 !important;
-        border-top: 1px solid var(--border-strong) !important;
+        border: none !important;
         font-size: 14px !important;
         transition: background 0.15s ease !important;
       }
-      #detail-tab-finances .bft-mini-row:first-child { border-top: none !important; }
       #detail-tab-finances .bft-mini-row:hover { background: var(--surface-2) !important; }
       #detail-tab-finances .bft-mini-row span:first-child { color: var(--text) !important; }
       #detail-tab-finances #fin-frozen-table-wrap {
@@ -1315,15 +1340,7 @@
         padding: 0 0 20px !important;
         margin-top: 0 !important;
       }
-      #detail-tab-finances #fin-frozen-table-wrap .bft-mini-table,
-      #detail-tab-finances #fin-comptable-wrap .bft-mini-table {
-        background: transparent !important;
-        box-shadow: none !important;
-        border-radius: 0 !important;
-        padding: 0 !important;
-        margin-bottom: 0 !important;
-      }
-      #detail-tab-finances .fin-finalize-wrap { padding: 20px !important; margin-top: 8px !important; display: flex !important; justify-content: flex-end !important; }
+      #detail-tab-finances .fin-finalize-wrap { padding: 20px !important; margin-top: 8px !important; display: flex !important; justify-content: center !important; }
       #detail-tab-finances #finalize-sale-btn { width: auto !important; padding: 10px 22px !important; border-radius: 9999px !important; font-size: 14px !important; }
       /* Clientele desktop : un seul bloc (comme Finances avant vente), grille 2 colonnes pour les champs */
       #detail-tab-clients .bft-card {
@@ -1346,7 +1363,7 @@
         padding: 0 !important;
       }
       #detail-tab-clients .dtc-section-label:first-child { margin-top: 20px !important; }
-      #detail-tab-clients .dtc-section-label span {
+      #detail-tab-clients .dtc-section-label {
         font-size: 14px !important;
         font-weight: 800 !important;
         color: var(--text) !important;
@@ -2193,9 +2210,7 @@
           <div id="detail-title" style="font-size:17px;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 50px;"></div>
           <div id="detail-subtitle" style="font-size:12px;color:var(--text2);margin-top:1px;"></div>
         </div>
-        <button onclick="confirmDeleteCurrentVehicle()" id="details-delete-btn-mobile" class="mobile-only" title="Supprimer" style="margin-left:auto;background:none;border:none;cursor:pointer;padding:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;width:30px;z-index:1;">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-        </button>
+        <button onclick="event.stopPropagation();showVehicleContextMenu(currentDetailVehicleId, this)" id="details-delete-btn-mobile" class="mobile-only card-menu-btn" title="Options" style="margin-left:auto;background:var(--surface-2);border:none;cursor:pointer;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:16px;line-height:1;letter-spacing:1px;flex-shrink:0;z-index:1;">···</button>
       </div>
     </div>
     <div id="detail-mobile-header-row" class="mobile-only" style="background:var(--surface);flex-shrink:0;padding:0 16px 16px;display:flex;align-items:center;justify-content:space-between;gap:14px;transition:padding 0.2s ease,gap 0.2s ease;">
@@ -2216,7 +2231,7 @@
     <div id="detail-tab-bar-wrap" style="background:var(--surface-2);flex-shrink:0;">
       <button id="tab-inforight" onclick="switchDetailTab('inforight')" style="display:none;">Détails</button>
       <button id="tab-infos" onclick="switchDetailTab('infos')" style="display:none;">Détails</button>
-      <button id="tab-finances" onclick="switchDetailTab('finances')" style="display:none;">Finances</button>
+      <button id="tab-finances" onclick="switchDetailTab('finances')" style="display:none;">Transaction</button>
       <button id="tab-clients" onclick="switchDetailTab('clients')" style="display:none;">Client</button>
       <div id="detail-tab-dropdown-desktop" class="desktop-only" onclick="openDetailTabMenuDesktop(this)" style="display:none;align-items:center;justify-content:space-between;gap:8px;background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--card-shadow);padding:10px 14px;cursor:pointer;">
         <span id="detail-tab-dropdown-desktop-label" style="font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;">Détails</span>
@@ -2304,7 +2319,7 @@
             </button>
 
             <div class="ntask-row ntask-row-static" style="cursor:default;flex-direction:column;align-items:stretch;min-height:0;padding-top:16px;padding-bottom:14px;">
-              <span class="ntask-row-label" style="margin-bottom:8px;">Notes</span>
+              <span class="ntask-row-label" style="margin-bottom:8px;display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.55;"><path d="M17 3a2.83 2.83 0 0 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>Notes</span>
               <div class="dt-notes-frame">
                 <textarea id="detail-notes" oninput="autoGrowNotes(this)" style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:22px;resize:none;color:var(--text);background:transparent;padding:0;box-sizing:border-box;overflow:hidden;" placeholder="Pas encore de note pour ce véhicule…" onblur="saveVehicleNotes()"></textarea>
                 <button type="button" class="notes-save-btn" onclick="saveVehicleNotes()">Enregistrer</button>
@@ -2312,15 +2327,15 @@
             </div>
             <div class="ntask-sep"></div>
 
-            <div class="ntask-section-label ntask-section-label-primary">Informations principales</div>
-            <div class="ntask-row ntask-row-hero" onclick="editVsgField(this,'numVo')"><span class="ntask-row-label">N° de VO</span><span class="ntask-row-val"><span class="vsg-value" id="detail-numvo"></span></span></div>
-            <div class="ntask-sep"></div>
-            <div class="ntask-row ntask-row-hero" onclick="editVsgField(this,'year')"><span class="ntask-row-label">Année</span><span class="ntask-row-val"><span class="vsg-value" id="detail-year"></span></span></div>
-            <div class="ntask-sep"></div>
-            <div class="ntask-row ntask-row-hero" onclick="editVsgField(this,'km')"><span class="ntask-row-label">Kilométrage</span><span class="ntask-row-val"><span class="vsg-value" id="detail-km"></span></span></div>
+            <div class="ntask-section-label ntask-section-label-primary" style="display:flex;align-items:center;gap:7px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.55;"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="8.5" cy="13.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 0 0-2.8 0L8 17"/></svg>Informations principales</div>
+            <div class="dt-hero-group">
+              <div class="ntask-row ntask-row-hero" onclick="editVsgField(this,'numVo')"><span class="ntask-row-label">N° de VO</span><span class="ntask-row-val"><span class="vsg-value" id="detail-numvo"></span></span></div>
+              <div class="ntask-row ntask-row-hero" onclick="editVsgField(this,'year')"><span class="ntask-row-label">Année</span><span class="ntask-row-val"><span class="vsg-value" id="detail-year"></span></span></div>
+              <div class="ntask-row ntask-row-hero" onclick="editVsgField(this,'km')"><span class="ntask-row-label">Kilométrage</span><span class="ntask-row-val"><span class="vsg-value" id="detail-km"></span></span></div>
+            </div>
             <div class="ntask-sep"></div>
 
-            <div class="ntask-section-label">Mécanique</div>
+            <div class="ntask-section-label" style="display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.55;"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Mécanique</div>
             <div class="ntask-row" onclick="openVsgCarburantMenu(this)"><span class="ntask-row-label">Carburant</span><span class="ntask-row-val"><span class="vsg-value" id="detail-carburant"></span><span class="chev">›</span></span></div>
             <div class="ntask-sep"></div>
             <div class="ntask-row" onclick="openVsgTransmissionMenu(this)"><span class="ntask-row-label">Transmission</span><span class="ntask-row-val"><span class="vsg-value" id="detail-transmission"></span><span class="chev">›</span></span></div>
@@ -2328,13 +2343,13 @@
             <div class="ntask-row" onclick="editVsgField(this,'puissance')"><span class="ntask-row-label">Puissance</span><span class="ntask-row-val"><span class="vsg-value" id="detail-puissance"></span></span></div>
             <div class="ntask-sep"></div>
 
-            <div class="ntask-section-label">Apparence</div>
+            <div class="ntask-section-label" style="display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.55;"><path d="M12 22a9.94 9.94 0 0 1-7.07-2.93A9.94 9.94 0 0 1 2 12a10 10 0 0 1 10-10 9 9 0 0 1 9 9c0 1.5-1 3-3 3h-2.5a1.5 1.5 0 0 0-1.5 1.5c0 .4.2.8.5 1.1.3.3.5.7.5 1.1a2.5 2.5 0 0 1-2.5 2.5z"/><circle cx="7.5" cy="10.5" r="1"/><circle cx="12" cy="7.5" r="1"/><circle cx="16.5" cy="10.5" r="1"/></svg>Apparence</div>
             <div class="ntask-row" onclick="editVsgField(this,'couleur')"><span class="ntask-row-label">Couleur</span><span class="ntask-row-val"><span class="vsg-value" id="detail-couleur"></span></span></div>
             <div class="ntask-sep"></div>
             <div class="ntask-row" onclick="editVsgField(this,'gen')"><span class="ntask-row-label">Génération</span><span class="ntask-row-val"><span class="vsg-value" id="detail-gen"></span></span></div>
             <div class="ntask-sep"></div>
 
-            <div class="ntask-section-label">Administratif</div>
+            <div class="ntask-section-label" style="display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.55;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>Administratif</div>
             <div class="ntask-row" onclick="editVsgField(this,'immatriculation')"><span class="ntask-row-label">Immatriculation</span><span class="ntask-row-val"><span class="vsg-value" id="detail-immat"></span></span></div>
             <div class="ntask-sep"></div>
             <div class="ntask-row" onclick="openVsgBoolMenu(this,'clesDouble','detail-cles')"><span class="ntask-row-label">Clés</span><span class="ntask-row-val"><span class="vsg-value" id="detail-cles"></span><span class="chev">›</span></span></div>
@@ -2359,30 +2374,18 @@
 
       <div id="detail-tab-finances" class="detail-tab-content" style="display:none;flex:1;overflow-y:auto;padding:16px 16px calc(140px + env(safe-area-inset-bottom)) 16px;">
 
-        <!-- Vente finalisée (tout en haut, visible uniquement une fois validée et non déverrouillée) -->
-        <div id="finalize-sale-done" style="display:none;background:color-mix(in srgb, var(--success) 12%, var(--surface));border-radius:14px;padding:14px 16px;margin-bottom:16px;align-items:center;gap:10px;">
-          <div style="width:30px;height:30px;border-radius:50%;background:var(--success);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          </div>
-          <div style="flex:1;min-width:0;">
-            <div style="font-size:14px;font-weight:600;color:var(--success);">Vente finalisée</div>
-            <div id="finalize-sale-done-date" style="font-size:12px;color:var(--text2);margin-top:1px;"></div>
-          </div>
-          <button onclick="unlockFinanceForEdit()" style="background:none;border:1px solid var(--success);color:var(--success);border-radius:9999px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;flex-shrink:0;">Modifier</button>
-        </div>
-
         <!-- Section editable : un seul tableau continu, visible tant que la vente n'est pas figee -->
         <div id="fin-editable-section">
           <div class="bft-card">
-            <div class="bft-group" style="border-top:none;"><span>Dates</span></div>
-            <div style="position:relative;padding:12px 16px;cursor:pointer;">
+            <div class="bft-group"><span style="display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.55;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Dates</span></div>
+            <div style="position:relative;padding:10px 16px;cursor:pointer;">
               <div style="display:flex;align-items:center;justify-content:space-between;pointer-events:none;">
                 <span class="fin-label-text" style="font-size:14px;">Date d'achat</span>
                 <span id="detail-achat-date-disp" style="font-size:14px;font-weight:600;color:var(--text);">—</span>
               </div>
               <input type="date" id="detail-achat-date-edit" onchange="saveVehicleDateInline('achat',this.value)" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;border:none;cursor:pointer;">
             </div>
-            <div id="fin-vente-date-row" style="display:none;position:relative;padding:12px 16px;cursor:pointer;border-top:0.5px solid var(--border);">
+            <div id="fin-vente-date-row" style="display:none;position:relative;padding:10px 16px;cursor:pointer;">
               <div style="display:flex;align-items:center;justify-content:space-between;pointer-events:none;">
                 <span class="fin-label-text" style="font-size:14px;">Date de vente</span>
                 <span id="detail-sale-date-disp" style="font-size:14px;font-weight:600;color:var(--text);">—</span>
@@ -2390,18 +2393,18 @@
               <input type="date" id="detail-sale-date-edit" onchange="saveVehicleDateInline('vente',this.value)" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;border:none;cursor:pointer;">
             </div>
 
-            <div class="bft-group"><span>Acquisition</span></div>
-            <div class="bft-row-simple"><span class="bft-name">Prix d'achat</span><input type="number" id="detail-achat-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="bft-inp-simple"></div>
-            <div class="bft-row-simple"><span class="bft-name">Prix de vente cible</span><input type="number" id="detail-vente-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="bft-inp-simple"></div>
+            <div class="bft-group"><span style="display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.55;"><circle cx="12" cy="12" r="9"/><path d="M15 9.5c0-1.1-1.3-2-3-2s-3 .9-3 2 1.3 1.6 3 2 3 .9 3 2-1.3 2-3 2-3-.9-3-2"/><line x1="12" y1="6" x2="12" y2="18"/></svg>Acquisition</span></div>
+            <div class="bft-row-simple"><span class="bft-name">Prix d'achat</span><div class="fin-input-wrap"><input type="number" id="detail-achat-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="bft-inp-simple"><span class="fin-unit">€</span></div></div>
+            <div class="bft-row-simple"><span class="bft-name">Prix de vente cible</span><div class="fin-input-wrap"><input type="number" id="detail-vente-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="bft-inp-simple"><span class="fin-unit">€</span></div></div>
 
-            <div class="bft-group"><span>Frais</span></div>
+            <div class="bft-group"><span style="display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.55;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>Frais</span></div>
             <div class="bft-subgroup"><span>Sans TVA · <span id="fin-total-sansTva">0 €</span></span><button class="bft-plus" onclick="addCostItemForm('sansTva')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
             <div id="fin-list-sansTva"></div>
             <div class="bft-subgroup"><span>Soumis à la TVA · <span id="fin-total-avecTva">0 €</span></span><button class="bft-plus" onclick="addCostItemForm('avecTva')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
             <div id="fin-list-avecTva"></div>
 
-            <div class="bft-group"><span>Autres frais</span></div>
-            <div class="bft-row-simple"><span class="bft-name">Carte grise</span><input type="number" id="detail-cg-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="bft-inp-simple"></div>
+            <div class="bft-group"><span style="display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.55;"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="6" y1="15" x2="10" y2="15"/></svg>Autres frais</span></div>
+            <div class="bft-row-simple"><span class="bft-name">Carte grise</span><div class="fin-input-wrap"><input type="number" id="detail-cg-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="bft-inp-simple"><span class="fin-unit">€</span></div></div>
 
             <!-- Valider la vente : action finale du bloc, visible tant que la vente n'est pas validée -->
             <div class="fin-finalize-wrap">
@@ -2416,43 +2419,53 @@
         <input type="hidden" id="detail-marge-cible-input" value="15">
         <span id="detail-marge" style="display:none;"></span><span id="detail-marge-pct" style="display:none;"></span>
 
-        <!-- Bloc unique apres vente : chiffres cles + recapitulatif + detail comptable -->
-        <div id="fin-postsale-block">
-          <!-- Widget prix de revient / vente / marge : visible uniquement une fois la vente validée (figee) -->
-          <div id="fin-stats-row" style="display:none;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;">
-            <div class="bft-card-title fin-stats-title">Chiffres clés</div>
-            <div class="bft-stat"><div class="bft-stat-lbl">Prix de revient</div><div id="stat-revient" class="bft-stat-val">—</div></div>
-            <div class="bft-stat"><div class="bft-stat-lbl">Prix de vente</div><div id="stat-vente" class="bft-stat-val">—</div></div>
-            <div class="bft-stat"><div class="bft-stat-lbl">Marge</div><div id="stat-marge" class="bft-stat-val">—</div></div>
-          </div>
-
-          <!-- Tableau recapitulatif figé : visible uniquement une fois la vente validee -->
-          <div id="fin-frozen-table-wrap" style="display:none;">
-            <div class="bft-card-title">Récapitulatif de la vente</div>
-            <div class="bft-mini-table">
-              <div class="bft-mini-row"><span>Date d'achat</span><span id="fz-achat-date">—</span></div>
-              <div class="bft-mini-row"><span>Date de vente</span><span id="fz-vente-date">—</span></div>
-              <div class="bft-mini-row"><span>Prix d'achat</span><span id="fz-achat">—</span></div>
-              <div class="bft-mini-row"><span>Prix de vente cible</span><span id="fz-vente-cible">—</span></div>
-              <div class="bft-mini-row"><span>Frais sans TVA</span><span id="fz-sans-tva">—</span></div>
-              <div id="fz-sansTva-detail"></div>
-              <div class="bft-mini-row"><span>Frais soumis à la TVA</span><span id="fz-avec-tva">—</span></div>
-              <div id="fz-avecTva-detail"></div>
-              <div class="bft-mini-row"><span>Carte grise</span><span id="fz-cg">—</span></div>
+        <!-- Bloc unique apres vente : chiffres cles + statut vente + recapitulatif + detail comptable, un seul tableau continu -->
+        <div id="fin-postsale-block" style="display:none;">
+          <div class="bft-card">
+            <!-- Vente finalisée : bandeau statut + action, en tête du bloc pour confirmer l'etat avant les chiffres -->
+            <div id="finalize-sale-done" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 16px;background:color-mix(in srgb, var(--success) 10%, var(--surface));border-bottom:1px solid var(--border-strong);">
+              <div style="display:flex;align-items:center;gap:8px;min-width:0;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="12" cy="12" r="10" fill="var(--success)" stroke="none"/><polyline points="7 12.5 10.5 16 17 9" stroke="#fff"/></svg>
+                <div style="min-width:0;">
+                  <div style="color:var(--success);font-weight:700;font-size:14px;line-height:1.3;">Vente finalisée</div>
+                  <div id="finalize-sale-done-date" style="font-size:12.5px;color:var(--text2);line-height:1.3;"></div>
+                </div>
+              </div>
+              <button onclick="unlockFinanceForEdit()" class="btn-outline" style="padding:9px 16px;min-height:auto;font-size:13.5px;border-radius:9999px;flex-shrink:0;">Modifier les chiffres</button>
             </div>
-          </div>
 
-          <!-- Détail comptable : visible uniquement une fois la vente validée (figee) -->
-          <div id="fin-comptable-wrap" style="display:none;">
-            <div class="fin-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l2 2"/></svg><span>Détail comptable</span></div>
-            <div class="bft-mini-table">
-              <div class="bft-mini-row"><span>Marge TTC</span><span id="ind-marge-ttc">—</span></div>
-              <div class="bft-mini-row"><span>Marge HT</span><span id="ind-marge-ht">—</span></div>
-              <div class="bft-mini-row"><span>TVA sur marge (20%)</span><span id="ind-tva-marge">—</span></div>
-              <div class="bft-mini-row"><span>% de la marge</span><span id="ind-pct-marge">—</span></div>
-              <div class="bft-mini-row"><span>Bénéf. net comptable</span><span id="ind-benef-net">—</span></div>
-              <div class="bft-mini-row"><span>Trésorerie</span><span id="ind-tresorerie">—</span></div>
-              <div class="bft-mini-row"><span>% marge trésorerie</span><span id="ind-pct-tresorerie">—</span></div>
+            <!-- Widget prix de revient / vente / marge : visible uniquement une fois la vente validée (figee) -->
+            <div id="fin-stats-row" style="display:none;grid-template-columns:repeat(3,1fr);gap:10px;">
+              <div class="bft-card-title fin-stats-title">Chiffres clés</div>
+              <div class="bft-stat"><div class="bft-stat-lbl">Prix de revient</div><div id="stat-revient" class="bft-stat-val">—</div></div>
+              <div class="bft-stat"><div class="bft-stat-lbl">Prix de vente</div><div id="stat-vente" class="bft-stat-val">—</div></div>
+              <div class="bft-stat"><div class="bft-stat-lbl">Marge</div><div id="stat-marge" class="bft-stat-val">—</div></div>
+            </div>
+
+            <!-- Tableau recapitulatif figé : le detail chiffre de la vente validee ci-dessus -->
+            <div id="fin-frozen-table-wrap" style="display:none;">
+              <div class="bft-group"><span>Récapitulatif de la vente</span></div>
+              <div class="bft-row-simple"><span class="bft-name">Date d'achat</span><span id="fz-achat-date" class="bft-amt">—</span></div>
+              <div class="bft-row-simple"><span class="bft-name">Date de vente</span><span id="fz-vente-date" class="bft-amt">—</span></div>
+              <div class="bft-row-simple"><span class="bft-name">Prix d'achat</span><span id="fz-achat" class="bft-amt">—</span></div>
+              <div class="bft-row-simple"><span class="bft-name">Prix de vente cible</span><span id="fz-vente-cible" class="bft-amt">—</span></div>
+              <div class="bft-row-simple"><span class="bft-name">Frais sans TVA</span><span id="fz-sans-tva" class="bft-amt">—</span></div>
+              <div id="fz-sansTva-detail"></div>
+              <div class="bft-row-simple"><span class="bft-name">Frais soumis à la TVA</span><span id="fz-avec-tva" class="bft-amt">—</span></div>
+              <div id="fz-avecTva-detail"></div>
+              <div class="bft-row-simple"><span class="bft-name">Carte grise</span><span id="fz-cg" class="bft-amt">—</span></div>
+            </div>
+
+            <!-- Détail comptable : visible uniquement une fois la vente validée (figee) -->
+            <div id="fin-comptable-wrap" style="display:none;">
+              <div class="bft-group"><span>Détail comptable</span></div>
+              <div class="bft-row-simple"><span class="bft-name">Marge TTC</span><span id="ind-marge-ttc" class="bft-amt">—</span></div>
+              <div class="bft-row-simple"><span class="bft-name">Marge HT</span><span id="ind-marge-ht" class="bft-amt">—</span></div>
+              <div class="bft-row-simple"><span class="bft-name">TVA sur marge (20%)</span><span id="ind-tva-marge" class="bft-amt">—</span></div>
+              <div class="bft-row-simple"><span class="bft-name">% de la marge</span><span id="ind-pct-marge" class="bft-amt">—</span></div>
+              <div class="bft-row-simple"><span class="bft-name">Bénéf. net comptable</span><span id="ind-benef-net" class="bft-amt">—</span></div>
+              <div class="bft-row-simple"><span class="bft-name">Trésorerie</span><span id="ind-tresorerie" class="bft-amt">—</span></div>
+              <div class="bft-row-simple"><span class="bft-name">% marge trésorerie</span><span id="ind-pct-tresorerie" class="bft-amt">—</span></div>
             </div>
           </div>
         </div>
@@ -2460,9 +2473,9 @@
       </div>
 
       <!-- Onglet Clientele (mobile + desktop) -->
-      <div id="detail-tab-clients" class="detail-tab-content" style="display:none;">
+      <div id="detail-tab-clients" class="detail-tab-content" style="display:none;flex:1;overflow-y:auto;padding:16px 16px calc(140px + env(safe-area-inset-bottom)) 16px;">
         <div class="bft-card" style="margin-bottom:20px;">
-          <div class="dtc-section-label"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Informations client</span></div>
+          <div class="ntask-section-label ntask-section-label-primary dtc-section-label">Informations client</div>
           <div class="dtc-field dtc-field-bordered" style="padding:12px 16px;border-bottom:1px solid var(--border);">
             <div style="font-size:11px;color:var(--text2);margin-bottom:2px;">Nom</div>
             <input type="text" id="dtc-nom" placeholder="Nom" onblur="saveClientField('nom', this.value)" style="width:100%;border:none;outline:none;font-size:15px;color:var(--text);background:transparent;padding:2px 0;">
@@ -2489,7 +2502,7 @@
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
             </button>
           </div>
-          <div class="dtc-section-label"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Notes</span></div>
+          <div class="ntask-section-label dtc-section-label">Notes</div>
           <div class="dtc-field dtc-field-notes">
             <div class="dt-notes-frame">
               <textarea id="dtc-notes" placeholder="Notes sur le client..." onblur="saveClientField('notes', this.value)" style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:90px;resize:none;color:var(--text);background:transparent;padding:0;box-sizing:border-box;"></textarea>
@@ -4266,8 +4279,8 @@ let currentDisplayDate = new Date();
 let planningIndex = {};
 
 const DETAIL_TABS = ['infos', 'finances'];
-const DETAIL_TAB_LABELS = {infos: 'Détails', finances: 'Finances', clients: 'Client'};
-const DETAIL_TAB_LABELS_DESKTOP = {inforight: 'Détails', finances: 'Finances', clients: 'Client'};
+const DETAIL_TAB_LABELS = {infos: 'Détails', finances: 'Transaction', clients: 'Client'};
+const DETAIL_TAB_LABELS_DESKTOP = {inforight: 'Détails', finances: 'Transaction', clients: 'Client'};
 function openDetailTabMenu(anchorEl){
   const html = Object.keys(DETAIL_TAB_LABELS).map(k => `<div class="ntask-opt" onclick="switchDetailTab('${k}');closeAnchoredMenu();"><span>${DETAIL_TAB_LABELS[k]}</span></div>`).join('');
   openAnchoredMenu(anchorEl, html);
@@ -4379,6 +4392,7 @@ function unlockFinanceForEdit(){
 function renderFinanceValidationState(v){
   const btn = document.getElementById('finalize-sale-btn');
   const done = document.getElementById('finalize-sale-done');
+  const postsaleBlock = document.getElementById('fin-postsale-block');
   const statsRow = document.getElementById('fin-stats-row');
   const comptableWrap = document.getElementById('fin-comptable-wrap');
   const editableSection = document.getElementById('fin-editable-section');
@@ -4387,6 +4401,7 @@ function renderFinanceValidationState(v){
   const locked = isFinanceLocked(v);
   btn.style.display = locked ? 'none' : 'flex';
   done.style.display = locked ? 'flex' : 'none';
+  if(postsaleBlock) postsaleBlock.style.display = locked ? 'block' : 'none';
   if(statsRow) statsRow.style.display = locked ? 'grid' : 'none';
   if(comptableWrap) comptableWrap.style.display = locked ? 'block' : 'none';
   if(editableSection) editableSection.style.display = locked ? 'none' : 'block';
@@ -4479,8 +4494,11 @@ function openFinalizeSaleModal(){
   const saleDate = v.saleDate || Utils.today();
   const ventePrefill = v.venteFinale || v.vente || '';
   const innerHtml = `
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);">
-      <span style="font-size:17px;font-weight:600;color:var(--text);">Finaliser la vente</span>
+    <div style="display:flex;align-items:center;gap:10px;padding:16px 20px;border-bottom:1px solid var(--border);">
+      <div style="width:32px;height:32px;border-radius:50%;background:color-mix(in srgb, var(--success) 15%, var(--surface));display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      </div>
+      <span style="font-size:17px;font-weight:600;color:var(--text);flex:1;">Finaliser la vente</span>
       <button onclick="closeFinalizeSaleModal()" class="modal-close-btn">✕</button>
     </div>
     <div style="padding:20px;">
@@ -4493,10 +4511,18 @@ function openFinalizeSaleModal(){
         </div>
         <div class="fin-row fin-sep"><span class="fin-label-text">Prix de vente</span><div class="fin-input-wrap"><input type="number" id="fs-vente-finale" class="fin-input" placeholder="0" value="${ventePrefill}" oninput="updateFinalizeSalePreview()"><span class="fin-unit">€</span></div></div>
       </div>
-      <div class="bft-card" style="padding:18px 16px;text-align:center;margin-bottom:20px;">
-        <div style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Marge réelle</div>
-        <div id="fs-marge-preview" style="font-size:22px;font-weight:700;color:var(--text);">—</div>
+      <div id="fs-summary-card" class="bft-card" style="padding:18px 16px;margin-bottom:8px;transition:background 0.15s ease;">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border);">
+          <span style="font-size:13px;color:var(--text2);">Prix de revient</span>
+          <span id="fs-revient-preview" style="font-size:15px;font-weight:600;color:var(--text);">—</span>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px;">Marge réelle</div>
+          <div id="fs-marge-preview" style="font-size:24px;font-weight:700;color:var(--text);">—</div>
+          <div id="fs-marge-pct-preview" style="font-size:13px;color:var(--text2);margin-top:2px;"></div>
+        </div>
       </div>
+      <div style="font-size:12.5px;color:var(--text2);text-align:center;margin-bottom:20px;line-height:1.4;">Ces chiffres seront figés. Vous pourrez les déverrouiller pour modification si besoin.</div>
       <button onclick="commitFinalizeSale()" class="btn-success-block">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
         Valider la vente
@@ -4518,11 +4544,23 @@ function updateFinalizeSalePreview(){
   const revient = achat + sansTva + avecTva + cg;
   const vente = parseFloat(document.getElementById('fs-vente-finale')?.value) || 0;
   const marge = vente - revient;
+  const pct = vente ? (marge / vente * 100) : 0;
   const fmt = n => Math.round(n).toLocaleString('fr-FR') + ' €';
+  const revientEl = document.getElementById('fs-revient-preview');
+  if(revientEl) revientEl.textContent = fmt(revient);
   const el = document.getElementById('fs-marge-preview');
+  const pctEl = document.getElementById('fs-marge-pct-preview');
+  const card = document.getElementById('fs-summary-card');
   if(el){
-    if(!vente && !revient){ el.textContent = '—'; el.style.color = 'var(--text)'; }
-    else { el.textContent = fmt(marge); el.style.color = marge >= 0 ? 'var(--success)' : 'var(--danger)'; }
+    if(!vente && !revient){
+      el.textContent = '—'; el.style.color = 'var(--text)';
+      if(pctEl) pctEl.textContent = '';
+      if(card) card.style.background = 'var(--surface)';
+    } else {
+      el.textContent = fmt(marge); el.style.color = marge >= 0 ? 'var(--success)' : 'var(--danger)';
+      if(pctEl) pctEl.textContent = vente ? pct.toFixed(1) + '% de la vente' : '';
+      if(card) card.style.background = marge >= 0 ? 'color-mix(in srgb, var(--success) 6%, var(--surface))' : 'color-mix(in srgb, var(--danger) 6%, var(--surface))';
+    }
   }
 }
 function commitFinalizeSale(){
