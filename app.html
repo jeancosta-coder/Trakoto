@@ -2194,6 +2194,82 @@
     </div>
   </div>
 
+  <!-- MODAL Paramètres -->
+  <div id="modal-parametres" style="position:fixed;top:0;left:0;width:100%;height:100%;background:var(--surface);z-index:9999;display:none;flex-direction:column;animation:slideUpFull 0.3s ease;">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;min-height:56px;">
+      <button onclick="closeParametresModal()" class="modal-close-btn">✕</button>
+      <span style="font-size:17px;font-weight:600;color:var(--text);flex:1;text-align:center;">Paramètres</span>
+      <span style="width:36px;"></span>
+    </div>
+    <div style="flex:1;overflow-y:auto;background:var(--surface-2);padding:24px 16px 40px 16px;">
+
+      <!-- Apparence -->
+      <div style="margin-bottom:6px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Apparence</span></div>
+      <div style="background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--card-shadow);overflow:hidden;margin-bottom:24px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;gap:12px;">
+          <span style="font-size:15px;color:var(--text);">Thème</span>
+          <div id="theme-segment" style="display:inline-flex;background:var(--surface-2);border-radius:10px;padding:3px;gap:2px;">
+            <button type="button" data-theme-choice="light" onclick="chooseTheme('light')" class="theme-seg-btn">Clair</button>
+            <button type="button" data-theme-choice="dark" onclick="chooseTheme('dark')" class="theme-seg-btn">Sombre</button>
+            <button type="button" data-theme-choice="system" onclick="chooseTheme('system')" class="theme-seg-btn">Système</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Réglages du parc -->
+      <div style="margin-bottom:6px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Réglages du parc</span></div>
+      <div style="background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--card-shadow);overflow:hidden;margin-bottom:24px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:0.5px solid var(--border);gap:12px;">
+          <div>
+            <div style="font-size:15px;color:var(--text);">Marge cible par défaut</div>
+            <div style="font-size:12px;color:var(--text2);margin-top:1px;">Pré-remplie sur chaque nouveau véhicule</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:4px;flex-shrink:0;">
+            <input type="number" id="param-marge-cible" onchange="saveDefaultMargeCible(this.value)" style="border:none;outline:none;font-size:15px;color:var(--text);text-align:right;width:50px;background:transparent;"/>
+            <span style="font-size:15px;color:var(--text2);">%</span>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;gap:12px;">
+          <div>
+            <div style="font-size:15px;color:var(--text);">Numérotation auto des N° de VO</div>
+            <div style="font-size:12px;color:var(--text2);margin-top:1px;">Pré-remplit le préfixe + le prochain numéro</div>
+          </div>
+          <label style="position:relative;display:inline-block;width:44px;height:26px;flex-shrink:0;">
+            <input type="checkbox" id="param-vo-autoinc" onchange="toggleVoAutoinc(this.checked)" style="opacity:0;width:0;height:0;">
+            <span id="param-vo-autoinc-track" style="position:absolute;inset:0;background:var(--surface-3);border-radius:9999px;transition:background 0.15s;"></span>
+            <span id="param-vo-autoinc-knob" style="position:absolute;top:3px;left:3px;width:20px;height:20px;background:#fff;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,0.2);transition:transform 0.15s;"></span>
+          </label>
+        </div>
+        <div id="param-vo-prefix-row" style="display:none;justify-content:space-between;align-items:center;padding:14px 16px;border-top:0.5px solid var(--border);gap:12px;">
+          <span style="font-size:15px;color:var(--text);">Préfixe + prochain numéro</span>
+          <div style="display:flex;align-items:center;gap:4px;flex-shrink:0;">
+            <input type="text" id="param-vo-prefix" onchange="saveVoPrefix(this.value)" placeholder="VO" style="border:none;outline:none;font-size:15px;color:var(--text);text-align:right;width:50px;background:transparent;"/>
+            <input type="number" id="param-vo-next" onchange="saveVoNext(this.value)" placeholder="1" style="border:none;outline:none;font-size:15px;color:var(--text);text-align:right;width:60px;background:transparent;"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- Export -->
+      <div style="margin-bottom:6px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Export</span></div>
+      <div style="background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--card-shadow);overflow:hidden;margin-bottom:24px;">
+        <button onclick="exportParcCsv()" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:none;border:none;cursor:pointer;text-align:left;">
+          <span style="font-size:15px;color:var(--text);">Exporter le parc en CSV</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--text2)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </button>
+      </div>
+
+      <!-- Application -->
+      <div style="margin-bottom:6px;padding:0 4px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Application</span></div>
+      <div style="background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--card-shadow);overflow:hidden;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;">
+          <span style="font-size:15px;color:var(--text);">Version</span>
+          <span style="font-size:15px;color:var(--text2);">1.0.0</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
   <div id="details" style="background:var(--surface-2);display:none;flex-direction:column;">
     <div style="background:var(--surface);flex-shrink:0;">
       <div style="display:flex;align-items:center;padding:14px 16px 10px;position:relative;">
@@ -2512,7 +2588,10 @@
   <!-- VUE COMPTE -->
   <div id="compte" class="view" style="display:none;">
     <!-- Avatar + nom -->
-    <div style="display:flex;flex-direction:column;align-items:center;padding:32px 16px 24px 16px;">
+    <div style="position:relative;display:flex;flex-direction:column;align-items:center;padding:32px 16px 24px 16px;">
+      <button type="button" onclick="openParametresModal()" title="Paramètres" style="position:absolute;top:16px;right:16px;width:36px;height:36px;background:var(--surface);box-shadow:var(--card-shadow);border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text2);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
       <div style="width:72px;height:72px;border-radius:50%;background:var(--text);display:flex;align-items:center;justify-content:center;margin-bottom:12px;">
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--bg)" stroke-width="1.5" stroke-linecap="round">
           <circle cx="12" cy="8" r="4"/>
@@ -2540,19 +2619,6 @@
       </div>
     </div>
 
-    <!-- Apparence -->
-    <div style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Apparence</span></div>
-    <div style="background:var(--surface);border-radius:var(--r-md);box-shadow:var(--shadow-sm);border:1px solid var(--border);overflow:hidden;margin:0 16px 24px 16px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;gap:12px;">
-        <span style="font-size:15px;color:var(--text);">Thème</span>
-        <div id="theme-segment" style="display:inline-flex;background:var(--surface-2);border-radius:10px;padding:3px;gap:2px;">
-          <button type="button" data-theme-choice="light" onclick="chooseTheme('light')" class="theme-seg-btn">Clair</button>
-          <button type="button" data-theme-choice="dark" onclick="chooseTheme('dark')" class="theme-seg-btn">Sombre</button>
-          <button type="button" data-theme-choice="system" onclick="chooseTheme('system')" class="theme-seg-btn">Système</button>
-        </div>
-      </div>
-    </div>
-
     <!-- Abonnement -->
     <div style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Abonnement</span></div>
     <div style="background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--card-shadow);overflow:hidden;margin:0 16px 24px 16px;">
@@ -2562,15 +2628,6 @@
       </div>
     </div>
 
-
-    <!-- App -->
-    <div style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Application</span></div>
-    <div style="background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--card-shadow);overflow:hidden;margin:0 16px 32px 16px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;">
-        <span style="font-size:15px;color:var(--text);">Version</span>
-        <span style="font-size:15px;color:var(--text2);">1.0.0</span>
-      </div>
-    </div>
 
     <!-- Déconnexion -->
     <div style="background:var(--surface);border-radius:var(--r-md);box-shadow:var(--shadow-sm);border:1px solid var(--border);overflow:hidden;margin:0 16px 24px 16px;">
@@ -3352,6 +3409,66 @@ function closeFinanceDataModal(){
   document.getElementById('modal-finance-data').style.display = 'none';
 }
 
+function getDefaultMargeCible(){ return Number(localStorage.getItem('at_default_marge_cible')) || 15; }
+function saveDefaultMargeCible(val){
+  const n = Number(val) || 15;
+  localStorage.setItem('at_default_marge_cible', n);
+  showToast('✓ Marge cible par défaut enregistrée');
+}
+function isVoAutoincEnabled(){ return localStorage.getItem('at_vo_autoinc_enabled') === '1'; }
+function getVoPrefix(){ return localStorage.getItem('at_vo_prefix') || 'VO'; }
+function getVoNext(){ return Number(localStorage.getItem('at_vo_next')) || 1; }
+function syncVoAutoincUI(){
+  const enabled = isVoAutoincEnabled();
+  const track = document.getElementById('param-vo-autoinc-track');
+  const knob = document.getElementById('param-vo-autoinc-knob');
+  const row = document.getElementById('param-vo-prefix-row');
+  if(track) track.style.background = enabled ? 'var(--accent)' : 'var(--surface-3)';
+  if(knob) knob.style.transform = enabled ? 'translateX(18px)' : 'translateX(0)';
+  if(row) row.style.display = enabled ? 'flex' : 'none';
+}
+function toggleVoAutoinc(checked){
+  localStorage.setItem('at_vo_autoinc_enabled', checked ? '1' : '0');
+  syncVoAutoincUI();
+}
+function saveVoPrefix(val){ localStorage.setItem('at_vo_prefix', val.trim() || 'VO'); }
+function saveVoNext(val){ localStorage.setItem('at_vo_next', Number(val) || 1); }
+function nextAutoVoNumber(){ return getVoPrefix() + getVoNext(); }
+function advanceVoAutoinc(){
+  if(!isVoAutoincEnabled()) return;
+  localStorage.setItem('at_vo_next', getVoNext() + 1);
+  const el = document.getElementById('param-vo-next'); if(el) el.value = getVoNext();
+}
+function exportParcCsv(){
+  if(!vehicles.length){ showToast('Aucun véhicule à exporter'); return; }
+  const cols = ['numVo','marque','modele','year','km','statut','achat','vente','venteFinale','achatDate','saleDate','clientNom','clientPrenom'];
+  const headers = ['N° VO','Marque','Modèle','Année','Kilométrage','Statut','Prix achat','Prix vente cible','Prix vente final','Date achat','Date vente','Client nom','Client prénom'];
+  const esc = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
+  const rows = vehicles.map(v => cols.map(c => esc(v[c])).join(';'));
+  const csv = '﻿' + [headers.map(esc).join(';'), ...rows].join('\n');
+  const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'parc-trakoto-' + Utils.today() + '.csv';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  showToast('✓ Export CSV téléchargé');
+}
+function openParametresModal(){
+  const _mc = document.getElementById('param-marge-cible'); if(_mc) _mc.value = getDefaultMargeCible();
+  const _ai = document.getElementById('param-vo-autoinc'); if(_ai) _ai.checked = isVoAutoincEnabled();
+  const _pf = document.getElementById('param-vo-prefix'); if(_pf) _pf.value = getVoPrefix();
+  const _nx = document.getElementById('param-vo-next'); if(_nx) _nx.value = getVoNext();
+  syncVoAutoincUI();
+  document.getElementById('modal-parametres').style.display = 'flex';
+}
+function closeParametresModal(){
+  document.getElementById('modal-parametres').style.display = 'none';
+}
+
 function renderCompte(){
   const user = sbUser;
   const meta = user?.user_metadata || {};
@@ -3460,6 +3577,7 @@ function openAddModal(){
   document.newVehiclePhoto = '';
   const _t = document.getElementById('add-vehicle-title'); if(_t) _t.textContent = 'Nouveau véhicule';
   ['f-numvo','f-marque','f-modele','f-year','f-gen','f-km','f-achat-date','f-achat','f-vente','f-notes','f-couleur','f-immat','f-puissance'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+  if(isVoAutoincEnabled()){ const _fnv = document.getElementById('f-numvo'); if(_fnv) _fnv.value = nextAutoVoNumber(); }
   const _pi = document.getElementById('f-photo-input'); if(_pi) _pi.value = '';
   const _pimg = document.getElementById('f-photo-preview'); if(_pimg){ _pimg.style.display = 'none'; _pimg.src = ''; }
   const _pph = document.getElementById('f-photo-placeholder'); if(_pph) _pph.style.display = 'flex';
@@ -3528,6 +3646,7 @@ function addVehicle(){
     notes
   };
   DataLayer.addVehicle(newVehicle);
+  advanceVoAutoinc();
   showToast('✓ Véhicule créé');
   closeAddModal();
   renderParc();
@@ -4046,7 +4165,7 @@ function openVehicleDetails(id){
   document.getElementById('detail-cg-input').value = v.carteGrise || '';
   renderCostList('sansTva');
   renderCostList('avecTva');
-  document.getElementById('detail-marge-cible-input').value = v.margeCible || 15;
+  document.getElementById('detail-marge-cible-input').value = v.margeCible || getDefaultMargeCible();
   const _sd = document.getElementById('detail-sale-date'); if(_sd) _sd.value = v.saleDate || '';
   const _fmtD = (d) => d ? new Date(d + 'T00:00:00').toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'}) : '—';
   const _ad = document.getElementById('detail-achat-date-disp'); if(_ad) _ad.textContent = _fmtD(v.achatDate);
