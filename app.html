@@ -2633,6 +2633,15 @@
     </div>
 
 
+    <!-- Zone de danger -->
+    <div style="margin-bottom:6px;padding:0 20px;"><span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Zone de danger</span></div>
+    <div style="background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--card-shadow);overflow:hidden;margin:0 16px 24px 16px;">
+      <button onclick="confirmDeleteAccount()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:14px 16px;background:none;border:none;cursor:pointer;font-size:15px;font-weight:500;color:var(--danger);letter-spacing:-0.2px;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        Supprimer mon compte
+      </button>
+    </div>
+
     <!-- Déconnexion -->
     <div style="background:var(--surface);border-radius:var(--r-md);box-shadow:var(--shadow-sm);border:1px solid var(--border);overflow:hidden;margin:0 16px 24px 16px;">
       <button onclick="doLogout()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:14px 16px;background:none;border:none;cursor:pointer;font-size:15px;font-weight:500;color:var(--danger);letter-spacing:-0.2px;">
@@ -3556,6 +3565,42 @@ async function cancelMySubscription(){
     loadSubscriptionStatus(email);
   } catch(e){
     showToast('⚠️ ' + (e.message || 'Erreur lors de la résiliation'));
+  }
+}
+
+function confirmDeleteAccount(){
+  const innerHtml = `<div style="padding:24px 20px 32px 20px;">
+    <div style="font-weight:600;font-size:17px;margin-bottom:8px;color:var(--danger);">Supprimer définitivement ton compte ?</div>
+    <div style="color:var(--text2);font-size:15px;margin-bottom:16px;">Tous tes véhicules, tâches et données seront supprimés immédiatement. Cette action est irréversible.</div>
+    <div style="color:var(--text2);font-size:13px;margin-bottom:8px;">Tape <strong>SUPPRIMER</strong> pour confirmer :</div>
+    <input type="text" id="delete-account-confirm-input" oninput="const b = document.getElementById('delete-account-confirm-btn'); const ok = this.value.trim() === 'SUPPRIMER'; b.disabled = !ok; b.style.opacity = ok ? '1' : '0.5';" style="width:100%;box-sizing:border-box;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:15px;outline:none;margin-bottom:20px;">
+    <div style="display:flex;gap:8px;">
+      <button onclick="this.closest('[style*=fixed]').remove()" class="btn-secondary">Annuler</button>
+      <button id="delete-account-confirm-btn" onclick="deleteMyAccount()" class="btn-danger" disabled style="opacity:0.5;">Supprimer mon compte</button>
+    </div>
+  </div>`;
+  createDialogOrSheet('confirm-delete-account-sheet', innerHtml, {desktopWidth:'440px', forceCenter:true});
+}
+async function deleteMyAccount(){
+  const btn = document.getElementById('delete-account-confirm-btn');
+  if(btn?.disabled) return;
+  const { data: sessionData } = await sb.auth.getSession();
+  const accessToken = sessionData?.session?.access_token;
+  if(!accessToken){ showToast('⚠️ Session expirée, reconnecte-toi.'); return; }
+  try {
+    const res = await fetch('/.netlify/functions/delete-account', {
+      method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({accessToken})
+    });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.message || 'Erreur');
+    document.getElementById('confirm-delete-account-sheet')?.remove();
+    await sb.auth.signOut();
+    sbUser = null; vehicles = []; planning = [];
+    localStorage.removeItem('at_vehicles');
+    localStorage.removeItem('at_planning');
+    window.location.replace('/');
+  } catch(e){
+    showToast('⚠️ ' + (e.message || 'Erreur lors de la suppression du compte'));
   }
 }
 
