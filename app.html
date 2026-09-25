@@ -3505,7 +3505,12 @@ function renderCompte(){
   const _sav = document.getElementById('sidebar-avatar');
   if(_sav){ const src = nom !== '—' ? nom : (email !== '—' ? email : '?'); const parts = src.trim().split(/\s+/); _sav.textContent = (parts.length > 1 ? parts[0][0] + parts[1][0] : src.substring(0,2)); }
 
-  if(email !== '—') loadSubscriptionStatus(email);
+  if(email !== '—') loadSubscriptionStatus();
+}
+
+async function getAccessToken(){
+  const { data } = await sb.auth.getSession();
+  return data?.session?.access_token || null;
 }
 
 const SUB_STATUS_LABELS = {
@@ -3515,14 +3520,16 @@ const SUB_STATUS_LABELS = {
   past_due: {label: 'IMPAYÉ', color: 'var(--danger)', bg: 'var(--danger-soft)'},
   none: {label: 'AUCUN', color: 'var(--text2)', bg: 'var(--surface-2)'}
 };
-async function loadSubscriptionStatus(email){
+async function loadSubscriptionStatus(){
   const badge = document.getElementById('compte-abo-badge');
   const detailWrap = document.getElementById('compte-abo-detail');
   const cancelBtn = document.getElementById('compte-abo-cancel-btn');
   if(!badge) return;
   try {
+    const accessToken = await getAccessToken();
+    if(!accessToken) { badge.textContent = '—'; return; }
     const res = await fetch('/.netlify/functions/get-subscription-status', {
-      method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({email})
+      method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({accessToken})
     });
     const data = await res.json();
     const info = SUB_STATUS_LABELS[data.status] || SUB_STATUS_LABELS.none;
@@ -3559,16 +3566,16 @@ function confirmCancelSubscription(){
   createDialogOrSheet('confirm-cancel-sub-sheet', innerHtml, {desktopWidth:'420px', forceCenter:true});
 }
 async function cancelMySubscription(){
-  const email = sbUser?.email;
-  if(!email) return;
+  const accessToken = await getAccessToken();
+  if(!accessToken) return;
   try {
     const res = await fetch('/.netlify/functions/cancel-subscription', {
-      method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({email})
+      method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({accessToken})
     });
     const data = await res.json();
     if(!res.ok) throw new Error(data.message || 'Erreur');
     showToast('✓ Abonnement résilié');
-    loadSubscriptionStatus(email);
+    loadSubscriptionStatus();
   } catch(e){
     showToast('⚠️ ' + (e.message || 'Erreur lors de la résiliation'));
   }
@@ -3590,8 +3597,7 @@ function confirmDeleteAccount(){
 async function deleteMyAccount(){
   const btn = document.getElementById('delete-account-confirm-btn');
   if(btn?.disabled) return;
-  const { data: sessionData } = await sb.auth.getSession();
-  const accessToken = sessionData?.session?.access_token;
+  const accessToken = await getAccessToken();
   if(!accessToken){ showToast('⚠️ Session expirée, reconnecte-toi.'); return; }
   try {
     const res = await fetch('/.netlify/functions/delete-account', {

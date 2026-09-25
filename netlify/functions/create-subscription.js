@@ -1,13 +1,16 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const { createClient } = require('@supabase/supabase-js');
+
+const SUPABASE_URL = 'https://qfwbneqcnqmpwkyolxze.supabase.co';
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: JSON.stringify({ message: 'Method Not Allowed' }) };
   }
 
-  let email, paymentMethodId, priceId, skipTrial;
+  let email, paymentMethodId, priceId, skipTrial, userId;
   try {
-    ({ email, paymentMethodId, priceId, skipTrial } = JSON.parse(event.body));
+    ({ email, paymentMethodId, priceId, skipTrial, userId } = JSON.parse(event.body));
   } catch {
     return { statusCode: 400, body: JSON.stringify({ message: 'Corps de requête invalide.' }) };
   }
@@ -51,9 +54,21 @@ exports.handler = async (event) => {
       expand: ['latest_invoice.payment_intent']
     });
 
+    // 5. Relier le customer Stripe au compte Supabase, pour ne plus jamais avoir a le retrouver par email ensuite.
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (userId && serviceKey) {
+      try {
+        const supabaseAdmin = createClient(SUPABASE_URL, serviceKey);
+        await supabaseAdmin.auth.admin.updateUserById(userId, { user_metadata: { stripe_customer_id: customer.id } });
+      } catch (linkErr) {
+        // Ne bloque pas la creation du compte/abonnement si cette etape echoue : le fallback par email prend le relais.
+        console.error('Impossible de lier le customer Stripe au compte Supabase:', linkErr.message);
+      }
+    }
+
     return {
       statusCode: 200,
-      body: JSON.stringify({ success: true })
+      body: JSON.stringify({ success: true, customerId: customer.id })
     };
   } catch (err) {
     console.error('Stripe error:', err.message);

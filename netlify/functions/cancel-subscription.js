@@ -1,31 +1,40 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const { createClient } = require('@supabase/supabase-js');
+const { resolveStripeCustomer } = require('./_stripe-customer');
+
+const SUPABASE_URL = 'https://qfwbneqcnqmpwkyolxze.supabase.co';
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: JSON.stringify({ message: 'Method Not Allowed' }) };
   }
 
-  let email;
+  let accessToken;
   try {
-    ({ email } = JSON.parse(event.body));
+    ({ accessToken } = JSON.parse(event.body));
   } catch {
     return { statusCode: 400, body: JSON.stringify({ message: 'Corps de requête invalide.' }) };
   }
-
-  if (!email) {
-    return { statusCode: 400, body: JSON.stringify({ message: 'email est requis.' }) };
+  if (!accessToken) {
+    return { statusCode: 400, body: JSON.stringify({ message: 'accessToken est requis.' }) };
   }
 
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!serviceKey) {
+    console.error('SUPABASE_SERVICE_ROLE_KEY manquante.');
+    return { statusCode: 500, body: JSON.stringify({ message: 'Configuration serveur incomplète.' }) };
+  }
+  const supabaseAdmin = createClient(SUPABASE_URL, serviceKey);
+
   try {
-    const customers = await stripe.customers.list({ email, limit: 1 });
-    if (customers.data.length === 0) {
-      return { statusCode: 404, body: JSON.stringify({ message: 'Aucun abonnement trouvé pour cet email.' }) };
-    }
-    const customer = customers.data[0];
-    const subscriptions = await stripe.subscriptions.list({ customer: customer.id, status: 'active', limit: 1 });
-    const trialing = subscriptions.data.length === 0
-      ? await stripe.subscriptions.list({ customer: customer.id, status: 'trialing', limit: 1 })
-      : subscriptions;
+    const { error, customerId } = await resolveStripeCustomer(supabaseAdmin, stripe, accessToken);
+    if (error) return { statusCode: error.statusCode, body: JSON.stringify({ message: error.message }) };
+    if (!customerId) return { statusCode: 404, body: JSON.stringify({ message: 'Aucun abonnement trouvé.' }) };
+
+    const active = await stripe.subscriptions.list({ customer: customerId, status: 'active', limit: 1 });
+    const trialing = active.data.length === 0
+      ? await stripe.subscriptions.list({ customer: customerId, status: 'trialing', limit: 1 })
+      : active;
     if (trialing.data.length === 0) {
       return { statusCode: 404, body: JSON.stringify({ message: 'Aucun abonnement actif à résilier.' }) };
     }
