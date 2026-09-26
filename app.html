@@ -374,6 +374,8 @@
       border-color: var(--navy);
     }
     .vc-desk { display: none; }
+    .vc-age { display: inline-flex; align-items: center; gap: 3px; font-weight: 600; }
+    .vc-age svg { width: 11px; height: 11px; }
     #parc-desk-header { display: none; }
     #parc-grid {
       display: grid;
@@ -1071,7 +1073,9 @@
       .vcd-photo svg { width: 32px; height: 32px; }
       .vcd-name { font-size: 17px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
       .vcd-pin { font-size: 11px; color: var(--accent); font-weight: 600; background: var(--accent-soft); padding: 2px 7px; border-radius: 6px; margin-right: 6px; }
-      .vcd-tag { display: inline-block; margin-top: 6px; font-size: 12.5px; color: var(--text2); background: var(--surface-2); padding: 3px 10px; border-radius: 20px; }
+      .vcd-tag { display: inline-block; font-size: 12.5px; color: var(--text2); background: var(--surface-2); padding: 3px 10px; border-radius: 20px; }
+      .vcd-age { display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; font-weight: 600; }
+      .vcd-age svg { width: 14px; height: 14px; }
       .vcd-carac { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
       .vcd-carac-line { display: flex; align-items: center; gap: 8px; font-size: 14.5px; color: var(--text2); }
       .vcd-carac-line svg { width: 16px; height: 16px; color: var(--text3); flex-shrink: 0; }
@@ -3964,13 +3968,21 @@ const RenderHelpers = {
   buildVehicleCard: (v) => {
     const color = STATUS_COLORS[v.statut] || '#8e8e93';
     const STATUS_LABELS = {'En cours':'En cours','Prêt à vendre':'Prêt à vendre','Vendu':'Vendu'};
-    const gen = v.gen !== '?' ? ` · ${v.gen}` : '';
+    const gen = (v.gen && v.gen !== '?') ? ` · ${v.gen}` : '';
     const marge = (v.vente || 0) - (v.achat || 0) - (v.prepCost || 0);
     const margeColor = marge >= 0 ? cssVar('--success') : cssVar('--danger');
     const hasVente = (v.vente || 0) > 0;
     const priceChip = hasVente
       ? `<span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:${margeColor};"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${marge >= 0 ? '<path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/>' : '<path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/>'}</svg>${marge >= 0 ? '+' : ''}${Number(marge).toLocaleString('fr-FR')} €</span>`
       : (v.achat ? `<span style="font-size:12px;font-weight:500;color:var(--text2);">Achat ${Number(v.achat).toLocaleString('fr-FR')} €</span>` : '');
+    // Ancienneté dans le parc (depuis la date d'achat)
+    const stockStart = v.achatDate ? new Date(v.achatDate + 'T00:00:00') : new Date(parseInt(v.id) || Date.now());
+    const daysInStock = Math.max(0, Math.floor((Date.now() - stockStart) / 86400000));
+    const ageColor = daysInStock > 120 ? cssVar('--danger') : daysInStock > 60 ? cssVar('--warning') : cssVar('--text2');
+    const ageTitle = `Dans le parc depuis ${daysInStock} jour${daysInStock > 1 ? 's' : ''}`;
+    const clockSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`;
+    const ageBadgeMob = `<span class="vc-age" style="color:${ageColor};" title="${ageTitle}">${clockSvg}${daysInStock} j</span>`;
+    const ageBadgeDesk = `<span class="vcd-age" style="color:${ageColor};" title="${ageTitle}">${clockSvg}${daysInStock} j</span>`;
     return `
     <div class="swipe-wrapper" style="position:relative;border-radius:var(--r-lg);" id="swipe-wrapper-${v.id}">
       <!-- Bouton corbeille fixe à droite -->
@@ -4008,7 +4020,7 @@ const RenderHelpers = {
           <div class="vc-top-row" style="display:flex;gap:12px;align-items:flex-start;">
             <div class="vc-info" style="flex:1;min-width:0;">
               <div class="vc-title" style="font-size:16px;font-weight:700;color:var(--text);">${v.pinned ? '<span style="font-size:11px;color:var(--accent);font-weight:600;background:var(--accent-soft);padding:2px 6px;border-radius:6px;margin-right:6px;">épinglé</span>' : ''}${v.marque} ${v.modele}</div>
-              <div class="vc-subtitle" style="font-size:13px;color:var(--text2);margin-top:2px;">${v.year} · ${Number(v.km).toLocaleString('fr-FR')} km${gen}</div>
+              <div class="vc-subtitle" style="font-size:13px;color:var(--text2);margin-top:2px;">${v.year} · ${Number(v.km).toLocaleString('fr-FR')} km${gen} · ${ageBadgeMob}</div>
             </div>
             <button class="card-menu-btn" onclick="event.stopPropagation();showVehicleContextMenu(${v.id}, this)" style="background:var(--surface-2);border:none;cursor:pointer;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:16px;line-height:1;letter-spacing:1px;flex-shrink:0;">···</button>
           </div>
@@ -4029,7 +4041,10 @@ const RenderHelpers = {
             </div>
             <div style="min-width:0;">
               <div class="vcd-name">${v.pinned ? '<span class="vcd-pin">épinglé</span>' : ''}${v.marque} ${v.modele}</div>
-              ${(v.gen && v.gen !== '?') ? `<div class="vcd-tag">${v.gen}</div>` : ''}
+              <div style="display:flex;align-items:center;gap:8px;margin-top:6px;flex-wrap:wrap;">
+                ${(v.gen && v.gen !== '?') ? `<span class="vcd-tag">${v.gen}</span>` : ''}
+                ${ageBadgeDesk}
+              </div>
             </div>
           </div>
           <div class="vcd-carac">
