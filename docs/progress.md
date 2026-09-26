@@ -6,22 +6,20 @@ Dernière mise à jour : 2026-09-26. Ce fichier est un instantané, pas un journ
 
 - **Auth** : inscription/connexion via Supabase, écran de connexion, récupération de mot de passe.
 - **Parc** (`#parc`) : liste des véhicules en stock, cartes avec statut/prix, filtre par statut.
-- **Fiche détail véhicule** : bloc unifié Notes + Infos véhicule (édition gated par un bouton pinceau), sections Informations principales / Mécanique / Apparence / Administratif, onglets Détails/Transaction/Client, gestion des coûts HT/TTC (chaque frais a sa propre date + n° de facture), verrouillage des champs finance après validation de vente, régime de TVA + n° facture achat/vente par véhicule (comptabilité découplée de la validation commerciale).
+- **Fiche détail véhicule** : bloc unifié Notes + Infos véhicule (édition gated par un bouton pinceau), sections Informations principales / Mécanique / Apparence / Administratif, onglets Détails/Transaction/Client, gestion des coûts HT/TTC (libellé + montant, système simple `addCostItemForm`), verrouillage des champs finance après validation de vente, régime de TVA par véhicule (`v.vatRegime`, simple champ informatif, sans lien avec un calcul comptable).
 - **Planning** (`#planning`) : vues semaine/mois, création de tâches, rail des prochaines tâches, transition de glissement type iOS entre pages.
 - **Organisation** (`#organisation`) : kanban des prestataires/réparations, recherche de véhicule qui bascule sur le bon prestataire.
 - **Dashboard** (`#dashboard`) : KPIs, graphique seuil de rentabilité (Chart.js), tableau des ventes.
-- **Finance** (`#finance`, desktop uniquement) : vue comptable par période (mois/trimestre/année/tout), KPI (CA, coût véhicules, marge, charges, résultat, TVA à payer), charges de structure (ponctuelles + récurrentes), journal chronologique des opérations (achat/frais/vente datés indépendamment de la vente commerciale), export CSV/PDF avec récap TVA collectée/déductible/à payer pour l'expert-comptable.
-- **Compte** (`#compte`) : profil utilisateur, statut d'abonnement (badge + détail), résiliation d'abonnement, bloc Paramètres (marge cible par défaut, numérotation auto des N° de VO, régime TVA par défaut, export CSV du parc, suppression de compte).
+- **Compte** (`#compte`) : profil utilisateur, statut d'abonnement (badge + détail), résiliation d'abonnement, bloc Paramètres (marge cible par défaut, numérotation auto des N° de VO, export CSV du parc, suppression de compte).
 - **Landing page** (`landing.html`) : vitrine marketing, démo interactive, showcase des fonctionnalités, FAQ.
 - **Paiement** (`payment.html` + `netlify/functions/create-subscription.js`) : inscription avec essai gratuit 14 jours via Stripe.
 - Pages légales (CGV, confidentialité, mentions légales).
 
 ## Terminé récemment (voir `git log` pour le détail exact)
 
-- **Finance — journal comptable** (commit `a3582fb`) : `finComputeSummary()` calcule TVA collectée (marge/classique), TVA déductible (frais avec TVA) et TVA à payer ; KPI recablés (corrige un bug d'affichage `undefined`) ; la liste "véhicules vendus" devient un vrai journal chronologique (achat/frais/vente datés) ; exports CSV/PDF structurés avec récap TVA.
-- **Finance — dissociation comptabilité / vente commerciale** (commit `98ddf67`) : chaque frais a désormais sa propre date + n° de facture (`openFraisModal`/`commitFrais`), la vue Finance devient un grand livre chronologique indépendant du statut `venteValidee`.
+- **Retrait du module Finance** (commit `25758fc`) : à la demande de l'utilisateur, revert complet du chantier comptabilité (commits `0b72b7c`, `98ddf67`, `a3582fb`) — vue Finance, journal chronologique, charges de structure, exports CSV/PDF, `financeData` et sa synchro (`_finance`), n° de facture par frais/achat/vente, dates par frais. Seul le champ régime de TVA par véhicule est conservé (stocké directement sur le véhicule, `v.vatRegime`). Voir section dédiée ci-dessous pour le contexte complet à reprendre plus tard.
 - **Abonnement** : `get-subscription-status.js` (badge statut dans Compte), `cancel-subscription.js` (résiliation en fin de période), `delete-account.js` (suppression compte RGPD : résilie Stripe immédiatement + supprime les données Supabase + `auth.admin.deleteUser`). Toutes basées sur `_stripe-customer.js` (résolution fiable du customer Stripe via `stripe_customer_id` en `user_metadata`, avec fallback email + backfill).
-- Vue Compte scindée : Compte (profil, abonnement) + Paramètres (mollette) contenant marge cible, numérotation VO, régime TVA par défaut, export CSV, suppression de compte.
+- Vue Compte scindée : Compte (profil, abonnement) + Paramètres (mollette) contenant marge cible, numérotation VO, export CSV, suppression de compte.
 - Desktop (`app.html`, scopé `@media (min-width: 900px)`) : refonte des onglets Détails/Transaction/Client de la fiche véhicule — bloc unique par onglet, titres de section en texte gras plus grand, séparateurs style tableau, bouton "Valider la vente" intégré en pilule dans le bloc Finances.
 - Planning : transition de glissement type iOS entre deux pages, sur flèches prev/next et swipe mobile.
 - Organisation : recherche de véhicule (icône loupe) qui bascule sur le bon prestataire et met en surbrillance la carte trouvée.
@@ -40,7 +38,7 @@ Dernière mise à jour : 2026-09-26. Ce fichier est un instantané, pas un journ
 
 ## Idées non retenues / mises de côté
 
-- Champ "type de vendeur" (particulier/pro) sur l'achat pour pré-remplir automatiquement le régime de TVA par véhicule : jugé non nécessaire — le régime par défaut (`financeData.vatDefault`, réglable dans Paramètres) pré-remplit déjà chaque véhicule, et le marchand peut l'ajuster ponctuellement dans l'onglet Transaction.
+- Champ "type de vendeur" (particulier/pro) sur l'achat pour pré-remplir automatiquement le régime de TVA par véhicule : jugé non nécessaire.
 
 ## Comptabilité — mis en pause à la demande de l'utilisateur (2026-09-26)
 
