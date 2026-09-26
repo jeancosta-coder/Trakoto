@@ -826,6 +826,15 @@
     .bft-del svg { width:15px; height:15px; }
     .bft-total { background:color-mix(in srgb, var(--accent) 8%, var(--surface)); }
     .bft-total .bft-name, .bft-total .bft-amt { font-weight:700; color:var(--accent); }
+    #devis-print-holder { display:none; }
+    @media print {
+      body > *:not(#devis-print-holder) { display:none !important; }
+      #devis-print-holder { display:block !important; padding:40px; color:#111; font-family:inherit; }
+    }
+    .fin-fld { display:flex; flex-direction:column; gap:5px; }
+    .fin-fld label { font-size:12px; color:var(--text2); }
+    .fin-fld input { border:1px solid var(--border); border-radius:10px; padding:10px 12px; font-size:15px; color:var(--text); background:var(--surface); font-family:inherit; }
+    .fin-empty { color:var(--text2); font-size:13.5px; text-align:center; }
     .desktop-sidebar { display:none; }
     @media (min-width: 900px) {
       body { background-color: var(--bg); }
@@ -2572,6 +2581,19 @@
             </div>
           </div>
         </div>
+
+        <!-- Devis : lignes optionnelles (garantie, accessoires, reprise...) + génération -->
+        <div class="bft-card" style="margin-bottom:20px;">
+          <div class="ntask-section-label ntask-section-label-primary dtc-section-label">Devis</div>
+          <div id="devis-lines-list"></div>
+          <div style="padding:10px 16px;border-top:1px solid var(--border);">
+            <button type="button" onclick="openDevisLineModal()" class="btn-outline" style="width:100%;">+ Ligne (option, accessoire, reprise…)</button>
+          </div>
+          <div style="display:flex;gap:10px;padding:10px 16px 14px;">
+            <button type="button" onclick="generateDevis()" class="btn-outline" style="flex:1;">Télécharger / Imprimer</button>
+            <button type="button" onclick="sendDevisByEmail()" class="btn-outline" style="flex:1;">Envoyer par mail</button>
+          </div>
+        </div>
       </div>
 
   </div>
@@ -2601,9 +2623,17 @@
         <span style="font-size:15px;color:var(--text);">Société</span>
         <span id="compte-garage" style="font-size:15px;color:var(--text2);">—</span>
       </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:0.5px solid var(--border);">
         <span style="font-size:15px;color:var(--text);">Email</span>
         <span id="compte-email" style="font-size:13px;color:var(--text2);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">—</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:0.5px solid var(--border);gap:12px;">
+        <span style="font-size:15px;color:var(--text);flex-shrink:0;">Adresse</span>
+        <input type="text" id="compte-adresse-input" placeholder="Adresse de l'entreprise" onblur="saveCompanyField('adresse', this.value)" style="border:none;outline:none;font-size:15px;color:var(--text2);text-align:right;background:transparent;flex:1;min-width:0;">
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;gap:12px;">
+        <span style="font-size:15px;color:var(--text);flex-shrink:0;">SIRET</span>
+        <input type="text" id="compte-siret-input" placeholder="N° SIRET" onblur="saveCompanyField('siret', this.value)" style="border:none;outline:none;font-size:15px;color:var(--text2);text-align:right;background:transparent;flex:1;min-width:0;">
       </div>
     </div>
 
@@ -3529,6 +3559,13 @@ function exportParcCsv(){
   URL.revokeObjectURL(url);
   showToast('✓ Export CSV téléchargé');
 }
+async function saveCompanyField(field, value){
+  if(!sbUser) return;
+  const { data, error } = await sb.auth.updateUser({ data: { [field]: value } });
+  if(error){ showToast('⚠️ Erreur : ' + error.message); return; }
+  sbUser = data.user;
+  showToast('✓ Enregistré');
+}
 function renderCompte(){
   const user = sbUser;
   const meta = user?.user_metadata || {};
@@ -3545,6 +3582,8 @@ function renderCompte(){
   if(document.getElementById('compte-nom')) document.getElementById('compte-nom').textContent = nom;
   if(document.getElementById('compte-garage')) document.getElementById('compte-garage').textContent = société;
   if(document.getElementById('compte-email')) document.getElementById('compte-email').textContent = email;
+  const _adr = document.getElementById('compte-adresse-input'); if(_adr) _adr.value = meta.adresse || '';
+  const _sir = document.getElementById('compte-siret-input'); if(_sir) _sir.value = meta.siret || '';
   // Puce profil sidebar (desktop)
   const _scn = document.getElementById('sidebar-compte-name'); if(_scn) _scn.textContent = nom !== '—' ? nom : 'Compte';
   const _scs = document.getElementById('sidebar-compte-sub'); if(_scs) _scs.textContent = société !== '—' ? société : 'Mon profil';
@@ -4159,6 +4198,7 @@ function renderClientDisplay(v){
   const dEmail = document.getElementById('dtc-email'); if(dEmail) dEmail.value = v.clientEmail || '';
   const dNotes = document.getElementById('dtc-notes'); if(dNotes) dNotes.value = v.clientNotes || '';
   toggleClientActionBtns();
+  renderDevisLines(v);
 }
 function toggleClientActionBtns(){
   const tel = (document.getElementById('dtc-tel')?.value || '').trim();
@@ -4171,6 +4211,121 @@ function emailClient(){
   const val = (v?.clientEmail || '').trim();
   if(!val) return;
   window.location.href = 'mailto:' + val;
+}
+
+// ── Devis ──
+function devisLinesOf(v){ return (v && v.devisLines) || []; }
+function renderDevisLines(v){
+  const el = document.getElementById('devis-lines-list'); if(!el) return;
+  const items = devisLinesOf(v);
+  if(items.length === 0){ el.innerHTML = '<div class="fin-empty" style="padding:16px;">Aucune ligne optionnelle (garantie, accessoires, reprise…)</div>'; return; }
+  el.innerHTML = items.map(it => `<div class="bft-row-simple" onclick="openDevisLineModal('${it.id}')" style="cursor:pointer;">
+    <span class="bft-name">${escapeHtml(it.label||'Ligne')}</span>
+    <span style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
+      <span class="bft-amt">${Number(it.amount).toLocaleString('fr-FR')} €</span>
+      <button class="bft-del" onclick="event.stopPropagation();removeDevisLine('${it.id}')"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+    </span>
+  </div>`).join('');
+}
+function openDevisLineModal(id){
+  const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
+  let it = {};
+  if(id){ it = devisLinesOf(v).find(x => String(x.id) === String(id)) || {}; }
+  const inner = `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);">
+      <span style="font-size:17px;font-weight:600;color:var(--text);">${id?'Modifier':'Nouvelle'} ligne</span>
+      <button onclick="document.getElementById('devis-line-modal')?.remove()" class="modal-close-btn">✕</button>
+    </div>
+    <div style="padding:20px;display:flex;flex-direction:column;gap:14px;">
+      <div class="fin-fld"><label>Intitulé</label><input type="text" id="devis-line-label" placeholder="Garantie 12 mois, accessoires, reprise…" value="${escapeHtml(it.label||'')}"></div>
+      <div class="fin-fld"><label>Montant (négatif pour une reprise)</label><input type="number" id="devis-line-amount" placeholder="0" value="${it.amount||''}"></div>
+      <button onclick="commitDevisLine('${id||''}')" class="ntask-save-btn" style="margin-top:6px;">${id?'Enregistrer':'Ajouter'}</button>
+    </div>`;
+  createDialogOrSheet('devis-line-modal', inner, {desktopWidth:'480px'});
+  setTimeout(() => document.getElementById('devis-line-label')?.focus(), 150);
+}
+function commitDevisLine(id){
+  const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
+  const label = document.getElementById('devis-line-label').value.trim();
+  const amount = Number(document.getElementById('devis-line-amount').value) || 0;
+  if(!label || !amount){ showToast('⚠️ Intitulé et montant requis'); return; }
+  const items = devisLinesOf(v).slice();
+  if(id){ const cur = items.find(x => String(x.id) === String(id)); if(cur) Object.assign(cur, {label, amount}); }
+  else { items.push({id: String(Date.now()), label, amount}); }
+  DataLayer.updateVehicle(currentDetailVehicleId, {devisLines: items});
+  document.getElementById('devis-line-modal')?.remove();
+  renderDevisLines(DataLayer.getVehicleById(currentDetailVehicleId));
+  showToast('✓ Ligne enregistrée');
+}
+function removeDevisLine(id){
+  const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
+  const items = devisLinesOf(v).filter(i => String(i.id) !== String(id));
+  DataLayer.updateVehicle(currentDetailVehicleId, {devisLines: items});
+  renderDevisLines(DataLayer.getVehicleById(currentDetailVehicleId));
+}
+function devisNumber(v){
+  return 'DEVIS-' + (v.numVo ? String(v.numVo).replace(/\s+/g,'') + '-' : '') + Utils.today().replace(/-/g,'');
+}
+function devisBuildRows(v){
+  const rows = [{label: `${(v.marque||'')} ${(v.modele||'')}`.trim() || 'Véhicule', amount: Number(v.vente || v.venteFinale) || 0}];
+  devisLinesOf(v).forEach(it => rows.push({label: it.label, amount: Number(it.amount)||0}));
+  return rows;
+}
+function devisTotal(v){ return devisBuildRows(v).reduce((s,r) => s + r.amount, 0); }
+function devisHtml(v){
+  const meta = sbUser?.user_metadata || {};
+  const garage = escapeHtml(meta.garage_name || 'Mon activité');
+  const adresse = escapeHtml(meta.adresse || '');
+  const siret = escapeHtml(meta.siret || '');
+  const clientNom = [v.clientPrenom, v.clientNom].filter(Boolean).join(' ') || '—';
+  const rows = devisBuildRows(v);
+  const rowsHtml = rows.map(r => `<tr><td style="padding:8px 0;">${escapeHtml(r.label)}</td><td style="padding:8px 0;text-align:right;font-variant-numeric:tabular-nums;">${finPrintFmt(r.amount)}</td></tr>`).join('');
+  return `
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;">
+      <div>
+        <div style="font-size:20px;font-weight:700;">${garage}</div>
+        ${adresse?`<div style="font-size:13px;color:#555;margin-top:2px;">${adresse}</div>`:''}
+        ${siret?`<div style="font-size:13px;color:#555;">SIRET ${siret}</div>`:''}
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:22px;font-weight:700;">DEVIS</div>
+        <div style="font-size:13px;color:#555;margin-top:2px;">${devisNumber(v)}</div>
+        <div style="font-size:13px;color:#555;">${new Date().toLocaleDateString('fr-FR')}</div>
+      </div>
+    </div>
+    <div style="margin-bottom:24px;">
+      <div style="font-size:12px;color:#555;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:4px;">Client</div>
+      <div style="font-size:15px;font-weight:600;">${escapeHtml(clientNom)}</div>
+      ${v.clientTel?`<div style="font-size:13px;color:#555;">${escapeHtml(v.clientTel)}</div>`:''}
+      ${v.clientEmail?`<div style="font-size:13px;color:#555;">${escapeHtml(v.clientEmail)}</div>`:''}
+    </div>
+    <table style="width:100%;border-collapse:collapse;font-size:14px;">
+      <thead><tr><th style="text-align:left;border-bottom:2px solid #111;padding-bottom:8px;">Description</th><th style="text-align:right;border-bottom:2px solid #111;padding-bottom:8px;">Montant</th></tr></thead>
+      <tbody>${rowsHtml}</tbody>
+      <tfoot><tr><td style="padding-top:12px;font-weight:700;border-top:1px solid #111;">Total</td><td style="padding-top:12px;font-weight:700;text-align:right;border-top:1px solid #111;">${finPrintFmt(devisTotal(v))}</td></tr></tfoot>
+    </table>
+    <div style="margin-top:32px;font-size:12px;color:#777;">Devis établi le ${new Date().toLocaleDateString('fr-FR')}, valable 30 jours sauf mention contraire.</div>`;
+}
+function finPrintFmt(n){ return Math.round(n).toLocaleString('fr-FR') + ' €'; }
+function generateDevis(){
+  const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
+  let holder = document.getElementById('devis-print-holder');
+  if(!holder){ holder = document.createElement('div'); holder.id = 'devis-print-holder'; document.body.appendChild(holder); }
+  holder.innerHTML = devisHtml(v);
+  window.print();
+}
+function sendDevisByEmail(){
+  const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
+  if(!v.clientEmail){ showToast('⚠️ Renseigne l\'email du client d\'abord'); return; }
+  const subject = encodeURIComponent('Devis ' + devisNumber(v));
+  const body = encodeURIComponent(
+    `Bonjour ${[v.clientPrenom, v.clientNom].filter(Boolean).join(' ')||''},\n\n` +
+    `Veuillez trouver ci-joint le devis pour ${(v.marque||'')} ${(v.modele||'')}.\n` +
+    `Montant total : ${finPrintFmt(devisTotal(v))}.\n\n` +
+    `Pense à joindre le PDF téléchargé avant l'envoi.\n\nCordialement,`
+  );
+  window.location.href = `mailto:${v.clientEmail}?subject=${subject}&body=${body}`;
+  showToast('N\'oublie pas de joindre le devis téléchargé au mail');
 }
 function saveClientField(field, val){
   if(!DataLayer.getVehicleById(currentDetailVehicleId)) return;
