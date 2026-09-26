@@ -42,6 +42,15 @@ Dernière mise à jour : 2026-09-26. Ce fichier est un instantané, pas un journ
 
 - Champ "type de vendeur" (particulier/pro) sur l'achat pour pré-remplir automatiquement le régime de TVA par véhicule : jugé non nécessaire — le régime par défaut (`financeData.vatDefault`, réglable dans Paramètres) pré-remplit déjà chaque véhicule, et le marchand peut l'ajuster ponctuellement dans l'onglet Transaction.
 
+## Comptabilité — mis en pause à la demande de l'utilisateur (2026-09-26)
+
+L'utilisateur souhaite finaliser le reste de l'app d'abord et revenir sur la comptabilité plus tard. Ne pas reprendre ces points sans demande explicite. Repartir de cette liste quand le sujet reviendra :
+
+- **Bug d'incohérence CA/coût/marge identifié, non corrigé** : dans `finComputeSummary()` (app.html), le KPI "Coût des véhicules" agrège tous les achats/frais **datés** dans la période choisie (n'importe quel véhicule, vendu ou non), alors que "Marge véhicules" prend le coût **total** des véhicules **vendus** dans la période (peu importe la date de leurs frais). Résultat : `CA − Coût ≠ Marge` affichée sur une période donnée dès qu'il y a un décalage entre achats et ventes (ex. véhicules achetés en mars mais vendus en janvier, ou l'inverse). Un comptable verra l'incohérence immédiatement.
+- **Infos manquantes dans l'export comptable** : nom de l'acheteur/vendeur, VIN/immatriculation du véhicule, mode de règlement (espèces/chèque/virement/crédit — pertinent pour le plafond légal espèces et le rapprochement bancaire), SIREN/SIRET de l'entreprise sur le PDF.
+- **Pièces justificatives (fichiers) non attachables** : les n° de facture existent déjà partout (achat véhicule, vente véhicule, chaque frais, chaque charge — tous dans l'export), mais il n'y a aucun moyen d'attacher le document lui-même (photo/PDF de la facture, certificat de cession, attestation de vente/déclaration de cession). Chantier à part : nécessite un vrai stockage de fichiers (Supabase Storage), l'appli actuelle collant les photos en base64 dans la ligne JSON du véhicule (`_vehicles`), ce qui ne scale pas pour des pièces jointes en nombre.
+- Hors scope app (à la charge du comptable) : charges sociales/salariales détaillées, immobilisations/amortissements, rapprochement bancaire réel, valorisation de stock de clôture d'exercice.
+
 ## Notes pour reprendre le travail
 
 - Toujours vérifier `git status`/`git diff` avant de supposer l'état du fichier `app.html` — plusieurs sessions de travail peuvent se succéder avec des changements non commités.
