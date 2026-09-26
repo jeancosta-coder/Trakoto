@@ -844,6 +844,11 @@
     .devis-line-sub { font-size:12px; color:var(--text2); margin-top:1px; }
     .devis-line-amt { font-size:15px; font-weight:700; color:var(--text); font-variant-numeric:tabular-nums; white-space:nowrap; flex-shrink:0; }
     .devis-line-amt.neg { color:var(--success); }
+    .devis-price-wrap { display:flex; align-items:center; gap:3px; flex-shrink:0; border:1px solid var(--border); border-radius:9px; padding:6px 10px; background:var(--surface-2); }
+    .devis-price-input { width:78px; border:none; outline:none; background:transparent; text-align:right; font-size:15px; font-weight:700; color:var(--text); font-variant-numeric:tabular-nums; font-family:inherit; }
+    .devis-price-input::-webkit-outer-spin-button, .devis-price-input::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
+    .devis-price-input { -moz-appearance:textfield; }
+    .devis-price-unit { font-size:15px; font-weight:700; color:var(--text2); }
     .devis-line.editable { cursor:pointer; transition:background 0.12s; }
     .devis-line.editable:active { background:var(--surface-2); }
     .devis-line-del { background:none; border:none; cursor:pointer; color:var(--text3); padding:4px; display:flex; flex-shrink:0; }
@@ -4232,6 +4237,14 @@ function emailClient(){
 
 // ── Devis ──
 function devisLinesOf(v){ return (v && v.devisLines) || []; }
+function saveDevisVehiclePrice(value){
+  const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
+  const price = Number(value) || 0;
+  DataLayer.updateVehicle(currentDetailVehicleId, {vente: price});
+  const t = document.getElementById('detail-vente-input'); if(t) t.value = price || '';
+  if(typeof updateMargePreview === 'function') updateMargePreview();
+  renderDevisLines(DataLayer.getVehicleById(currentDetailVehicleId));
+}
 function renderDevisLines(v){
   const el = document.getElementById('devis-recap'); if(!el || !v) return;
   const vehPrice = Number(v.vente || v.venteFinale) || 0;
@@ -4239,14 +4252,17 @@ function renderDevisLines(v){
   const items = devisLinesOf(v);
   const total = vehPrice + items.reduce((s,it) => s + (Number(it.amount)||0), 0);
 
-  // Ligne véhicule (prix de vente cible, saisi dans l'onglet Transaction)
+  // Ligne véhicule : prix de vente saisi directement ici, sur le devis
   let html = `<div class="devis-line">
     <div class="devis-line-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h18l-1.5-5.5A2 2 0 0 0 17.6 6H6.4a2 2 0 0 0-1.9 1.5L3 13z"/><path d="M5 13v5M19 13v5"/><circle cx="7" cy="18" r="1.5"/><circle cx="17" cy="18" r="1.5"/></svg></div>
     <div class="devis-line-body">
       <div class="devis-line-label">${escapeHtml(vehName)}</div>
       <div class="devis-line-sub">Prix de vente${v.numVo?' · N°'+escapeHtml(v.numVo):''}</div>
     </div>
-    <div class="devis-line-amt">${vehPrice.toLocaleString('fr-FR')} €</div>
+    <div class="devis-price-wrap">
+      <input type="number" id="devis-veh-price" class="devis-price-input" placeholder="0" value="${vehPrice||''}" onchange="saveDevisVehiclePrice(this.value)" onclick="event.stopPropagation()">
+      <span class="devis-price-unit">€</span>
+    </div>
   </div>`;
 
   // Lignes optionnelles
@@ -4271,7 +4287,7 @@ function renderDevisLines(v){
 
   // Avertissement si prix véhicule non renseigné
   if(vehPrice === 0){
-    html += `<div class="devis-warn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Renseigne le prix de vente dans l'onglet Transaction pour l'afficher sur le devis.</div>`;
+    html += `<div class="devis-warn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Saisis le prix de vente ci-dessus pour compléter le devis.</div>`;
   }
 
   // Actions
