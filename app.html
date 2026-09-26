@@ -1058,23 +1058,24 @@
         display: none !important;
       }
       /* Parc desktop : liste type tableau, une ligne par véhicule */
-      :root { --vc-cols: 2.6fr 1.4fr 1fr 0.7fr 1fr 1.1fr 34px; }
-      #parc-grid { grid-template-columns: 1fr !important; gap: 8px !important; }
-      #parc-desk-header { display: grid !important; grid-template-columns: var(--vc-cols); align-items: center; gap: 16px; padding: 0 18px 10px; }
-      #parc-desk-header > div { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; }
+      :root { --vc-cols: 2.6fr 1.4fr 1fr 0.7fr 1fr 1.1fr 40px; }
+      #parc-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+      #parc-desk-header { display: grid !important; grid-template-columns: var(--vc-cols); align-items: center; gap: 20px; padding: 0 24px 12px; }
+      #parc-desk-header > div { font-size: 12px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; }
       #parc-grid .vc-mob { display: none !important; }
-      #parc-grid .vehicle-card-swipeable { display: block !important; flex-direction: unset !important; padding: 0 !important; gap: 0 !important; border-radius: 14px !important; }
+      #parc-grid .vehicle-card-swipeable { display: block !important; flex-direction: unset !important; padding: 0 !important; gap: 0 !important; border-radius: 16px !important; }
       #parc-grid .vehicle-card-swipeable:hover { box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
-      .vc-desk { display: grid; grid-template-columns: var(--vc-cols); align-items: center; gap: 16px; padding: 12px 18px; }
-      .vcd-veh { display: flex; align-items: center; gap: 12px; min-width: 0; }
-      .vcd-photo { width: 64px; height: 46px; border-radius: 10px; background: var(--surface-2); flex-shrink: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-      .vcd-name { font-size: 14.5px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-      .vcd-pin { font-size: 10px; color: var(--accent); font-weight: 600; background: var(--accent-soft); padding: 2px 6px; border-radius: 6px; margin-right: 6px; }
-      .vcd-tag { display: inline-block; margin-top: 4px; font-size: 11px; color: var(--text2); background: var(--surface-2); padding: 2px 9px; border-radius: 20px; }
-      .vcd-carac { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
-      .vcd-carac-line { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--text2); }
-      .vcd-carac-line svg { color: var(--text3); flex-shrink: 0; }
-      .vcd-km, .vcd-year, .vcd-vo { font-size: 13.5px; color: var(--text); font-variant-numeric: tabular-nums; }
+      .vc-desk { display: grid; grid-template-columns: var(--vc-cols); align-items: center; gap: 20px; padding: 18px 24px; }
+      .vcd-veh { display: flex; align-items: center; gap: 16px; min-width: 0; }
+      .vcd-photo { width: 96px; height: 68px; border-radius: 12px; background: var(--surface-2); flex-shrink: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+      .vcd-photo svg { width: 32px; height: 32px; }
+      .vcd-name { font-size: 17px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .vcd-pin { font-size: 11px; color: var(--accent); font-weight: 600; background: var(--accent-soft); padding: 2px 7px; border-radius: 6px; margin-right: 6px; }
+      .vcd-tag { display: inline-block; margin-top: 6px; font-size: 12.5px; color: var(--text2); background: var(--surface-2); padding: 3px 10px; border-radius: 20px; }
+      .vcd-carac { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+      .vcd-carac-line { display: flex; align-items: center; gap: 8px; font-size: 14.5px; color: var(--text2); }
+      .vcd-carac-line svg { width: 16px; height: 16px; color: var(--text3); flex-shrink: 0; }
+      .vcd-km, .vcd-year, .vcd-vo { font-size: 15px; color: var(--text); font-variant-numeric: tabular-nums; }
       .vcd-vo { color: var(--text2); }
       .vcd-menu:hover { background: var(--surface-2) !important; }
       .modal-box {
@@ -4039,9 +4040,9 @@ const RenderHelpers = {
           <div class="vcd-year">${(v.year && v.year !== '?') ? v.year : '—'}</div>
           <div class="vcd-vo">${v.numVo ? 'N°' + v.numVo : '—'}</div>
           <div class="vcd-status">
-            <span class="vc-status-chip" style="display:inline-flex;align-items:center;gap:5px;background:${color}18;padding:4px 10px;border-radius:20px;">
+            <span class="vc-status-chip" style="display:inline-flex;align-items:center;gap:6px;background:${color}18;padding:6px 14px;border-radius:20px;">
               ${statusIconSVG(v.statut, color)}
-              <span style="font-size:12px;font-weight:600;color:${color};">${STATUS_LABELS[v.statut] || v.statut}</span>
+              <span style="font-size:13.5px;font-weight:600;color:${color};">${STATUS_LABELS[v.statut] || v.statut}</span>
             </span>
           </div>
           <button class="card-menu-btn vcd-menu" onclick="event.stopPropagation();showVehicleContextMenu(${v.id}, this)" style="background:none;border:none;cursor:pointer;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:16px;line-height:1;letter-spacing:1px;flex-shrink:0;">···</button>
