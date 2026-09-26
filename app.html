@@ -407,6 +407,32 @@
     .dash-sale-card .dsc-row span:first-child { color: var(--text2); }
     .dash-sale-card .dsc-row span:last-child { font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
 
+    /* Dashboard : sections enrichies (état du parc, rotation, tâches) */
+    .dash-section-card { background: var(--surface); border-radius: 18px; box-shadow: var(--shadow-sm); padding: 16px; border: 1px solid transparent; }
+    [data-theme="dark"] .dash-section-card { border-color: var(--border); }
+    .dash-sec-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; gap: 8px; }
+    .dash-sec-title { font-size: 15px; font-weight: 700; color: var(--text); letter-spacing: -0.2px; }
+    .dash-sec-hint { font-size: 11px; color: var(--text2); }
+    .dash-stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(68px, 1fr)); gap: 12px; }
+    .dash-stat { text-align: left; min-width: 0; }
+    .dash-stat-val { font-size: 22px; font-weight: 800; color: var(--text); letter-spacing: -0.5px; line-height: 1; font-variant-numeric: tabular-nums; }
+    .dash-stat-val.warn { color: var(--danger); }
+    .dash-stat-lbl { font-size: 11.5px; color: var(--text2); margin-top: 5px; line-height: 1.25; }
+    .dash-parc-footer { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); }
+    .dash-foot-lbl { font-size: 11.5px; color: var(--text2); }
+    .dash-foot-val { font-size: 17px; font-weight: 700; color: var(--text); margin-top: 3px; font-variant-numeric: tabular-nums; }
+    .dash-rotation { display: flex; flex-direction: column; gap: 11px; }
+    .dash-rot-row { display: flex; align-items: center; gap: 12px; }
+    .dash-rot-lbl { font-size: 12px; color: var(--text2); width: 62px; flex-shrink: 0; }
+    .dash-rot-track { display: block; flex: 1; height: 10px; background: var(--surface-2); border-radius: 6px; overflow: hidden; }
+    .dash-rot-fill { display: block; height: 100%; border-radius: 6px; background: var(--accent); min-width: 0; transition: width 0.4s ease; }
+    .dash-rot-count { font-size: 13px; font-weight: 700; color: var(--text); width: 24px; text-align: right; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+    @media (min-width: 900px) {
+      #dash-extra-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+      #dash-extra-grid > .dash-section-card { margin-bottom: 0 !important; }
+      #dash-extra-grid > .dash-parc { grid-column: 1 / -1; }
+    }
+
     /* Organisation */
     .org-pill { border: none; background: var(--surface-2); color: var(--text2); font-size: 13px; font-weight: 600; padding: 8px 16px; border-radius: 9999px; cursor: pointer; white-space: nowrap; transition: background 0.15s ease, color 0.15s ease; flex-shrink: 0; }
     .org-pill.active { background: var(--accent); color: #fff; }
@@ -2175,6 +2201,40 @@
           <div class="kpi-label">Total sorties</div>
           <div id="dash-sorties-count" style="font-size:12px;color:var(--text2);margin-top:2px;"></div>
           <div id="dash-sorties-spark"></div>
+        </div>
+      </div>
+
+      <!-- Sections enrichies : état du parc, rotation du stock, tâches -->
+      <div id="dash-extra-grid">
+        <!-- État du parc -->
+        <div class="dash-section-card dash-parc" style="margin-bottom:16px;">
+          <div class="dash-sec-head">
+            <span class="dash-sec-title">État du parc</span>
+            <span id="dash-parc-total" class="kpi-delta" style="background:var(--accent-soft);color:var(--accent);"></span>
+          </div>
+          <div id="dash-parc-stats" class="dash-stat-row"></div>
+          <div class="dash-parc-footer">
+            <div><div class="dash-foot-lbl">Valorisation du stock</div><div id="dash-parc-valo" class="dash-foot-val">—</div></div>
+            <div><div class="dash-foot-lbl">Âge moyen du stock</div><div id="dash-parc-age" class="dash-foot-val">—</div></div>
+          </div>
+        </div>
+
+        <!-- Rotation du stock -->
+        <div class="dash-section-card" style="margin-bottom:16px;">
+          <div class="dash-sec-head">
+            <span class="dash-sec-title">Rotation du stock</span>
+            <span class="dash-sec-hint">ancienneté en stock</span>
+          </div>
+          <div id="dash-rotation" class="dash-rotation"></div>
+        </div>
+
+        <!-- Tâches & RDV -->
+        <div class="dash-section-card" style="margin-bottom:16px;">
+          <div class="dash-sec-head">
+            <span class="dash-sec-title">Tâches &amp; RDV</span>
+            <span class="dash-sec-hint">planning</span>
+          </div>
+          <div id="dash-tasks-stats" class="dash-stat-row"></div>
         </div>
       </div>
     </div>
@@ -5892,6 +5952,75 @@ function renderDashboard(){
   const sortiesSeries = buckets.map(b => b.sold.length);
   const sSpark = document.getElementById('dash-sorties-spark'); if(sSpark) sSpark.innerHTML = sparklineSVG(sortiesSeries, 'var(--warning)', isDesktopDash, v => Math.round(v) + ' véh.');
   const sDelta = document.getElementById('dash-sorties-delta'); if(sDelta) sDelta.innerHTML = deltaBadgeHTML(currentBucket.sold.length, previousBucket ? previousBucket.sold.length : 0);
+
+  renderDashboardParc();
+  renderDashboardRotation();
+  renderDashboardTasks();
+}
+
+function _dashDaysInStock(v){
+  const start = v.achatDate ? new Date(v.achatDate + 'T00:00:00') : new Date(parseInt(v.id) || Date.now());
+  return Math.max(0, Math.floor((Date.now() - start) / 86400000));
+}
+
+function renderDashboardParc(){
+  const stock = vehicles.filter(v => v.statut !== 'Livré' && v.statut !== 'Vendu');
+  const count = s => stock.filter(v => v.statut === s).length;
+  const stats = [
+    {val: count('En cours'), lbl: 'En préparation'},
+    {val: count('Prêt à vendre'), lbl: 'Prêt à vendre'},
+    {val: count('Réservé'), lbl: 'Réservé'},
+    {val: stock.filter(v => !v.photo).length, lbl: 'Sans photo'}
+  ];
+  const statsEl = document.getElementById('dash-parc-stats');
+  if(statsEl) statsEl.innerHTML = stats.map(s => `<div class="dash-stat"><div class="dash-stat-val">${s.val}</div><div class="dash-stat-lbl">${s.lbl}</div></div>`).join('');
+  const totalEl = document.getElementById('dash-parc-total');
+  if(totalEl) totalEl.textContent = stock.length + (stock.length > 1 ? ' véhicules' : ' véhicule');
+  const valo = stock.reduce((s, v) => s + (v.achat || 0), 0);
+  const valoEl = document.getElementById('dash-parc-valo'); if(valoEl) valoEl.textContent = valo ? valo.toLocaleString('fr-FR') + ' €' : '—';
+  const ages = stock.map(_dashDaysInStock);
+  const ageMoy = ages.length ? Math.round(ages.reduce((a, b) => a + b, 0) / ages.length) : null;
+  const ageEl = document.getElementById('dash-parc-age'); if(ageEl) ageEl.textContent = ageMoy !== null ? ageMoy + ' j' : '—';
+}
+
+function renderDashboardRotation(){
+  const el = document.getElementById('dash-rotation'); if(!el) return;
+  const stock = vehicles.filter(v => v.statut !== 'Livré' && v.statut !== 'Vendu');
+  const defs = [
+    {lbl: '0–30 j', min: 0, max: 30},
+    {lbl: '31–60 j', min: 31, max: 60},
+    {lbl: '61–90 j', min: 61, max: 90},
+    {lbl: '91–120 j', min: 91, max: 120},
+    {lbl: '+120 j', min: 121, max: Infinity}
+  ];
+  const counts = defs.map(d => stock.filter(v => { const a = _dashDaysInStock(v); return a >= d.min && a <= d.max; }).length);
+  const max = Math.max(1, ...counts);
+  el.innerHTML = defs.map((d, i) => {
+    const pct = Math.round(counts[i] / max * 100);
+    const old = i >= 3;
+    return `<div class="dash-rot-row">
+      <span class="dash-rot-lbl">${d.lbl}</span>
+      <span class="dash-rot-track"><span class="dash-rot-fill" style="width:${counts[i] ? Math.max(6, pct) : 0}%;${old ? 'background:var(--warning);' : ''}"></span></span>
+      <span class="dash-rot-count">${counts[i]}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderDashboardTasks(){
+  const el = document.getElementById('dash-tasks-stats'); if(!el) return;
+  const today = Utils.today();
+  const we = new Date(); we.setDate(we.getDate() + 7);
+  const weekEnd = [we.getFullYear(), String(we.getMonth()+1).padStart(2,'0'), String(we.getDate()).padStart(2,'0')].join('-');
+  const pending = planning.filter(t => !t.completed && t.date);
+  const enRetard = pending.filter(t => t.date < today).length;
+  const aFaire = pending.filter(t => t.date >= today).length;
+  const semaine = pending.filter(t => t.date >= today && t.date <= weekEnd).length;
+  const stats = [
+    {val: aFaire, lbl: 'À faire'},
+    {val: enRetard, lbl: 'En retard', warn: enRetard > 0},
+    {val: semaine, lbl: 'Cette semaine'}
+  ];
+  el.innerHTML = stats.map(s => `<div class="dash-stat"><div class="dash-stat-val${s.warn ? ' warn' : ''}">${s.val}</div><div class="dash-stat-lbl">${s.lbl}</div></div>`).join('');
 }
 
 function computeVehicleSaleIndicators(v){
