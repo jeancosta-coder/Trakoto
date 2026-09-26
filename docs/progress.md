@@ -1,42 +1,48 @@
 # État d'avancement — Trakoto
 
-Dernière mise à jour : 2026-09-19 (soir). Ce fichier est un instantané, pas un journal en temps réel — croiser avec `git log` et `git status` pour l'état exact au moment présent.
+Dernière mise à jour : 2026-09-26. Ce fichier est un instantané, pas un journal en temps réel — croiser avec `git log` et `git status` pour l'état exact au moment présent.
 
 ## Fonctionnalités en place
 
 - **Auth** : inscription/connexion via Supabase, écran de connexion, récupération de mot de passe.
 - **Parc** (`#parc`) : liste des véhicules en stock, cartes avec statut/prix, filtre par statut.
-- **Fiche détail véhicule** : bloc unifié Notes + Infos véhicule (édition gated par un bouton pinceau), sections Informations principales / Mécanique / Apparence / Administratif, onglets Détails/Finances/Clientèle, gestion des coûts HT/TTC, verrouillage des champs finance après validation de vente.
-- **Planning** (`#planning`) : vues semaine/mois, création de tâches, rail des prochaines tâches.
-- **Organisation** (`#organisation`) : kanban des prestataires/réparations.
+- **Fiche détail véhicule** : bloc unifié Notes + Infos véhicule (édition gated par un bouton pinceau), sections Informations principales / Mécanique / Apparence / Administratif, onglets Détails/Transaction/Client, gestion des coûts HT/TTC (chaque frais a sa propre date + n° de facture), verrouillage des champs finance après validation de vente, régime de TVA + n° facture achat/vente par véhicule (comptabilité découplée de la validation commerciale).
+- **Planning** (`#planning`) : vues semaine/mois, création de tâches, rail des prochaines tâches, transition de glissement type iOS entre pages.
+- **Organisation** (`#organisation`) : kanban des prestataires/réparations, recherche de véhicule qui bascule sur le bon prestataire.
 - **Dashboard** (`#dashboard`) : KPIs, graphique seuil de rentabilité (Chart.js), tableau des ventes.
-- **Compte** (`#compte`) : paramètres utilisateur.
+- **Finance** (`#finance`, desktop uniquement) : vue comptable par période (mois/trimestre/année/tout), KPI (CA, coût véhicules, marge, charges, résultat, TVA à payer), charges de structure (ponctuelles + récurrentes), journal chronologique des opérations (achat/frais/vente datés indépendamment de la vente commerciale), export CSV/PDF avec récap TVA collectée/déductible/à payer pour l'expert-comptable.
+- **Compte** (`#compte`) : profil utilisateur, statut d'abonnement (badge + détail), résiliation d'abonnement, bloc Paramètres (marge cible par défaut, numérotation auto des N° de VO, régime TVA par défaut, export CSV du parc, suppression de compte).
 - **Landing page** (`landing.html`) : vitrine marketing, démo interactive, showcase des fonctionnalités, FAQ.
 - **Paiement** (`payment.html` + `netlify/functions/create-subscription.js`) : inscription avec essai gratuit 14 jours via Stripe.
 - Pages légales (CGV, confidentialité, mentions légales).
 
 ## Terminé récemment (voir `git log` pour le détail exact)
 
-- Desktop (`app.html`, scopé `@media (min-width: 900px)`) : refonte des onglets Détails/Finances/Client de la fiche véhicule — bloc unique par onglet (au lieu de plusieurs sous-blocs), titres de section en texte gras plus grand (pas de fond ni de trait), séparateurs style tableau entre les lignes d'une même section uniquement, bouton "Valider la vente" intégré en pilule dans le bloc Finances, onglet "Clientèle" renommé "Client".
-- Planning : vraie transition de glissement façon iOS entre deux pages (l'ancienne sort pendant que la nouvelle entre), sur les flèches prev/next et le swipe mobile.
-- Organisation : ajout d'une recherche de véhicule (icône loupe dans l'en-tête) qui bascule sur le bon prestataire et met en surbrillance la carte trouvée.
-- Retrait du bandeau "Préconisations constructeur IA" (placeholder désactivé) et du bandeau d'en-tête desktop de la vue Compte.
-- Fiche détail véhicule : fusion Notes + Infos véhicule en un bloc unique, édition verrouillée tant que le pinceau n'est pas activé, sections labellisées, hiérarchie visuelle renforcée (infos principales en lignes verticales, plus grandes que le reste).
-- Zone Notes : cadre visible, hauteur auto-adaptative au contenu, placeholder plus clair.
-- Parc mobile : cartes remplacées par des lignes pleine largeur type Leboncoin (photo à gauche, infos à droite).
-- Landing page : plusieurs refontes (showcase, FAQ, animations au scroll, réorganisation des sections pour la conversion).
-- Nettoyage `app.html` (commit `102dc5f`) : suppression de code mort (popover statut dupliqué, fonction `_ntaskModalBodyOLD`), migration des popovers vers `openAnchoredMenu()`.
+- **Finance — journal comptable** (commit `a3582fb`) : `finComputeSummary()` calcule TVA collectée (marge/classique), TVA déductible (frais avec TVA) et TVA à payer ; KPI recablés (corrige un bug d'affichage `undefined`) ; la liste "véhicules vendus" devient un vrai journal chronologique (achat/frais/vente datés) ; exports CSV/PDF structurés avec récap TVA.
+- **Finance — dissociation comptabilité / vente commerciale** (commit `98ddf67`) : chaque frais a désormais sa propre date + n° de facture (`openFraisModal`/`commitFrais`), la vue Finance devient un grand livre chronologique indépendant du statut `venteValidee`.
+- **Abonnement** : `get-subscription-status.js` (badge statut dans Compte), `cancel-subscription.js` (résiliation en fin de période), `delete-account.js` (suppression compte RGPD : résilie Stripe immédiatement + supprime les données Supabase + `auth.admin.deleteUser`). Toutes basées sur `_stripe-customer.js` (résolution fiable du customer Stripe via `stripe_customer_id` en `user_metadata`, avec fallback email + backfill).
+- Vue Compte scindée : Compte (profil, abonnement) + Paramètres (mollette) contenant marge cible, numérotation VO, régime TVA par défaut, export CSV, suppression de compte.
+- Desktop (`app.html`, scopé `@media (min-width: 900px)`) : refonte des onglets Détails/Transaction/Client de la fiche véhicule — bloc unique par onglet, titres de section en texte gras plus grand, séparateurs style tableau, bouton "Valider la vente" intégré en pilule dans le bloc Finances.
+- Planning : transition de glissement type iOS entre deux pages, sur flèches prev/next et swipe mobile.
+- Organisation : recherche de véhicule (icône loupe) qui bascule sur le bon prestataire et met en surbrillance la carte trouvée.
+- Modal d'ajout de véhicule : refonte visuelle desktop (bordures, espacements) ; correction d'un bug d'affichage au chargement (`display:flex !important` en CSS écrasait le `display:none` du JS).
+- Fiche détail véhicule : fusion Notes + Infos véhicule en un bloc unique, édition verrouillée tant que le pinceau n'est pas activé.
+- Parc mobile : cartes remplacées par des lignes pleine largeur type Leboncoin.
+- Landing page : plusieurs refontes (showcase, FAQ, animations au scroll, réorganisation pour la conversion).
 
-## En cours (non terminé)
+## En cours / à finaliser
 
-- **Vue Compte desktop** : ajout d'un bloc "Paramètres" prévu (marge cible par défaut, numérotation automatique des N° de VO, export CSV du parc). Pas encore commencé.
+- **Aucun développement en cours.** Le blocage restant est une action utilisateur, pas du code : voir ci-dessous.
 
-## Prochaine étape demandée (mise de côté pour plus tard, à la demande de l'utilisateur)
+## ⚠️ Action utilisateur requise (bloquant en production)
 
-- **Suppression de compte** (obligation RGPD) : nécessite une nouvelle fonction Netlify avec la clé service role Supabase (impossible depuis le front avec la clé publique) pour supprimer l'utilisateur dans `auth.users` en plus de ses données.
-- **Résiliation d'abonnement** : à relier soit à un lien vers le Customer Portal Stripe, soit à une nouvelle fonction backend — à clarifier avec l'utilisateur avant de commencer (zone sensible, voir garde-fous Stripe dans `CLAUDE.md`).
+- **`SUPABASE_SERVICE_ROLE_KEY` manquante sur Netlify** : `cancel-subscription.js` et `delete-account.js` renvoient une erreur 500 tant que cette variable d'environnement n'est pas ajoutée dans le dashboard Netlify (Site settings → Environment variables). Cette clé ne doit **jamais** être commitée dans le repo — uniquement côté Netlify. Sans elle, la résiliation d'abonnement et la suppression de compte sont cassées en prod.
+
+## Idées non retenues / mises de côté
+
+- Champ "type de vendeur" (particulier/pro) sur l'achat pour pré-remplir automatiquement le régime de TVA par véhicule : jugé non nécessaire — le régime par défaut (`financeData.vatDefault`, réglable dans Paramètres) pré-remplit déjà chaque véhicule, et le marchand peut l'ajuster ponctuellement dans l'onglet Transaction.
 
 ## Notes pour reprendre le travail
 
 - Toujours vérifier `git status`/`git diff` avant de supposer l'état du fichier `app.html` — plusieurs sessions de travail peuvent se succéder avec des changements non commités.
-- Pas de tests automatisés : toute vérification se fait manuellement (preview locale via `.claude/launch.json`, ou test live sur le compte Supabase de l'utilisateur).
+- Pas de tests automatisés : toute vérification se fait manuellement (preview locale, ou test live sur le compte Supabase de l'utilisateur).
