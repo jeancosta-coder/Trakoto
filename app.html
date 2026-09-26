@@ -2296,10 +2296,10 @@
           <div id="fin-charges-list"></div>
         </section>
 
-        <!-- Colonne droite : véhicules vendus -->
+        <!-- Colonne droite : journal chronologique des opérations -->
         <section class="fin-section">
           <div class="fin-section-head">
-            <span class="fin-section-title">Véhicules vendus</span>
+            <span class="fin-section-title">Journal des opérations</span>
           </div>
           <div id="fin-veh-list"></div>
         </section>
@@ -2677,9 +2677,9 @@
             <div class="bft-row-simple"><span class="bft-name">Prix de vente cible</span><div class="fin-input-wrap"><input type="number" id="detail-vente-input" placeholder="0" oninput="updateMargePreview()" onblur="savePrices()" class="bft-inp-simple"><span class="fin-unit">€</span></div></div>
 
             <div class="bft-group"><span style="display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.55;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>Frais</span></div>
-            <div class="bft-subgroup"><span>Sans TVA · <span id="fin-total-sansTva">0 €</span></span><button class="bft-plus" onclick="addCostItemForm('sansTva')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
+            <div class="bft-subgroup"><span>Sans TVA · <span id="fin-total-sansTva">0 €</span></span><button class="bft-plus" onclick="openFraisModal('sansTva')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
             <div id="fin-list-sansTva"></div>
-            <div class="bft-subgroup"><span>Soumis à la TVA · <span id="fin-total-avecTva">0 €</span></span><button class="bft-plus" onclick="addCostItemForm('avecTva')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
+            <div class="bft-subgroup"><span>Soumis à la TVA · <span id="fin-total-avecTva">0 €</span></span><button class="bft-plus" onclick="openFraisModal('avecTva')"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg></button></div>
             <div id="fin-list-avecTva"></div>
 
             <div class="bft-group"><span style="display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.55;"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="6" y1="15" x2="10" y2="15"/></svg>Autres frais</span></div>
@@ -3769,15 +3769,49 @@ function finChargesForPeriod(){
   list.sort((a,b) => (b.date||'').localeCompare(a.date||''));
   return list;
 }
-function finVehSoldInPeriod(){
-  return vehicles.filter(v => {
-    if(v.statut !== 'Livré' && v.statut !== 'Vendu') return false;
-    const sm = _soldMonth(v);
-    if(finScope === 'all') return true;
-    if(!sm) return false;
-    if(finScope === 'year') return sm.startsWith(String(finPeriod.getFullYear()));
-    return sm === finMonthKey(finPeriod);
+function finVehFigures(v){
+  const achat = Number(v.achat) || 0;
+  const fraisSansTva = costTotal(costItemsOf(v,'sansTva'));
+  const fraisAvecTva = costTotal(costItemsOf(v,'avecTva'));
+  const cg = Number(v.carteGrise) || 0;
+  const frais = fraisSansTva + fraisAvecTva + cg;
+  const vente = Number(v.venteFinale || v.vente) || 0;
+  const revient = achat + frais;
+  const marge = vente - revient;
+  const meta = financeData.vehMeta[v.id] || {};
+  const regime = meta.vatRegime || financeData.vatDefault || 'marge';
+  let tva = 0;
+  if(regime === 'marge') tva = marge > 0 ? (marge - marge/1.2) : 0;
+  else if(regime === 'classique') tva = vente > 0 ? (vente - vente/1.2) : 0;
+  return {achat, frais, fraisSansTva, fraisAvecTva, cg, vente, revient, marge, regime, tva, meta};
+}
+function finFraisDate(v, it){ return (it && it.date) || v.achatDate || ''; }
+function finVehSoldInScope(v){
+  if(v.statut !== 'Livré' && v.statut !== 'Vendu') return false;
+  if(finScope === 'all') return true;
+  const sd = v.saleDate;
+  return sd ? finDateInPeriod(sd) : false;
+}
+// Journal chronologique : chaque opération datée à sa date réelle (indépendant de la validation de vente)
+function finLedger(){
+  const lines = [];
+  vehicles.forEach(v => {
+    const meta = financeData.vehMeta[v.id] || {};
+    const regime = meta.vatRegime || financeData.vatDefault || 'marge';
+    const name = ((v.marque||'')+' '+(v.modele||'')).trim() || 'Véhicule';
+    if(Number(v.achat) && finDateInPeriod(v.achatDate))
+      lines.push({date:v.achatDate, type:'Achat', vehId:v.id, label:name, detail:"Prix d'achat", invoice:meta.achatInvoice||'', amount:Number(v.achat), tvaRate:'', sens:'achat'});
+    costItemsOf(v,'sansTva').forEach(it => { const d=finFraisDate(v,it); if(Number(it.amount)&&finDateInPeriod(d)) lines.push({date:d,type:'Frais',vehId:v.id,label:name,detail:it.label||'Frais',invoice:it.invoiceNo||'',amount:Number(it.amount),tvaRate:0,sens:'frais'}); });
+    costItemsOf(v,'avecTva').forEach(it => { const d=finFraisDate(v,it); if(Number(it.amount)&&finDateInPeriod(d)) lines.push({date:d,type:'Frais',vehId:v.id,label:name,detail:it.label||'Frais',invoice:it.invoiceNo||'',amount:Number(it.amount),tvaRate:20,sens:'frais'}); });
+    if(Number(v.carteGrise) && finDateInPeriod(v.achatDate))
+      lines.push({date:v.achatDate,type:'Frais',vehId:v.id,label:name,detail:'Carte grise',invoice:'',amount:Number(v.carteGrise),tvaRate:'',sens:'frais'});
+    if(finVehSoldInScope(v)){
+      const f = finVehFigures(v);
+      if(f.vente) lines.push({date:v.saleDate||'', type:'Vente', vehId:v.id, label:name, detail:'Prix de vente', invoice:meta.venteInvoice||'', amount:f.vente, tvaRate:FIN_VAT_LABELS[regime], tva:f.tva, sens:'vente'});
+    }
   });
+  lines.sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  return lines;
 }
 function finVehFigures(v){
   const achat = Number(v.achat) || 0;
@@ -3796,11 +3830,19 @@ function finVehFigures(v){
   return {achat, frais, fraisSansTva, fraisAvecTva, cg, vente, revient, marge, regime, tva, meta};
 }
 function finComputeSummary(){
-  const vehs = finVehSoldInPeriod();
-  let ca=0, cogs=0, margeVeh=0, tvaVeh=0;
-  vehs.forEach(v => { const f = finVehFigures(v); ca+=f.vente; cogs+=f.revient; margeVeh+=f.marge; tvaVeh+=f.tva; });
+  let achats=0, frais=0, ca=0, tvaCollectee=0, tvaDeductible=0;
+  finLedger().forEach(l => {
+    if(l.sens==='achat') achats += l.amount;
+    else if(l.sens==='frais'){ frais += l.amount; if(l.tvaRate===20) tvaDeductible += l.amount - l.amount/1.2; }
+    else if(l.sens==='vente'){ ca += l.amount; tvaCollectee += (l.tva||0); }
+  });
   const charges = finChargesForPeriod().reduce((s,c)=> s + (Number(c.amount)||0), 0);
-  return {ca, cogs, margeVeh, tvaVeh, charges, resultat: margeVeh - charges, nbVehs: vehs.length};
+  let margeVeh=0, nbVendus=0;
+  vehicles.forEach(v => { if(finVehSoldInScope(v)){ margeVeh += finVehFigures(v).marge; nbVendus++; } });
+  const cout = achats + frais;
+  const tvaAPayer = tvaCollectee - tvaDeductible;
+  const resultat = margeVeh - charges;
+  return {achats, frais, cout, ca, tvaCollectee, tvaDeductible, tvaAPayer, charges, margeVeh, nbVendus, resultat};
 }
 
 function finShiftPeriod(dir){
@@ -3824,12 +3866,12 @@ function renderFinanceSummary(){
   const el = document.getElementById('fin-summary'); if(!el) return;
   const s = finComputeSummary();
   el.innerHTML = `
-    <div class="fin-kpi"><div class="fin-kpi-label">Chiffre d'affaires</div><div class="fin-kpi-val">${finFmt(s.ca)}</div><div class="fin-kpi-sub">${s.nbVehs} véhicule${s.nbVehs>1?'s':''} vendu${s.nbVehs>1?'s':''}</div></div>
-    <div class="fin-kpi"><div class="fin-kpi-label">Coût des véhicules</div><div class="fin-kpi-val">${finFmt(s.cogs)}</div><div class="fin-kpi-sub">Achats + frais + CG</div></div>
+    <div class="fin-kpi"><div class="fin-kpi-label">Chiffre d'affaires</div><div class="fin-kpi-val">${finFmt(s.ca)}</div><div class="fin-kpi-sub">${s.nbVendus} véhicule${s.nbVendus>1?'s':''} vendu${s.nbVendus>1?'s':''}</div></div>
+    <div class="fin-kpi"><div class="fin-kpi-label">Coût des véhicules</div><div class="fin-kpi-val">${finFmt(s.cout)}</div><div class="fin-kpi-sub">Achats + frais</div></div>
     <div class="fin-kpi"><div class="fin-kpi-label">Marge véhicules</div><div class="fin-kpi-val">${finFmt(s.margeVeh)}</div><div class="fin-kpi-sub">CA − coût</div></div>
     <div class="fin-kpi"><div class="fin-kpi-label">Charges</div><div class="fin-kpi-val">${finFmt(s.charges)}</div><div class="fin-kpi-sub">Frais de structure</div></div>
     <div class="fin-kpi ${s.resultat>=0?'pos':'neg'}"><div class="fin-kpi-label">Résultat</div><div class="fin-kpi-val">${finFmt(s.resultat)}</div><div class="fin-kpi-sub">Marge − charges</div></div>
-    <div class="fin-kpi"><div class="fin-kpi-label">TVA estimée</div><div class="fin-kpi-val">${finFmt(s.tvaVeh)}</div><div class="fin-kpi-sub">Sur ventes véhicules</div></div>`;
+    <div class="fin-kpi"><div class="fin-kpi-label">TVA à payer</div><div class="fin-kpi-val">${finFmt(s.tvaAPayer)}</div><div class="fin-kpi-sub">Collectée ${finFmt(s.tvaCollectee)} − déduct. ${finFmt(s.tvaDeductible)}</div></div>`;
 }
 function renderFinanceCharges(){
   const el = document.getElementById('fin-charges-list'); if(!el) return;
@@ -3849,29 +3891,31 @@ function renderFinanceCharges(){
     </div>`;
   }).join('');
 }
+const FIN_LEDGER_BADGE = {
+  achat: {label:'Achat', color:'var(--text2)', bg:'var(--surface-2)'},
+  frais: {label:'Frais', color:'var(--text2)', bg:'var(--surface-2)'},
+  vente: {label:'Vente', color:'var(--success)', bg:'var(--success-soft)'}
+};
+function finDateShort(d){ return d ? new Date(d+'T00:00:00').toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'}) : '—'; }
 function renderFinanceVehicles(){
   const el = document.getElementById('fin-veh-list'); if(!el) return;
-  const vehs = finVehSoldInPeriod();
-  if(vehs.length === 0){ el.innerHTML = '<div class="fin-empty">Aucun véhicule vendu sur cette période.</div>'; return; }
-  el.innerHTML = vehs.map(v => {
-    const f = finVehFigures(v);
-    const name = escapeHtml((v.marque||'') + ' ' + (v.modele||''));
-    const sm = _soldMonth(v);
-    const dsold = v.saleDate ? new Date(v.saleDate+'T00:00:00').toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'}) : (sm||'');
-    const opts = Object.keys(FIN_VAT_LABELS).map(k => `<option value="${k}"${f.regime===k?' selected':''}>${FIN_VAT_LABELS[k]}</option>`).join('');
-    return `<div class="fin-row" style="flex-wrap:wrap;cursor:default;">
-      <div class="fin-row-main" style="flex:1 1 160px;">
-        <div class="fin-row-title">${name}</div>
-        <div class="fin-row-sub">${v.numVo?('N°'+escapeHtml(v.numVo)+' · '):''}Vendu ${dsold}</div>
+  const lines = finLedger();
+  if(lines.length === 0){ el.innerHTML = '<div class="fin-empty">Aucune opération sur cette période.</div>'; return; }
+  el.innerHTML = lines.map(l => {
+    const b = FIN_LEDGER_BADGE[l.sens] || FIN_LEDGER_BADGE.frais;
+    const badge = `<span class="fin-badge" style="color:${b.color};background:${b.bg};">${b.label}</span>`;
+    const sub = [finDateShort(l.date), escapeHtml(l.detail||''), l.invoice?('Fact. '+escapeHtml(l.invoice)):''].filter(Boolean).join(' · ');
+    const amt = (l.sens==='vente'?'+':'−') + finFmt(l.amount);
+    const amtStyle = l.sens==='vente' ? 'color:var(--success);' : 'color:var(--text2);';
+    const tvaSub = (l.sens==='vente' && l.tva) ? `<div class="fin-row-sub">TVA ${finFmt(l.tva)}</div>` : '';
+    return `<div class="fin-row" style="cursor:default;">
+      <div class="fin-row-main">
+        <div class="fin-row-title">${badge} ${escapeHtml(l.label||'')}</div>
+        <div class="fin-row-sub">${sub}</div>
       </div>
       <div style="text-align:right;flex-shrink:0;">
-        <div class="fin-row-amt">${finFmt(f.vente)}</div>
-        <div class="fin-row-sub">Marge ${finFmt(f.marge)}</div>
-      </div>
-      <div style="display:flex;gap:8px;align-items:center;flex-basis:100%;margin-top:4px;flex-wrap:wrap;">
-        <select class="fin-veh-vat" onchange="finSetVehMeta(${JSON.stringify(String(v.id))},'vatRegime',this.value)">${opts}</select>
-        <input class="fin-veh-invoice-input" placeholder="N° fact. achat" value="${escapeHtml(f.meta.achatInvoice||'')}" onchange="finSetVehMeta(${JSON.stringify(String(v.id))},'achatInvoice',this.value)">
-        <input class="fin-veh-invoice-input" placeholder="N° fact. vente" value="${escapeHtml(f.meta.venteInvoice||'')}" onchange="finSetVehMeta(${JSON.stringify(String(v.id))},'venteInvoice',this.value)">
+        <div class="fin-row-amt" style="${amtStyle}">${amt}</div>
+        ${tvaSub}
       </div>
     </div>`;
   }).join('');
@@ -3962,28 +4006,37 @@ function deleteCharge(id, isRecurring){
 /* ── Export comptable ── */
 function finExportRows(){
   const rows = [];
-  finVehSoldInPeriod().forEach(v => {
-    const f = finVehFigures(v);
-    const name = (v.marque||'')+' '+(v.modele||'')+(v.numVo?(' (N°'+v.numVo+')'):'');
-    const dsold = v.saleDate || (_soldMonth(v)||'');
-    const dachat = v.achatDate || '';
-    if(f.achat) rows.push([dachat,'Achat véhicule',name,'Prix achat',v.marque||'',f.meta.achatInvoice||'',f.achat,'',FIN_VAT_LABELS[f.regime]]);
-    costItemsOf(v,'sansTva').forEach(it => rows.push(['','Frais véhicule',name,it.label||'Frais','',it.invoiceNo||'',Number(it.amount)||0,'0 %','']));
-    costItemsOf(v,'avecTva').forEach(it => rows.push(['','Frais véhicule',name,it.label||'Frais','',it.invoiceNo||'',Number(it.amount)||0,'20 %','']));
-    if(f.cg) rows.push(['','Frais véhicule',name,'Carte grise','','',f.cg,'','']);
-    if(f.vente) rows.push([dsold,'Vente véhicule',name,'Prix vente','',f.meta.venteInvoice||'',f.vente,FIN_VAT_LABELS[f.regime],Math.round(f.tva)]);
+  const typeLabel = {achat:'Achat véhicule', frais:'Frais véhicule', vente:'Vente véhicule'};
+  finLedger().forEach(l => {
+    const taux = l.sens==='vente' ? (FIN_VAT_LABELS[ (financeData.vehMeta[l.vehId]||{}).vatRegime || financeData.vatDefault || 'marge' ]) : (l.tvaRate===''? '' : l.tvaRate+' %');
+    const tva = l.sens==='vente' && l.tva ? Math.round(l.tva) : '';
+    rows.push([l.date||'', typeLabel[l.sens]||'Opération', l.label||'', l.detail||'', l.invoice||'', l.amount, taux, tva]);
   });
   finChargesForPeriod().forEach(c => {
-    rows.push([c.date||'', c._recur?'Charge récurrente':'Charge', c.category||'', c.label||'', c.supplier||'', c.invoiceNo||'', Number(c.amount)||0, (c.tvaRate||0)+' %', '']);
+    rows.push([c.date||'', c._recur?'Charge récurrente':'Charge', c.category||'', c.label||'', c.invoiceNo||'', Number(c.amount)||0, (c.tvaRate||0)+' %', '']);
   });
   return rows;
 }
 function exportFinanceCsv(){
-  const headers = ['Date','Type','Catégorie / Véhicule','Libellé','Fournisseur','N° facture','Montant TTC','Taux TVA','TVA'];
+  const headers = ['Date','Type','Véhicule / Catégorie','Libellé','N° facture','Montant TTC','Taux TVA','TVA'];
   const rows = finExportRows();
   if(!rows.length){ showToast('Rien à exporter sur cette période'); return; }
   const esc = v => '"' + String(v==null?'':v).replace(/"/g,'""') + '"';
-  const csv = '﻿' + [headers.map(esc).join(';'), ...rows.map(r => r.map(esc).join(';'))].join('\n');
+  const s = finComputeSummary();
+  const recap = [
+    [],
+    ['RÉCAPITULATIF', finPeriodLabel()],
+    ["Chiffre d'affaires", s.ca],
+    ['Coût des véhicules (achats + frais)', s.cout],
+    ['Marge véhicules', s.margeVeh],
+    ['Charges de structure', s.charges],
+    ['Résultat', s.resultat],
+    [],
+    ['TVA collectée (sur ventes)', Math.round(s.tvaCollectee)],
+    ['TVA déductible (sur frais)', Math.round(s.tvaDeductible)],
+    ['TVA à payer', Math.round(s.tvaAPayer)]
+  ];
+  const csv = '﻿' + [headers.map(esc).join(';'), ...rows.map(r => r.map(esc).join(';')), ...recap.map(r => r.map(esc).join(';'))].join('\n');
   const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -3997,19 +4050,23 @@ function exportFinancePdf(){
   if(!rows.length){ showToast('Rien à exporter sur cette période'); return; }
   const user = sbUser?.user_metadata || {};
   const garage = user.garage_name || 'Mon activité';
-  const th = ['Date','Type','Catégorie / Véhicule','Libellé','Fournisseur','N° facture','Montant TTC','TVA'];
-  const bodyRows = rows.map(r => `<tr><td>${r[0]||''}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]||''}</td><td>${r[5]||''}</td><td style="text-align:right">${finFmt(Number(r[6])||0)}</td><td style="text-align:right">${r[8]!==''?finFmt(Number(r[8])||0):(r[7]||'')}</td></tr>`).join('');
+  const th = ['Date','Type','Véhicule / Catégorie','Libellé','N° facture','Montant TTC','TVA'];
+  const bodyRows = rows.map(r => `<tr><td>${r[0]||''}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]||''}</td><td style="text-align:right">${finFmt(Number(r[5])||0)}</td><td style="text-align:right">${r[7]!==''?finFmt(Number(r[7])||0):(r[6]||'')}</td></tr>`).join('');
   const html = `<div id="fin-print-area">
     <h1 style="margin:0 0 4px;font-size:22px;">Récapitulatif comptable</h1>
     <div style="color:#555;margin-bottom:2px;">${escapeHtml(garage)}</div>
     <div style="color:#555;margin-bottom:18px;">Période : ${finPeriodLabel()} · édité le ${new Date().toLocaleDateString('fr-FR')}</div>
     <table class="fin-print-sum" style="width:100%;border-collapse:collapse;margin-bottom:22px;">
       <tr><td>Chiffre d'affaires</td><td style="text-align:right;font-weight:700;">${finFmt(s.ca)}</td>
-          <td>Coût des véhicules</td><td style="text-align:right;font-weight:700;">${finFmt(s.cogs)}</td></tr>
+          <td>Coût des véhicules</td><td style="text-align:right;font-weight:700;">${finFmt(s.cout)}</td></tr>
       <tr><td>Marge véhicules</td><td style="text-align:right;font-weight:700;">${finFmt(s.margeVeh)}</td>
           <td>Charges</td><td style="text-align:right;font-weight:700;">${finFmt(s.charges)}</td></tr>
       <tr><td>Résultat</td><td style="text-align:right;font-weight:700;">${finFmt(s.resultat)}</td>
-          <td>TVA estimée (ventes)</td><td style="text-align:right;font-weight:700;">${finFmt(s.tvaVeh)}</td></tr>
+          <td>&nbsp;</td><td>&nbsp;</td></tr>
+      <tr><td>TVA collectée (ventes)</td><td style="text-align:right;font-weight:700;">${finFmt(s.tvaCollectee)}</td>
+          <td>TVA déductible (frais)</td><td style="text-align:right;font-weight:700;">${finFmt(s.tvaDeductible)}</td></tr>
+      <tr><td style="font-weight:700;">TVA à payer</td><td style="text-align:right;font-weight:800;">${finFmt(s.tvaAPayer)}</td>
+          <td>&nbsp;</td><td>&nbsp;</td></tr>
     </table>
     <table style="width:100%;border-collapse:collapse;font-size:12px;">
       <thead><tr>${th.map(h=>`<th style="text-align:left;border-bottom:2px solid #222;padding:6px 8px;">${h}</th>`).join('')}</tr></thead>
@@ -4874,49 +4931,61 @@ function renderCostList(kind){
   const locked = isFinanceLocked(v);
   const listEl = document.getElementById('fin-list-' + kind);
   if(listEl){
-    listEl.innerHTML = items.map(it => `<div class="bft-row">
-      <span class="bft-name">${it.label}</span>
-      <span class="bft-amt">${Number(it.amount).toLocaleString('fr-FR')} €</span>
-      <span class="bft-badge ${badgeCls}">${badgeLabel}</span>
-      ${locked ? '<span></span>' : `<button class="bft-del" onclick="removeCostItem('${kind}','${it.id}')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-      </button>`}
-    </div>`).join('');
+    listEl.innerHTML = items.map(it => {
+      const d = it.date ? new Date(it.date+'T00:00:00').toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'}) : '';
+      const sub = [d, it.invoiceNo ? 'Fact. '+it.invoiceNo : ''].filter(Boolean).join(' · ');
+      return `<div class="bft-row-simple"${locked?'':` onclick="openFraisModal('${kind}','${it.id}')" style="cursor:pointer;"`}>
+        <span class="bft-name">${escapeHtml(it.label||'Frais')}${sub?`<span style="display:block;font-size:11.5px;color:var(--text2);margin-top:2px;">${escapeHtml(sub)}</span>`:''}</span>
+        <span style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
+          <span class="bft-amt">${Number(it.amount).toLocaleString('fr-FR')} €</span>
+          ${locked ? '' : `<button class="bft-del" onclick="event.stopPropagation();removeCostItem('${kind}','${it.id}')"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>`}
+        </span>
+      </div>`;
+    }).join('');
   }
   const totalEl = document.getElementById('fin-total-' + kind);
   const total = costTotal(items);
   if(totalEl) totalEl.textContent = total.toLocaleString('fr-FR') + ' €';
 }
-function addCostItemForm(kind){
-  const listEl = document.getElementById('fin-list-' + kind);
-  if(!listEl || document.getElementById('cost-row-new-' + kind)) return;
-  const rowHtml = `<div id="cost-row-new-${kind}" class="bft-row">
-    <input type="text" id="cost-row-label-${kind}" placeholder="Titre" style="border:none;outline:none;background:transparent;font-size:14px;color:var(--text);font-family:inherit;" onblur="handleCostRowBlur('${kind}')">
-    <input type="number" id="cost-row-amount-${kind}" placeholder="Montant" class="bft-inp" style="grid-column:auto;" onkeydown="if(event.key==='Enter')this.blur()" onblur="handleCostRowBlur('${kind}')">
-    <span></span><span></span>
-  </div>`;
-  listEl.insertAdjacentHTML('beforeend', rowHtml);
-  setTimeout(() => document.getElementById('cost-row-label-' + kind)?.focus(), 50);
-}
-function handleCostRowBlur(kind){
-  setTimeout(() => {
-    const row = document.getElementById('cost-row-new-' + kind);
-    if(!row || row.contains(document.activeElement)) return;
-    commitCostItemRow(kind);
-  }, 120);
-}
-function commitCostItemRow(kind){
+function openFraisModal(kind, id){
   const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
-  const labelEl = document.getElementById('cost-row-label-' + kind);
-  const amountEl = document.getElementById('cost-row-amount-' + kind);
-  const label = labelEl?.value.trim();
-  const amount = Number(amountEl?.value) || 0;
-  if(!label || !amount){ document.getElementById('cost-row-new-' + kind)?.remove(); return; }
-  const items = [...costItemsOf(v, kind), {id: String(Date.now()), label, amount}];
+  let it = {};
+  if(id){ it = costItemsOf(v, kind).find(x => String(x.id) === String(id)) || {}; }
+  const tvaTxt = kind === 'avecTva' ? 'Frais soumis à la TVA' : 'Frais non soumis à la TVA';
+  const inner = `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);">
+      <span style="font-size:17px;font-weight:600;color:var(--text);">${id?'Modifier':'Nouveau'} frais</span>
+      <button onclick="document.getElementById('frais-modal')?.remove()" class="modal-close-btn">✕</button>
+    </div>
+    <div style="padding:20px;display:flex;flex-direction:column;gap:14px;">
+      <div style="font-size:12px;color:var(--text2);">${tvaTxt}</div>
+      <div class="fin-fld"><label>Intitulé</label><input type="text" id="frais-label" placeholder="Révision, pneus, carrosserie…" value="${escapeHtml(it.label||'')}"></div>
+      <div style="display:flex;gap:12px;">
+        <div class="fin-fld" style="flex:1;"><label>Montant TTC</label><input type="number" id="frais-amount" placeholder="0" value="${it.amount||''}"></div>
+        <div class="fin-fld" style="flex:1;"><label>Date</label><input type="date" id="frais-date" value="${it.date || v.achatDate || Utils.today()}"></div>
+      </div>
+      <div class="fin-fld"><label>N° de facture</label><input type="text" id="frais-invoice" placeholder="Optionnel" value="${escapeHtml(it.invoiceNo||'')}"></div>
+      <button onclick="commitFrais('${kind}','${id||''}')" class="ntask-save-btn" style="margin-top:6px;">${id?'Enregistrer':'Ajouter'}</button>
+    </div>`;
+  createDialogOrSheet('frais-modal', inner, {desktopWidth:'480px'});
+  setTimeout(() => document.getElementById('frais-label')?.focus(), 150);
+}
+function commitFrais(kind, id){
+  const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
+  const label = document.getElementById('frais-label').value.trim();
+  const amount = Number(document.getElementById('frais-amount').value) || 0;
+  if(!label || !amount){ showToast('⚠️ Intitulé et montant requis'); return; }
+  const date = document.getElementById('frais-date').value || v.achatDate || Utils.today();
+  const invoiceNo = document.getElementById('frais-invoice').value.trim();
   const arrKey = kind === 'sansTva' ? 'costsSansTva' : 'costsAvecTva';
+  const items = costItemsOf(v, kind).slice();
+  if(id){ const cur = items.find(x => String(x.id) === String(id)); if(cur) Object.assign(cur, {label, amount, date, invoiceNo}); }
+  else { items.push({id: String(Date.now()), label, amount, date, invoiceNo}); }
   DataLayer.updateVehicle(currentDetailVehicleId, {[arrKey]: items});
+  document.getElementById('frais-modal')?.remove();
   renderCostList(kind);
   updateMargePreview();
+  showToast('✓ Frais enregistré');
 }
 function removeCostItem(kind, id){
   const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
