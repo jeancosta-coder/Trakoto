@@ -835,6 +835,27 @@
     .fin-fld label { font-size:12px; color:var(--text2); }
     .fin-fld input { border:1px solid var(--border); border-radius:10px; padding:10px 12px; font-size:15px; color:var(--text); background:var(--surface); font-family:inherit; }
     .fin-empty { color:var(--text2); font-size:13.5px; text-align:center; }
+    /* Devis */
+    .devis-line { display:flex; align-items:center; gap:12px; padding:13px 16px; border-bottom:1px solid var(--border); }
+    .devis-line:last-of-type { border-bottom:none; }
+    .devis-line-ico { width:34px; height:34px; border-radius:9px; background:var(--surface-2); display:flex; align-items:center; justify-content:center; flex-shrink:0; color:var(--text2); }
+    .devis-line-body { flex:1; min-width:0; }
+    .devis-line-label { font-size:14.5px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .devis-line-sub { font-size:12px; color:var(--text2); margin-top:1px; }
+    .devis-line-amt { font-size:15px; font-weight:700; color:var(--text); font-variant-numeric:tabular-nums; white-space:nowrap; flex-shrink:0; }
+    .devis-line-amt.neg { color:var(--success); }
+    .devis-line.editable { cursor:pointer; transition:background 0.12s; }
+    .devis-line.editable:active { background:var(--surface-2); }
+    .devis-line-del { background:none; border:none; cursor:pointer; color:var(--text3); padding:4px; display:flex; flex-shrink:0; }
+    .devis-add { display:flex; align-items:center; justify-content:center; gap:7px; width:100%; padding:13px 16px; background:none; border:none; border-top:1px dashed var(--border); cursor:pointer; font-size:14px; font-weight:600; color:var(--accent); font-family:inherit; }
+    .devis-total-row { display:flex; align-items:center; justify-content:space-between; padding:15px 16px; background:var(--surface-2); border-top:1px solid var(--border); }
+    .devis-total-lbl { font-size:13px; font-weight:700; color:var(--text); text-transform:uppercase; letter-spacing:0.4px; }
+    .devis-total-val { font-size:20px; font-weight:800; color:var(--text); font-variant-numeric:tabular-nums; letter-spacing:-0.3px; }
+    .devis-actions { display:flex; gap:10px; padding:14px 16px; }
+    .devis-btn { flex:1; display:flex; align-items:center; justify-content:center; gap:7px; padding:12px; border-radius:11px; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit; border:1px solid var(--border); }
+    .devis-btn-primary { background:var(--accent); color:var(--accent-contrast); border-color:var(--accent); }
+    .devis-btn-ghost { background:var(--surface); color:var(--text); }
+    .devis-warn { display:flex; align-items:center; gap:8px; padding:11px 16px; background:color-mix(in srgb, var(--danger) 8%, var(--surface)); color:var(--danger); font-size:12.5px; border-top:1px solid var(--border); }
     .desktop-sidebar { display:none; }
     @media (min-width: 900px) {
       body { background-color: var(--bg); }
@@ -2582,17 +2603,13 @@
           </div>
         </div>
 
-        <!-- Devis : lignes optionnelles (garantie, accessoires, reprise...) + génération -->
-        <div class="bft-card" style="margin-bottom:20px;">
-          <div class="ntask-section-label ntask-section-label-primary dtc-section-label">Devis</div>
-          <div id="devis-lines-list"></div>
-          <div style="padding:10px 16px;border-top:1px solid var(--border);">
-            <button type="button" onclick="openDevisLineModal()" class="btn-outline" style="width:100%;">+ Ligne (option, accessoire, reprise…)</button>
+        <!-- Devis : récapitulatif chiffré (véhicule + options) + génération -->
+        <div class="bft-card" style="margin-bottom:20px;overflow:hidden;">
+          <div class="ntask-section-label ntask-section-label-primary dtc-section-label" style="display:flex;align-items:center;justify-content:space-between;">
+            <span>Devis</span>
+            <span style="font-size:11px;font-weight:500;color:var(--text2);text-transform:none;letter-spacing:0;">à remettre au client avant la vente</span>
           </div>
-          <div style="display:flex;gap:10px;padding:10px 16px 14px;">
-            <button type="button" onclick="generateDevis()" class="btn-outline" style="flex:1;">Télécharger / Imprimer</button>
-            <button type="button" onclick="sendDevisByEmail()" class="btn-outline" style="flex:1;">Envoyer par mail</button>
-          </div>
+          <div id="devis-recap"></div>
         </div>
       </div>
 
@@ -4216,16 +4233,54 @@ function emailClient(){
 // ── Devis ──
 function devisLinesOf(v){ return (v && v.devisLines) || []; }
 function renderDevisLines(v){
-  const el = document.getElementById('devis-lines-list'); if(!el) return;
+  const el = document.getElementById('devis-recap'); if(!el || !v) return;
+  const vehPrice = Number(v.vente || v.venteFinale) || 0;
+  const vehName = `${(v.marque||'')} ${(v.modele||'')}`.trim() || 'Véhicule';
   const items = devisLinesOf(v);
-  if(items.length === 0){ el.innerHTML = '<div class="fin-empty" style="padding:16px;">Aucune ligne optionnelle (garantie, accessoires, reprise…)</div>'; return; }
-  el.innerHTML = items.map(it => `<div class="bft-row-simple" onclick="openDevisLineModal('${it.id}')" style="cursor:pointer;">
-    <span class="bft-name">${escapeHtml(it.label||'Ligne')}</span>
-    <span style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
-      <span class="bft-amt">${Number(it.amount).toLocaleString('fr-FR')} €</span>
-      <button class="bft-del" onclick="event.stopPropagation();removeDevisLine('${it.id}')"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
-    </span>
-  </div>`).join('');
+  const total = vehPrice + items.reduce((s,it) => s + (Number(it.amount)||0), 0);
+
+  // Ligne véhicule (prix de vente cible, saisi dans l'onglet Transaction)
+  let html = `<div class="devis-line">
+    <div class="devis-line-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h18l-1.5-5.5A2 2 0 0 0 17.6 6H6.4a2 2 0 0 0-1.9 1.5L3 13z"/><path d="M5 13v5M19 13v5"/><circle cx="7" cy="18" r="1.5"/><circle cx="17" cy="18" r="1.5"/></svg></div>
+    <div class="devis-line-body">
+      <div class="devis-line-label">${escapeHtml(vehName)}</div>
+      <div class="devis-line-sub">Prix de vente${v.numVo?' · N°'+escapeHtml(v.numVo):''}</div>
+    </div>
+    <div class="devis-line-amt">${vehPrice.toLocaleString('fr-FR')} €</div>
+  </div>`;
+
+  // Lignes optionnelles
+  items.forEach(it => {
+    const neg = Number(it.amount) < 0;
+    html += `<div class="devis-line editable" onclick="openDevisLineModal('${it.id}')">
+      <div class="devis-line-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+      <div class="devis-line-body">
+        <div class="devis-line-label">${escapeHtml(it.label||'Ligne')}</div>
+        <div class="devis-line-sub">${neg?'Déduction (reprise, remise…)':'Option / prestation'}</div>
+      </div>
+      <div class="devis-line-amt${neg?' neg':''}">${neg?'':'+'}${Number(it.amount).toLocaleString('fr-FR')} €</div>
+      <button class="devis-line-del" onclick="event.stopPropagation();removeDevisLine('${it.id}')" title="Supprimer"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+    </div>`;
+  });
+
+  // Bouton ajouter
+  html += `<button type="button" class="devis-add" onclick="openDevisLineModal()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Ajouter une option (garantie, accessoire, reprise…)</button>`;
+
+  // Total
+  html += `<div class="devis-total-row"><span class="devis-total-lbl">Total du devis</span><span class="devis-total-val">${total.toLocaleString('fr-FR')} €</span></div>`;
+
+  // Avertissement si prix véhicule non renseigné
+  if(vehPrice === 0){
+    html += `<div class="devis-warn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Renseigne le prix de vente dans l'onglet Transaction pour l'afficher sur le devis.</div>`;
+  }
+
+  // Actions
+  html += `<div class="devis-actions">
+    <button type="button" class="devis-btn devis-btn-ghost" onclick="generateDevis()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>PDF / Imprimer</button>
+    <button type="button" class="devis-btn devis-btn-primary" onclick="sendDevisByEmail()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>Envoyer</button>
+  </div>`;
+
+  el.innerHTML = html;
 }
 function openDevisLineModal(id){
   const v = DataLayer.getVehicleById(currentDetailVehicleId); if(!v) return;
