@@ -1380,8 +1380,9 @@
       }
       #detail-tab-clients .dtc-field { grid-column: span 1 !important; border-bottom: none !important; padding: 14px 0 !important; }
       #detail-tab-clients .dtc-field-bordered { border-bottom: 1px solid var(--border) !important; }
-      #detail-tab-clients .dtc-field-notes { grid-column: 1 / -1 !important; padding: 6px 0 14px !important; }
-      #detail-tab-clients #dtc-notes { min-height: 140px !important; }
+      /* La carte Devis n'entre pas dans la grille 2 colonnes : elle prend toute la largeur */
+      #detail-tab-clients #devis-card { display: block !important; grid-template-columns: none !important; padding: 0 !important; }
+      #detail-tab-clients #devis-card .dtc-section-label { padding: 18px 16px 0 !important; margin: 0 !important; }
       /* Titres de section : bandeau accent, meme traitement fort-contraste que Details et Finances */
       #detail-tab-clients .dtc-section-label {
         grid-column: 1 / -1 !important;
@@ -2599,17 +2600,10 @@
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
             </button>
           </div>
-          <div class="ntask-section-label dtc-section-label">Notes</div>
-          <div class="dtc-field dtc-field-notes">
-            <div class="dt-notes-frame">
-              <textarea id="dtc-notes" placeholder="Notes sur le client..." oninput="document.getElementById('dtc-notes-save-btn').classList.add('visible')" onblur="saveClientNotes()" style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:90px;resize:none;color:var(--text);background:transparent;padding:0;box-sizing:border-box;"></textarea>
-              <button type="button" id="dtc-notes-save-btn" class="notes-save-btn" onclick="saveClientNotes()">Enregistrer</button>
-            </div>
-          </div>
         </div>
 
         <!-- Devis : récapitulatif chiffré (véhicule + options) + génération -->
-        <div class="bft-card" style="margin-bottom:20px;overflow:hidden;">
+        <div id="devis-card" class="bft-card" style="margin-bottom:20px;overflow:hidden;">
           <div class="ntask-section-label ntask-section-label-primary dtc-section-label" style="display:flex;align-items:center;justify-content:space-between;">
             <span>Devis</span>
             <span style="font-size:11px;font-weight:500;color:var(--text2);text-transform:none;letter-spacing:0;">à remettre au client avant la vente</span>
@@ -4218,7 +4212,6 @@ function renderClientDisplay(v){
   const dPrenom = document.getElementById('dtc-prenom'); if(dPrenom) dPrenom.value = v.clientPrenom || '';
   const dTel = document.getElementById('dtc-tel'); if(dTel) dTel.value = v.clientTel || '';
   const dEmail = document.getElementById('dtc-email'); if(dEmail) dEmail.value = v.clientEmail || '';
-  const dNotes = document.getElementById('dtc-notes'); if(dNotes) dNotes.value = v.clientNotes || '';
   toggleClientActionBtns();
   renderDevisLines(v);
 }
@@ -4402,11 +4395,6 @@ function saveClientField(field, val){
   if(!DataLayer.getVehicleById(currentDetailVehicleId)) return;
   DataLayer.updateVehicle(currentDetailVehicleId, {[CLIENT_FIELD_MAP[field]]: val.trim()});
   renderClientDisplay(DataLayer.getVehicleById(currentDetailVehicleId));
-}
-function saveClientNotes(){
-  saveClientField('notes', document.getElementById('dtc-notes').value);
-  document.getElementById('dtc-notes-save-btn')?.classList.remove('visible');
-  showToast('✓ Notes enregistrées');
 }
 function callClientPhone(){
   const v = DataLayer.getVehicleById(currentDetailVehicleId);
