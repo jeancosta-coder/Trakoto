@@ -1183,41 +1183,44 @@
         display: flex !important;
         flex-direction: row !important;
         align-items: center !important;
-        gap: 16px !important;
+        gap: 22px !important;
         flex-shrink: 0 !important;
-        padding: 14px 24px !important;
+        padding: 20px 28px !important;
         background:var(--surface) !important;
       }
       #details-desktop-nav .dtn-back {
         flex-shrink: 0 !important;
       }
       #details-desktop-nav .dtn-photo {
-        width: 64px !important;
-        height: 44px !important;
-        border-radius: 10px !important;
+        width: 112px !important;
+        height: 80px !important;
+        border-radius: 14px !important;
         flex-shrink: 0 !important;
       }
+      #details-desktop-nav .dtn-photo svg { width: 30px !important; height: 30px !important; }
       #details-desktop-nav .dtn-titles {
         min-width: 0 !important;
+        padding-right: 22px !important;
+        border-right: 1px solid var(--border) !important;
       }
       #details-desktop-nav .dtn-spacer {
         flex: 1 !important;
       }
       #detail-title-desktop {
-        font-size: 17px !important;
+        font-size: 24px !important;
         font-weight: 700 !important;
         color:var(--text) !important;
         text-align: left !important;
-        letter-spacing: -0.3px !important;
+        letter-spacing: -0.4px !important;
         white-space: nowrap !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
       }
       #detail-subtitle-desktop {
-        font-size: 12.5px !important;
+        font-size: 14px !important;
         color:var(--text2) !important;
         text-align: left !important;
-        margin-top: 2px !important;
+        margin-top: 5px !important;
         white-space: nowrap !important;
       }
       /* Statut : deplace dans le nav desktop (photo/titre), on masque l'ancien emplacement */
