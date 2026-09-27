@@ -1160,51 +1160,69 @@
         overflow: hidden !important;
         z-index: 999 !important;
         display: grid !important;
-        grid-template-columns: 280px 1fr !important;
-        grid-template-rows: auto 1fr !important;
+        grid-template-columns: 1fr !important;
+        grid-template-rows: auto auto 1fr !important;
       }
       /* Header principal mobile : masqué sur desktop */
       #details > div:first-child { display: none !important; }
       #details::before { display: none !important; }
 
-      /* === COLONNE GAUCHE : span les 2 rows === */
+      /* === BANDEAU HAUT : photo/titre/statut, pleine largeur === */
       #detail-tab-infos {
         display: flex !important;
         flex-direction: column !important;
         grid-column: 1 !important;
-        grid-row: 1 / 3 !important;
-        overflow-y: auto !important;
+        grid-row: 1 !important;
+        overflow: visible !important;
         padding: 0 !important;
         background:var(--surface) !important;
-        border-right: 1px solid rgba(0,0,0,0.06) !important;
+        border-bottom: 1px solid rgba(0,0,0,0.06) !important;
       }
-      /* Nav desktop : ← Parc + titre */
+      /* Nav desktop : bandeau horizontal (retour, photo, titre, statut, menu) */
       #details-desktop-nav {
         display: flex !important;
-        flex-direction: column !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 16px !important;
         flex-shrink: 0 !important;
-        padding: 24px 20px 16px !important;
+        padding: 14px 24px !important;
         background:var(--surface) !important;
       }
-      #details-desktop-nav button {
-        margin-bottom: 16px !important;
+      #details-desktop-nav .dtn-back {
+        flex-shrink: 0 !important;
+      }
+      #details-desktop-nav .dtn-photo {
+        width: 64px !important;
+        height: 44px !important;
+        border-radius: 10px !important;
+        flex-shrink: 0 !important;
+      }
+      #details-desktop-nav .dtn-titles {
+        min-width: 0 !important;
+      }
+      #details-desktop-nav .dtn-spacer {
+        flex: 1 !important;
       }
       #detail-title-desktop {
-        font-size: 22px !important;
+        font-size: 17px !important;
         font-weight: 700 !important;
         color:var(--text) !important;
         text-align: left !important;
-        letter-spacing: -0.4px !important;
+        letter-spacing: -0.3px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
       }
       #detail-subtitle-desktop {
-        font-size: 13px !important;
+        font-size: 12.5px !important;
         color:var(--text2) !important;
         text-align: left !important;
-        margin-top: 3px !important;
+        margin-top: 2px !important;
+        white-space: nowrap !important;
       }
       /* Statut : deplace dans le nav desktop (photo/titre), on masque l'ancien emplacement */
       .dt-statut-wrap { display: none !important; }
-      .dt-client-wrap { flex-shrink: 0 !important; padding: 12px 20px 0 !important; }
+      .dt-client-wrap { flex-shrink: 0 !important; padding: 0 24px 14px !important; }
       .dt-client-wrap > div:first-child { padding: 0 !important; }
       /* Fiche unifiee (Notes + Infos vehicule) */
       .dt-info-wrap {
@@ -1217,8 +1235,8 @@
       /* === COLONNE DROITE : barre onglets + contenu === */
       /* Barre d'onglets : col 2, row 1 (cible directement l'id, pas nth-child : l'ordre des freres a change) */
       #detail-tab-bar-wrap {
-        grid-column: 2 !important;
-        grid-row: 1 !important;
+        grid-column: 1 !important;
+        grid-row: 2 !important;
         display: flex !important;
         align-items: center !important;
         padding: 16px 24px !important;
@@ -1229,8 +1247,8 @@
       /* Onglets contenu : col 2, row 2 */
       #detail-tab-inforight,
       #detail-tab-finances {
-        grid-column: 2 !important;
-        grid-row: 2 !important;
+        grid-column: 1 !important;
+        grid-row: 3 !important;
         height: 100% !important;
         min-height: 0 !important;
         overflow-y: auto !important;
@@ -1288,8 +1306,8 @@
       #tab-infos, #tab-inforight, #tab-finances, #tab-clients { display: none !important; }
       #detail-tab-dropdown-desktop { display: flex !important; background:var(--surface-2) !important; border:1px solid var(--border) !important; box-shadow:none !important; }
       #detail-tab-clients {
-        grid-column: 2 !important;
-        grid-row: 2 !important;
+        grid-column: 1 !important;
+        grid-row: 3 !important;
         height: 100% !important;
         min-height: 0 !important;
         overflow-y: auto !important;
@@ -2366,29 +2384,21 @@
 
         <!-- Nav desktop uniquement : caché sur mobile -->
         <div id="details-desktop-nav" style="display:none;">
-          <div style="padding:14px 16px 8px;display:flex;align-items:center;justify-content:space-between;">
-            <button onclick="closeVehicleDetails()" style="background:none;border:none;cursor:pointer;font-size:12px;font-weight:500;color:var(--text2);padding:0;display:flex;align-items:center;gap:4px;letter-spacing:0.1px;">
-              <svg width="6" height="10" viewBox="0 0 6 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="5,1 1,5 5,9"/></svg>
-              Parc
-            </button>
-            <button onclick="event.stopPropagation();showVehicleContextMenu(currentDetailVehicleId, this)" class="card-menu-btn" title="Options" style="background:var(--surface-2);border:none;cursor:pointer;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:16px;line-height:1;letter-spacing:1px;flex-shrink:0;">···</button>
+          <button class="dtn-back" onclick="closeVehicleDetails()" style="background:none;border:none;cursor:pointer;font-size:12px;font-weight:500;color:var(--text2);padding:0;display:flex;align-items:center;gap:4px;letter-spacing:0.1px;">
+            <svg width="6" height="10" viewBox="0 0 6 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="5,1 1,5 5,9"/></svg>
+            Parc
+          </button>
+          <div id="detail-photo-thumb-desktop" onclick="openVehiclePhotoPicker()" class="dtn-photo" style="position:relative;cursor:pointer;background:var(--surface-2);display:flex;align-items:center;justify-content:center;color:var(--text2);overflow:hidden;">
+            <svg id="detail-photo-placeholder-desktop" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="8.5" cy="13.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 0 0-2.8 0L8 17"/></svg>
+            <img id="detail-photo-img-desktop" style="display:none;width:100%;height:100%;object-fit:cover;"/>
           </div>
-          <div style="padding:0 16px 12px;">
-            <div id="detail-photo-thumb-desktop" onclick="openVehiclePhotoPicker()" style="position:relative;cursor:pointer;width:100%;aspect-ratio:16/10;border-radius:16px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;color:var(--text2);overflow:hidden;">
-              <svg id="detail-photo-placeholder-desktop" width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="8.5" cy="13.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 0 0-2.8 0L8 17"/></svg>
-              <img id="detail-photo-img-desktop" style="display:none;width:100%;height:100%;object-fit:cover;"/>
-              <div style="position:absolute;right:8px;bottom:8px;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;pointer-events:none;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.83 2.83 0 0 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
-              </div>
-            </div>
+          <div class="dtn-titles">
+            <div id="detail-title-desktop"></div>
+            <div id="detail-subtitle-desktop"></div>
           </div>
-          <div style="padding:6px 16px 14px;">
-            <div id="detail-title-desktop" style="font-size:20px;font-weight:700;color:var(--text);line-height:1.25;text-align:left;"></div>
-            <div id="detail-subtitle-desktop" style="font-size:12px;color:var(--text2);margin-top:5px;letter-spacing:0.1px;text-align:left;"></div>
-          </div>
-          <div style="padding:0 16px 16px;display:flex;justify-content:flex-start;">
-            <div id="detail-desktop-statut-slot"></div>
-          </div>
+          <div id="detail-desktop-statut-slot"></div>
+          <div class="dtn-spacer"></div>
+          <button onclick="event.stopPropagation();showVehicleContextMenu(currentDetailVehicleId, this)" class="card-menu-btn" title="Options" style="background:var(--surface-2);border:none;cursor:pointer;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:16px;line-height:1;letter-spacing:1px;flex-shrink:0;">···</button>
         </div>
 
         <!-- Statut -->
