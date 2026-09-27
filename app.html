@@ -1602,7 +1602,7 @@
         gap: 16px 20px;
         align-items: start;
       }
-      #add-veh-step-3 .ntask-card, #add-veh-step-4 .ntask-card { margin-bottom: 16px !important; }
+      #add-veh-step-3 .ntask-card, #add-veh-step-4 .ntask-card, #add-veh-step-6 .ntask-card { margin-bottom: 16px !important; }
       #new-task-modal > *,
       #simple-task-modal > *,
       #edit-simple-task-modal > *,
@@ -2827,9 +2827,10 @@
     <div class="add-veh-step-dot" id="add-veh-dot-3"></div>
     <div class="add-veh-step-dot" id="add-veh-dot-4"></div>
     <div class="add-veh-step-dot" id="add-veh-dot-5"></div>
+    <div class="add-veh-step-dot" id="add-veh-dot-6"></div>
   </div>
   <div id="add-veh-stepper-label-wrap" style="padding:8px 20px 0;flex-shrink:0;">
-    <span id="add-veh-step-label" style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.4px;">Étape 1/5 · Identité</span>
+    <span id="add-veh-step-label" style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.4px;">Étape 1/6 · Identité</span>
   </div>
   <div id="add-veh-body" style="flex:1;overflow-y:auto;background:var(--surface-2);padding:16px 16px 24px 16px;">
 
@@ -2950,16 +2951,21 @@
         <div class="ntask-row" style="cursor:default;"><span class="ntask-row-label">Double des clés</span><div class="veh-bool-toggle" id="f-cles-toggle"><button type="button" data-val="oui" onclick="vehSelectBool('cles','oui')">Oui</button><button type="button" data-val="non" onclick="vehSelectBool('cles','non')">Non</button></div></div>
         <div class="ntask-sep"></div>
         <div class="ntask-row" style="cursor:default;"><span class="ntask-row-label">Historique d'entretien</span><div class="veh-bool-toggle" id="f-histo-toggle"><button type="button" data-val="oui" onclick="vehSelectBool('histo','oui')">Oui</button><button type="button" data-val="non" onclick="vehSelectBool('histo','non')">Non</button></div></div>
-        <div class="ntask-sep"></div>
-        <textarea id="f-notes" placeholder="Notes (révisions, rayures, réparations...)" style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:80px;resize:none;color:var(--text);background:transparent;padding:14px 0 0;box-sizing:border-box;"></textarea>
       </div>
+    </div>
+
+    <!-- ÉTAPE 6 : Photo & notes -->
+    <div id="add-veh-step-6" style="display:none;">
       <input type="file" id="f-photo-input" accept="image/*" style="display:none;" onchange="onVehPhotoSelected(event)"/>
-      <div id="f-photo-card" onclick="document.getElementById('f-photo-input').click()" class="ntask-card" style="grid-column:1 / 3;cursor:pointer;width:100%;height:160px;display:flex;align-items:center;justify-content:center;position:relative;">
+      <div id="f-photo-card" onclick="document.getElementById('f-photo-input').click()" class="ntask-card" style="cursor:pointer;width:100%;height:160px;display:flex;align-items:center;justify-content:center;position:relative;">
         <div id="f-photo-placeholder" style="display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--text2);">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="8.5" cy="13.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 0 0-2.8 0L8 17"/></svg>
           <span style="font-size:13px;font-weight:500;">Ajouter une photo</span>
         </div>
         <img id="f-photo-preview" style="display:none;width:100%;height:100%;object-fit:cover;"/>
+      </div>
+      <div class="ntask-card">
+        <textarea id="f-notes" placeholder="Notes (révisions, rayures, réparations...)" style="width:100%;border:none;outline:none;font-family:inherit;font-size:15px;min-height:90px;resize:none;color:var(--text);background:transparent;padding:14px 16px;box-sizing:border-box;"></textarea>
       </div>
     </div>
 
@@ -3889,12 +3895,12 @@ function setVehBoolToggle(field, val){
   if(toggle) toggle.querySelectorAll('button').forEach(b => b.classList.toggle('active', b.dataset.val === val));
   document['newVehicle' + (field === 'cles' ? 'Cles' : 'Histo')] = val || '';
 }
-const ADD_VEH_STEP_LABELS = ['Étape 1/5 · Identité', 'Étape 2/5 · Caractéristiques', 'Étape 3/5 · Mécanique', 'Étape 4/5 · Achat & prix', 'Étape 5/5 · Administratif'];
+const ADD_VEH_STEP_LABELS = ['Étape 1/6 · Identité', 'Étape 2/6 · Caractéristiques', 'Étape 3/6 · Mécanique', 'Étape 4/6 · Achat & prix', 'Étape 5/6 · Administratif', 'Étape 6/6 · Photo & notes'];
 let currentAddVehStep = 1;
 function addVehModalGoToStep(n){
   currentAddVehStep = n;
   const isDesktop = window.innerWidth >= 900;
-  [1,2,3,4,5].forEach(i => {
+  [1,2,3,4,5,6].forEach(i => {
     const panel = document.getElementById('add-veh-step-' + i);
     if(panel) panel.style.display = i !== n ? 'none' : (isDesktop && panel.classList.contains('add-veh-cols') ? 'grid' : 'block');
     const dot = document.getElementById('add-veh-dot-' + i);
@@ -3902,8 +3908,8 @@ function addVehModalGoToStep(n){
   });
   const lbl = document.getElementById('add-veh-step-label'); if(lbl) lbl.textContent = ADD_VEH_STEP_LABELS[n - 1];
   document.getElementById('add-veh-back-btn').style.display = n > 1 ? 'block' : 'none';
-  document.getElementById('add-veh-next-btn').style.display = n < 5 ? 'block' : 'none';
-  document.getElementById('add-veh-save-btn').style.display = n === 5 ? 'block' : 'none';
+  document.getElementById('add-veh-next-btn').style.display = n < 6 ? 'block' : 'none';
+  document.getElementById('add-veh-save-btn').style.display = n === 6 ? 'block' : 'none';
   const scroller = document.getElementById('add-veh-body'); if(scroller) scroller.scrollTop = 0;
 }
 function addVehModalNextStep(){
