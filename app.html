@@ -1597,13 +1597,13 @@
         padding: 16px 28px !important;
         border-top: 1px solid var(--border) !important;
       }
-      #add-veh-step-1.add-veh-cols, #add-veh-step-3.add-veh-cols {
+      #add-veh-step-1.add-veh-cols, #add-veh-step-2.add-veh-cols, #add-veh-step-5.add-veh-cols {
         grid-template-columns: 1fr 1fr;
         gap: 16px 20px;
         align-items: start;
       }
       #add-veh-step-1.add-veh-cols > :first-child { grid-column: 1 / 3; }
-      #add-veh-step-2 .ntask-card { margin-bottom: 16px !important; }
+      #add-veh-step-3 .ntask-card, #add-veh-step-4 .ntask-card { margin-bottom: 16px !important; }
       #new-task-modal > *,
       #simple-task-modal > *,
       #edit-simple-task-modal > *,
@@ -2822,9 +2822,11 @@
     <div class="add-veh-step-dot" id="add-veh-dot-1"></div>
     <div class="add-veh-step-dot" id="add-veh-dot-2"></div>
     <div class="add-veh-step-dot" id="add-veh-dot-3"></div>
+    <div class="add-veh-step-dot" id="add-veh-dot-4"></div>
+    <div class="add-veh-step-dot" id="add-veh-dot-5"></div>
   </div>
   <div id="add-veh-stepper-label-wrap" style="padding:8px 20px 0;flex-shrink:0;">
-    <span id="add-veh-step-label" style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.4px;">Étape 1/3 · Identité</span>
+    <span id="add-veh-step-label" style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.4px;">Étape 1/5 · Identité</span>
   </div>
   <div id="add-veh-body" style="flex:1;overflow-y:auto;background:var(--surface-2);padding:16px 16px 24px 16px;">
 
@@ -2848,10 +2850,12 @@
       <div class="ntask-card">
         <div class="ntask-row" style="cursor:default;"><span class="ntask-row-label">Année</span><input type="number" id="f-year" placeholder="2022" style="border:none;outline:none;font-size:16px;color:var(--text);background:transparent;text-align:right;width:100%;"/></div>
         <div class="ntask-sep"></div>
-        <div class="ntask-row" style="cursor:default;"><span class="ntask-row-label">Génération</span><input type="text" id="f-gen" placeholder="W206" style="border:none;outline:none;font-size:16px;color:var(--text);background:transparent;text-align:right;width:100%;"/></div>
-        <div class="ntask-sep"></div>
         <div class="ntask-row" style="cursor:default;"><span class="ntask-row-label">Kilométrage</span><input type="number" id="f-km" placeholder="45 000" style="border:none;outline:none;font-size:16px;color:var(--text);background:transparent;text-align:right;width:100%;"/></div>
       </div>
+    </div>
+
+    <!-- ÉTAPE 2 : Caractéristiques -->
+    <div id="add-veh-step-2" class="add-veh-cols" style="display:none;">
       <div class="ntask-card" style="overflow:visible;">
         <div class="ntask-field">
           <div class="ntask-row" onclick="vehToggleDropdown('carrosserie')">
@@ -2861,14 +2865,42 @@
           <div id="veh-carrosserie-panel" class="ntask-inline-panel"></div>
         </div>
         <div class="ntask-sep"></div>
+        <div class="ntask-row" style="cursor:default;"><span class="ntask-row-label">Génération</span><input type="text" id="f-gen" placeholder="W206" style="border:none;outline:none;font-size:16px;color:var(--text);background:transparent;text-align:right;width:100%;"/></div>
+        <div class="ntask-sep"></div>
+        <div class="ntask-row" style="cursor:default;"><span class="ntask-row-label">Couleur</span><input type="text" id="f-couleur" placeholder="Noir" style="border:none;outline:none;font-size:16px;color:var(--text);background:transparent;text-align:right;width:100%;"/></div>
+      </div>
+      <div class="ntask-card">
         <div class="ntask-row" style="cursor:default;"><span class="ntask-row-label">Portes</span><input type="number" id="f-portes" placeholder="5" style="border:none;outline:none;font-size:16px;color:var(--text);background:transparent;text-align:right;width:100%;"/></div>
         <div class="ntask-sep"></div>
         <div class="ntask-row" style="cursor:default;"><span class="ntask-row-label">Places</span><input type="number" id="f-places" placeholder="5" style="border:none;outline:none;font-size:16px;color:var(--text);background:transparent;text-align:right;width:100%;"/></div>
       </div>
     </div>
 
-    <!-- ÉTAPE 2 : Achat & specs -->
-    <div id="add-veh-step-2" style="display:none;">
+    <!-- ÉTAPE 3 : Mécanique -->
+    <div id="add-veh-step-3" style="display:none;">
+      <div class="ntask-card" style="overflow:visible;">
+        <div class="ntask-field">
+          <div class="ntask-row" onclick="vehToggleDropdown('carburant')">
+            <span class="ntask-row-label">Carburant</span>
+            <span class="ntask-row-val"><span id="veh-carburant-label">—</span><span class="chev">›</span></span>
+          </div>
+          <div id="veh-carburant-panel" class="ntask-inline-panel"></div>
+        </div>
+        <div class="ntask-sep"></div>
+        <div class="ntask-field">
+          <div class="ntask-row" onclick="vehToggleDropdown('transmission')">
+            <span class="ntask-row-label">Transmission</span>
+            <span class="ntask-row-val"><span id="veh-transmission-label">—</span><span class="chev">›</span></span>
+          </div>
+          <div id="veh-transmission-panel" class="ntask-inline-panel"></div>
+        </div>
+        <div class="ntask-sep"></div>
+        <div class="ntask-row" style="cursor:default;"><span class="ntask-row-label">Puissance</span><div style="display:flex;align-items:center;gap:4px;"><input type="number" id="f-puissance" placeholder="0" style="border:none;outline:none;font-size:16px;color:var(--text);background:transparent;text-align:right;width:80px;"/><span style="font-size:16px;color:var(--text2);">ch</span></div></div>
+      </div>
+    </div>
+
+    <!-- ÉTAPE 4 : Achat & prix -->
+    <div id="add-veh-step-4" style="display:none;">
       <div class="ntask-card">
         <div class="ntask-row" style="position:relative;">
           <span class="ntask-row-label">Mise en circulation</span>
@@ -2891,37 +2923,11 @@
       </div>
     </div>
 
-    <!-- ÉTAPE 3 : Détails -->
-    <div id="add-veh-step-3" class="add-veh-cols" style="display:none;">
+    <!-- ÉTAPE 5 : Administratif -->
+    <div id="add-veh-step-5" class="add-veh-cols" style="display:none;">
       <div class="ntask-card" style="overflow:visible;">
-        <div class="ntask-field">
-          <div class="ntask-row" onclick="vehToggleDropdown('carburant')">
-            <span class="ntask-row-label">Carburant</span>
-            <span class="ntask-row-val"><span id="veh-carburant-label">—</span><span class="chev">›</span></span>
-          </div>
-          <div id="veh-carburant-panel" class="ntask-inline-panel"></div>
-        </div>
-        <div class="ntask-sep"></div>
-        <div class="ntask-field">
-          <div class="ntask-row" onclick="vehToggleDropdown('transmission')">
-            <span class="ntask-row-label">Transmission</span>
-            <span class="ntask-row-val"><span id="veh-transmission-label">—</span><span class="chev">›</span></span>
-          </div>
-          <div id="veh-transmission-panel" class="ntask-inline-panel"></div>
-        </div>
-        <div class="ntask-sep"></div>
-        <div class="ntask-row" style="cursor:default;"><span class="ntask-row-label">Couleur</span><input type="text" id="f-couleur" placeholder="Noir" style="border:none;outline:none;font-size:16px;color:var(--text);background:transparent;text-align:right;width:100%;"/></div>
-        <div class="ntask-sep"></div>
         <div class="ntask-row" style="cursor:default;"><span class="ntask-row-label">Immatriculation</span><input type="text" id="f-immat" placeholder="AA-123-AA" style="border:none;outline:none;font-size:16px;color:var(--text);background:transparent;text-align:right;width:100%;"/></div>
         <div class="ntask-sep"></div>
-        <div class="ntask-row" style="cursor:default;"><span class="ntask-row-label">Puissance</span><div style="display:flex;align-items:center;gap:4px;"><input type="number" id="f-puissance" placeholder="0" style="border:none;outline:none;font-size:16px;color:var(--text);background:transparent;text-align:right;width:80px;"/><span style="font-size:16px;color:var(--text2);">ch</span></div></div>
-      </div>
-      <div class="ntask-card">
-        <div class="ntask-row" style="cursor:default;"><span class="ntask-row-label">Double des clés</span><div class="veh-bool-toggle" id="f-cles-toggle"><button type="button" data-val="oui" onclick="vehSelectBool('cles','oui')">Oui</button><button type="button" data-val="non" onclick="vehSelectBool('cles','non')">Non</button></div></div>
-        <div class="ntask-sep"></div>
-        <div class="ntask-row" style="cursor:default;"><span class="ntask-row-label">Historique d'entretien</span><div class="veh-bool-toggle" id="f-histo-toggle"><button type="button" data-val="oui" onclick="vehSelectBool('histo','oui')">Oui</button><button type="button" data-val="non" onclick="vehSelectBool('histo','non')">Non</button></div></div>
-      </div>
-      <div class="ntask-card" style="overflow:visible;">
         <div class="ntask-row" style="cursor:default;"><span class="ntask-row-label">VIN</span><input type="text" id="f-vin" placeholder="N° de série" style="border:none;outline:none;font-size:16px;color:var(--text);background:transparent;text-align:right;width:100%;"/></div>
         <div class="ntask-sep"></div>
         <div class="ntask-row" style="position:relative;">
@@ -2939,6 +2945,11 @@
           </div>
           <div id="veh-critair-panel" class="ntask-inline-panel"></div>
         </div>
+      </div>
+      <div class="ntask-card">
+        <div class="ntask-row" style="cursor:default;"><span class="ntask-row-label">Double des clés</span><div class="veh-bool-toggle" id="f-cles-toggle"><button type="button" data-val="oui" onclick="vehSelectBool('cles','oui')">Oui</button><button type="button" data-val="non" onclick="vehSelectBool('cles','non')">Non</button></div></div>
+        <div class="ntask-sep"></div>
+        <div class="ntask-row" style="cursor:default;"><span class="ntask-row-label">Historique d'entretien</span><div class="veh-bool-toggle" id="f-histo-toggle"><button type="button" data-val="oui" onclick="vehSelectBool('histo','oui')">Oui</button><button type="button" data-val="non" onclick="vehSelectBool('histo','non')">Non</button></div></div>
       </div>
     </div>
 
@@ -3868,12 +3879,12 @@ function setVehBoolToggle(field, val){
   if(toggle) toggle.querySelectorAll('button').forEach(b => b.classList.toggle('active', b.dataset.val === val));
   document['newVehicle' + (field === 'cles' ? 'Cles' : 'Histo')] = val || '';
 }
-const ADD_VEH_STEP_LABELS = ['Étape 1/3 · Identité', 'Étape 2/3 · Achat & notes', 'Étape 3/3 · Specs & détails'];
+const ADD_VEH_STEP_LABELS = ['Étape 1/5 · Identité', 'Étape 2/5 · Caractéristiques', 'Étape 3/5 · Mécanique', 'Étape 4/5 · Achat & prix', 'Étape 5/5 · Administratif'];
 let currentAddVehStep = 1;
 function addVehModalGoToStep(n){
   currentAddVehStep = n;
   const isDesktop = window.innerWidth >= 900;
-  [1,2,3].forEach(i => {
+  [1,2,3,4,5].forEach(i => {
     const panel = document.getElementById('add-veh-step-' + i);
     if(panel) panel.style.display = i !== n ? 'none' : (isDesktop && panel.classList.contains('add-veh-cols') ? 'grid' : 'block');
     const dot = document.getElementById('add-veh-dot-' + i);
@@ -3881,8 +3892,8 @@ function addVehModalGoToStep(n){
   });
   const lbl = document.getElementById('add-veh-step-label'); if(lbl) lbl.textContent = ADD_VEH_STEP_LABELS[n - 1];
   document.getElementById('add-veh-back-btn').style.display = n > 1 ? 'block' : 'none';
-  document.getElementById('add-veh-next-btn').style.display = n < 3 ? 'block' : 'none';
-  document.getElementById('add-veh-save-btn').style.display = n === 3 ? 'block' : 'none';
+  document.getElementById('add-veh-next-btn').style.display = n < 5 ? 'block' : 'none';
+  document.getElementById('add-veh-save-btn').style.display = n === 5 ? 'block' : 'none';
   const scroller = document.getElementById('add-veh-body'); if(scroller) scroller.scrollTop = 0;
 }
 function addVehModalNextStep(){
