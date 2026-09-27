@@ -1161,7 +1161,7 @@
         z-index: 999 !important;
         display: grid !important;
         grid-template-columns: 1fr !important;
-        grid-template-rows: auto auto 1fr !important;
+        grid-template-rows: auto 1fr !important;
       }
       /* Header principal mobile : masqué sur desktop */
       #details > div:first-child { display: none !important; }
@@ -1244,21 +1244,15 @@
 
       /* === COLONNE DROITE : barre onglets + contenu === */
       /* Barre d'onglets : col 2, row 1 (cible directement l'id, pas nth-child : l'ordre des freres a change) */
+      /* Le sélecteur d'onglets desktop a été déplacé dans #details-desktop-nav : cette barre ne sert plus qu'au mobile */
       #detail-tab-bar-wrap {
-        grid-column: 1 !important;
-        grid-row: 2 !important;
-        display: flex !important;
-        align-items: center !important;
-        padding: 16px 24px !important;
-        background:var(--surface) !important;
-        border-bottom: 1px solid rgba(0,0,0,0.06) !important;
-        gap: 4px !important;
+        display: none !important;
       }
-      /* Onglets contenu : col 2, row 2 */
+      /* Onglets contenu : col 1, row 2 (row 1 = bandeau nav) */
       #detail-tab-inforight,
       #detail-tab-finances {
         grid-column: 1 !important;
-        grid-row: 3 !important;
+        grid-row: 2 !important;
         height: 100% !important;
         min-height: 0 !important;
         overflow-y: auto !important;
@@ -1314,10 +1308,9 @@
       #detail-tab-inforight #detail-notes { font-size: 13.5px !important; }
       #detail-tab-inforight .dt-info-edit-fab { top: 14px !important; right: 14px !important; }
       #tab-infos, #tab-inforight, #tab-finances, #tab-clients { display: none !important; }
-      #detail-tab-dropdown-desktop { display: flex !important; background:var(--surface-2) !important; border:1px solid var(--border) !important; box-shadow:none !important; }
       #detail-tab-clients {
         grid-column: 1 !important;
-        grid-row: 3 !important;
+        grid-row: 2 !important;
         height: 100% !important;
         min-height: 0 !important;
         overflow-y: auto !important;
@@ -2380,10 +2373,6 @@
       <button id="tab-infos" onclick="switchDetailTab('infos')" style="display:none;">Détails</button>
       <button id="tab-finances" onclick="switchDetailTab('finances')" style="display:none;">Transaction</button>
       <button id="tab-clients" onclick="switchDetailTab('clients')" style="display:none;">Client</button>
-      <div id="detail-tab-dropdown-desktop" class="desktop-only" onclick="openDetailTabMenuDesktop(this)" style="display:none;align-items:center;justify-content:space-between;gap:8px;background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--card-shadow);padding:10px 14px;cursor:pointer;">
-        <span id="detail-tab-dropdown-desktop-label" style="font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;">Détails</span>
-        <svg width="11" height="11" viewBox="0 0 10 10" fill="none" stroke="var(--text2)" stroke-width="2" stroke-linecap="round" style="opacity:0.7;flex-shrink:0;"><polyline points="2,3 5,7 8,3"/></svg>
-      </div>
       <div id="detail-tab-dropdown" class="mobile-only" onclick="openDetailTabMenu(this)" style="align-items:center;justify-content:space-between;gap:8px;background:var(--surface);border-radius:var(--card-radius);box-shadow:var(--card-shadow);padding:14px 16px;margin:10px 16px;cursor:pointer;">
         <span id="detail-tab-dropdown-label" style="font-size:16px;font-weight:700;color:var(--text);">Détails</span>
         <span style="display:flex;color:var(--text2);opacity:0.7;"><svg width="13" height="13" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="2,3 5,7 8,3"/></svg></span>
@@ -2408,6 +2397,10 @@
           </div>
           <div id="detail-desktop-statut-slot"></div>
           <div class="dtn-spacer"></div>
+          <div id="detail-tab-dropdown-desktop" onclick="openDetailTabMenuDesktop(this)" style="display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--surface-2);border-radius:var(--card-radius);padding:10px 14px;cursor:pointer;flex-shrink:0;">
+            <span id="detail-tab-dropdown-desktop-label" style="font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;">Détails</span>
+            <svg width="11" height="11" viewBox="0 0 10 10" fill="none" stroke="var(--text2)" stroke-width="2" stroke-linecap="round" style="opacity:0.7;flex-shrink:0;"><polyline points="2,3 5,7 8,3"/></svg>
+          </div>
           <button onclick="event.stopPropagation();showVehicleContextMenu(currentDetailVehicleId, this)" class="card-menu-btn" title="Options" style="background:var(--surface-2);border:none;cursor:pointer;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:16px;line-height:1;letter-spacing:1px;flex-shrink:0;">···</button>
         </div>
 
